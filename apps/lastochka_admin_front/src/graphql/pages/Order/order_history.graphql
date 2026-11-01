@@ -1,0 +1,13 @@
+query ($order_id: Int!) {
+  admin_order_history(order_id: $order_id) {
+    id
+    order_id
+    action
+    actor_type
+    actor_name
+    old_value
+    new_value
+    comment
+    created_at
+  }
+}

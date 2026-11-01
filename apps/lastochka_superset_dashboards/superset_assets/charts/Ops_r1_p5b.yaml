@@ -1,0 +1,57 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Запросы без привязки
+description: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - search_query
+  metrics:
+  - &id001
+    expressionType: SQL
+    sqlExpression: COUNT(DISTINCT search_id)
+    label: Запросов
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT client_key)
+    label: Клиентов
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: DATE_FORMAT(MAX(event_at), '%d.%m.%Y')
+    label: Последний раз
+    hasCustomLabel: true
+  percent_metrics: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: event_at
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: loss_kind = 'Запрос без привязки'
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: false
+  show_totals: false
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  order_desc: true
+  column_config:
+    Запросов:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    Клиентов:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+  timeseries_limit_metric: *id001
+cache_timeout: null
+dataset_uuid: 1ee44de1-76c8-439c-bbe1-720914f5e3fc
+uuid: 69f63bd6-275a-5d50-a87e-d2c4b9a2dc4c
+version: 1.0.0

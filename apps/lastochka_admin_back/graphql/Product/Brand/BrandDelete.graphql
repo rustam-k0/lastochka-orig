@@ -1,0 +1,8 @@
+extend type Mutation {
+  "Удаление бренда"
+  BrandDelete(
+    "ID"
+    id: Int!
+  ): Brand @delete
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

@@ -1,0 +1,9 @@
+extend type Mutation {
+  "Создать/Редактировать зону доставки магазина"
+  ShopZoneDelete(
+    "ID зоны"
+    id:Int
+    ):DefaultResponse  @field(resolver:"ShopZone\\ShopZoneDelete")
+  @validator(class:"ShopZone\\ShopZoneDeleteValidator")
+  @guard @can(model: "Admin",ability: "onlyAdmin")
+}

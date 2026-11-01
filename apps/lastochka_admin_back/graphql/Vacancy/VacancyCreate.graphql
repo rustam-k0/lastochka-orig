@@ -1,0 +1,37 @@
+extend type Mutation {
+  "Создание вакансии"
+  VacancyCreate(
+    "Наименование вакансии"
+    title: String!
+    "Город"
+    city: String
+    "Формат работы"
+    work_format: VacancyWorkFormat
+    "Тип занятости"
+    employment_type: VacancyEmploymentType
+    "График работы"
+    work_schedule: String
+    "Уровень дохода"
+    salary: String
+    "Краткое описание"
+    short_description: String!
+    "Полное описание"
+    description: String!
+    "Обязанности"
+    responsibilities: String
+    "Требования"
+    requirements: String
+    "Условия"
+    conditions: String
+    "Название ссылки на вакансию"
+    link_title: String
+    "Ссылка на вакансию (например, hh.ru)"
+    link_url: String
+    "Порядок отображения"
+    position: Int
+    "Статус публикации"
+    is_published: Boolean
+  ): Vacancy! @field(resolver: "Vacancy\\VacancyCreate")
+  @validator(class: "Vacancy\\VacancyCreateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "vacancies")
+}

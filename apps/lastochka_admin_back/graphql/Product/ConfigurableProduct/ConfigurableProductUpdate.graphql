@@ -1,0 +1,19 @@
+extend type Mutation {
+  ConfigurableProductUpdate(
+    id: Int!
+    title: String
+    description: String
+    category_id: Int
+    meta_title: String
+    meta_description: String
+    meta_keywords: String
+    brand_id: Int
+    video_path: String
+    img: ImgInput
+    images: [ImgInput]
+    children_add: [Int!]
+    children_remove: [Int!]
+  ): DefaultResponse
+    @field(resolver: "ConfigurableProduct\\ConfigurableProductUpdate")
+    @guard @can(model: "Admin", ability: "onlyShop")
+}

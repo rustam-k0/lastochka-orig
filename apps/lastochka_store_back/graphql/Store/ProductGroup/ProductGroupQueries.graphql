@@ -1,0 +1,24 @@
+extend type Query {
+  product_groups_paginate(
+    "Между акциями и наборами"
+    stocks_sets: Boolean
+    "Межу наборами и кулинарией"
+    sets_cooking: Boolean
+    "После кулинарии"
+    after_cooking: Boolean
+  ): [ProductGroup] @paginate(scopes: ["filter"]) @orderBy(column: "position")
+
+  product_groups(
+    "Между акциями и наборами"
+    stocks_sets: Boolean
+    "Межу наборами и кулинарией"
+    sets_cooking: Boolean
+    "После кулинарии"
+    after_cooking: Boolean
+  ): [ProductGroup] @all(scopes: ["filter"]) @orderBy(column: "position")
+
+  product_group(
+    id: Int @eq
+  ): ProductGroup @first(scopes: ["filter"])
+
+}

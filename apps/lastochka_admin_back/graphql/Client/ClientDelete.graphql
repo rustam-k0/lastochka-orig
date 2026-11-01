@@ -1,0 +1,15 @@
+type ClientDeleteResult {
+  "Успех операции"
+  success: Boolean!
+  "Количество заказов, оставшихся в истории клиента"
+  orders_count: Int!
+}
+
+extend type Mutation {
+  "Удаление клиента (soft delete). Каскадно soft-удаляет привязанные карты, запрещено при наличии активных заказов."
+  ClientDelete(
+    "ID клиента"
+    id: Int!
+  ): ClientDeleteResult! @field(resolver: "Client\\ClientDelete")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "clients")
+}

@@ -1,0 +1,40 @@
+query (
+  $first: Int
+  $page: Int
+  $search: String
+  $is_published: Boolean
+  $city: String
+  $work_format: VacancyWorkFormat
+  $employment_type: VacancyEmploymentType
+  $ordering: [DefaultOrdering]
+) {
+  admin_vacancies_paginate(
+    first: $first
+    page: $page
+    search: $search
+    is_published: $is_published
+    city: $city
+    work_format: $work_format
+    employment_type: $employment_type
+    ordering: $ordering
+  ) {
+    data {
+      id
+      title
+      city
+      work_format
+      employment_type
+      salary
+      position
+      is_published
+      published_at
+      created_at
+    }
+    paginatorInfo {
+      count
+      currentPage
+      lastPage
+      total
+    }
+  }
+}

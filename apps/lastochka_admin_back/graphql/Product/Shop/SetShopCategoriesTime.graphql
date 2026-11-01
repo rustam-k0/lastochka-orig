@@ -1,0 +1,11 @@
+extend type Mutation {
+  "Установить время для сборки категорий для определенного магазина"
+  SetShopCategoriesTime(
+    "ID магазина"
+    shop_id:Int
+    "Категории"
+    items:[ShopCategoryInput]
+  ):DefaultResponse  @field(resolver:"Shop\\SetShopCategoriesTime")
+  @validator(class:"Shop\\SetShopCategoriesTimeValidator")
+  @guard @can(model: "Admin",ability: "onlyAdmin")
+}

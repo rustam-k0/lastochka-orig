@@ -1,0 +1,6 @@
+mutation ($metric_key: String!, $shop_id: Int, $category_id: Int, $period_start: Date!, $period_end: Date!, $target_value: Float!, $comment: String, $is_active: Boolean) {
+  KpiTargetCreate(metric_key: $metric_key, shop_id: $shop_id, category_id: $category_id, period_start: $period_start, period_end: $period_end, target_value: $target_value, comment: $comment, is_active: $is_active) {
+    code
+    message
+  }
+}

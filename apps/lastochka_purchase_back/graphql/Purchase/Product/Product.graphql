@@ -1,0 +1,27 @@
+type Product
+{
+  "ID"
+  id:Int
+  "Артикул"
+  articul:String
+  "Название"
+  title:String
+  "Код кванта (грамм, шт...)"
+  unit_type_id:Int
+  "Цена"
+  price:Price @hasOne
+  "Остатки по каждому магазину"
+  remain:Remain @hasOne
+  "Изображение"
+  img:Img @hasOne(relation: "headImg")
+  "Категории"
+  categories:[Category] @hasMany
+  "ID магазина, которому принадлежит товар"
+  shop_id:Int
+  "Добавки"
+  supplements:[Supplement] @hasMany
+  info_weight: Int
+  info_weight_type_id: Int
+  "Товар доступен только для самовывоза"
+  pickup_only:Boolean!
+}

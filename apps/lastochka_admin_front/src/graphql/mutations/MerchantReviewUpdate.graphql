@@ -1,0 +1,10 @@
+mutation UpdateMerchantReview($id: Int!, $input: UpdateMerchantReviewInput!) {
+  updateMerchantReview(id: $id, input: $input) {
+    id
+    rating
+    description
+    is_published
+    author_name
+    author_phone
+  }
+}

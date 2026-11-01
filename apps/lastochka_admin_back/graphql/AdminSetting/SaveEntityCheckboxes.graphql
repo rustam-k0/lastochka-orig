@@ -1,0 +1,9 @@
+extend type Mutation {
+    saveEntityCheckboxes(
+        "JSON-конфигурация чекбоксов сущностей"
+        config: String!
+    ): AdminSetting!
+        @field(resolver: "AdminSetting\\SaveEntityCheckboxes")
+        @guard
+        @can(ability: "manageSettings", model: "Admin")
+}

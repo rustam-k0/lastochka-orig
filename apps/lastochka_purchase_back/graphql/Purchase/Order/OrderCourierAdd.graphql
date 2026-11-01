@@ -1,0 +1,13 @@
+extend type Mutation {
+  "Добавить ДОПОЛНИТЕЛЬНОГО курьера на тяжёлый заказ (совместная доставка, модуль heavy_orders). Первый курьер назначается через OrderGoToNextStep"
+  OrderCourierAdd(
+    "ID заказа"
+    id: Int!
+    "ID дополнительного курьера"
+    courier_id: Int!
+  ): DefaultResponse
+  @field(resolver: "Order\\OrderCourierAdd")
+  @validator(class: "Order\\OrderCourierAddValidator")
+  @guard(with: ["api"])
+  @orderAction(key: "assign_courier")
+}

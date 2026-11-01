@@ -1,0 +1,59 @@
+{
+  "name": "Category",
+  "migration_create": false,
+  "columns": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "comment": "Название"
+    },
+    {
+      "name": "parent_id",
+      "type": "hasOne",
+      "related": "Category",
+      "comment": "Родительская категория"
+    },
+    {
+      "name": "important",
+      "type": "boolean",
+      "comment": "Важные категории"
+    },
+    {
+      "name": "site_catalog_img",
+      "type": "image",
+      "head_code": "CODE_SITE_CATALOG_IMG",
+      "comment": "Изображение для каталога(Сайт)"
+    },
+    {
+      "name": "site_square_img",
+      "type": "image",
+      "head_code": "CODE_SITE_SQUARE_IMG",
+      "comment": "Изображение квадрат (Сайт)"
+    },
+    {
+      "name": "site_rect_img",
+      "type": "image",
+      "head_code": "CODE_SITE_RECT_IMG",
+      "comment": "Изображение прямоугольник(Сайт)"
+    },
+    {
+      "name": "mobile_column_img",
+      "type": "image",
+      "head_code": "CODE_MOB_COLUMN_IMG",
+      "comment": "Изображение колонка(Мобильная версия)"
+    },
+    {
+      "name": "mobile_square_img",
+      "type": "image",
+      "head_code": "CODE_MOB_SQUARE_IMG",
+      "comment": "Изображение квадрат(Мобильная версия)"
+    },
+    {
+      "name": "mobile_rect_img",
+      "type": "image",
+      "head_code": "CODE_MOB_RECT_IMG",
+      "comment": "Изображение прямоугольник(Мобильная версия)"
+    }
+  ]
+}

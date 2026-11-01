@@ -1,0 +1,6 @@
+mutation($title: String, $values: [AttributeValueInput]) {
+  AttributeCreate(title: $title, values: $values) {
+    message
+    code
+  }
+}

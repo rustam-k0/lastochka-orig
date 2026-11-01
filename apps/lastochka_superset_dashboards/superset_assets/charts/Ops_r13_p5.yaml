@@ -1,0 +1,58 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Список клиентов для адресных акций
+description: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: raw
+  all_columns:
+  - client_id
+  - segment
+  - first_order_at
+  - last_order_at
+  - recency_days
+  - frequency_365
+  - monetary_365
+  - avg_check_365
+  - r_score
+  - f_score
+  - m_score
+  - rfm_code
+  - shop_name
+  - segment_reason
+  - segment_action
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: last_order_at
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: false
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  column_config:
+    recency_days:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    frequency_365:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    monetary_365:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    avg_check_365:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+  order_by_cols:
+  - '["monetary_365", false]'
+cache_timeout: null
+dataset_uuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+uuid: 6b245f6b-f597-55ac-9b16-3088b870dc32
+version: 1.0.0

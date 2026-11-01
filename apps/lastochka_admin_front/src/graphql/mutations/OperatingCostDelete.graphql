@@ -1,0 +1,6 @@
+mutation ($id: Int!) {
+  OperatingCostDelete(id: $id) {
+    code
+    message
+  }
+}

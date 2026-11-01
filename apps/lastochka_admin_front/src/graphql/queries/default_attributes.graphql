@@ -1,0 +1,13 @@
+query {
+  default_attributes {
+    id
+    title
+    code
+    type_id
+    category_type_id
+    values {
+      id
+      title
+    }
+  }
+}

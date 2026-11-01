@@ -1,0 +1,14 @@
+extend type Mutation {
+  saveIntegrationConfig(
+    integration_type: String!
+    driver: String!
+    credentials: String!
+    is_active: Boolean!
+    sync_categories_enabled: Boolean
+    sync_images_enabled: Boolean
+    deactivate_missing_enabled: Boolean
+    shop_id: Int
+  ): IntegrationConfig!
+    @field(resolver: "App\\GraphQL\\Mutations\\IntegrationConfig\\SaveIntegrationConfig")
+    @guard
+}

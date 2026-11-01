@@ -1,0 +1,13 @@
+# Local credentials and generated configuration
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.sample
+!**/.env.template
+**/.credentials
+**/auth.json
+**/secret.yaml
+**/*.pem
+**/*.key
+**/bootstrap/cache/*.php
+**/superset_config.py.bak*

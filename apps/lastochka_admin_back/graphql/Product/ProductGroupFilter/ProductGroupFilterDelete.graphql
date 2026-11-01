@@ -1,0 +1,5 @@
+extend type Mutation {
+  ProductGroupFilterDelete(id: Int!): DefaultResponse
+  @field(resolver: "ProductGroupFilter\\ProductGroupFilterDelete")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

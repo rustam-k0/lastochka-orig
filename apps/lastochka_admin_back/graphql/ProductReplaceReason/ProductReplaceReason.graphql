@@ -1,0 +1,24 @@
+type ProductReplaceReason {
+  "ID"
+  id: Int
+  "Причина замены"
+  title: String
+  "Активна"
+  is_active: Boolean
+  "Позиция сортировки"
+  position: Int
+}
+
+extend type Query {
+  "Список активных причин замены товара"
+  productReplaceReasons: [ProductReplaceReason!]! @all(scopes: ["active"])
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Все причины замены (включая неактивные)"
+  allProductReplaceReasons: [ProductReplaceReason!]! @all
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Причина замены по ID"
+  productReplaceReason(id: Int! @eq): ProductReplaceReason @find
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+}

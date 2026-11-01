@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Собрано единиц
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(CASE WHEN is_finished = 1 THEN positions_assembled ELSE 0 END)
+    label: Собрано единиц
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: assembly_started_at
+  subheader: Позиции без отклонённых, шт.
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',d'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 7f64de2b-ba11-4e40-a875-f5f51593a14d
+uuid: c8162ff4-22e9-5405-9fe4-6ad2a2e9657c
+version: 1.0.0

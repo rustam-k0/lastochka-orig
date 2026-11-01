@@ -1,0 +1,8 @@
+extend type Mutation {
+  ConfigurableProductGenerateVariants(
+    parent_id: Int!
+    matrix: [VariantMatrixInput!]!
+  ): DefaultResponse
+    @field(resolver: "ConfigurableProduct\\ConfigurableProductGenerateVariants")
+    @guard @can(model: "Admin", ability: "onlyShop")
+}

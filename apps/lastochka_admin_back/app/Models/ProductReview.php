@@ -1,0 +1,186 @@
+<?php
+
+namespace App\Models;
+
+use App\Traits\ModelTools;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+
+/**
+ * @mixin IdeHelperProductReview
+ */
+class ProductReview extends Model
+{
+    use HasFactory, ModelTools, SoftDeletes;
+
+    const table = "product_reviews";
+    protected $table = self::table;
+
+    protected $fillable = [
+        'shop_id',
+        'product_id',
+        'rating',
+        'description',
+        'is_published',
+        'author_name',
+        'author_phone',
+    ];
+
+    protected $casts = [
+        'shop_id' => 'integer',
+        'product_id' => 'integer',
+        'rating' => 'integer',
+        'is_published' => 'boolean',
+    ];
+
+    protected $attributes = [
+        'is_published' => false,
+    ];
+
+    /**
+     * Получение магазина
+     */
+    public function shop(): BelongsTo
+    {
+        return $this->belongsTo(Shop::class);
+    }
+
+    /**
+     * Получение товара
+     */
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    /**
+     * Scope: фильтрация по магазинам текущего пользователя
+     * Админ видит всё, селлер — только свои магазины
+     */
+    public function scopeForCurrentUser(Builder $query): Builder
+    {
+        $user = Auth::user();
+
+        if (!$user || $user->isGlobalScope()) {
+            return $query;
+        }
+
+        $shopIds = $user->shops()->pluck('shop_id')->toArray();
+
+        return $query->whereIn('shop_id', $shopIds);
+    }
+
+    /**
+     * Scope: фильтрация
+     */
+    public function scopeFilter(Builder $query, ?array $args = null): Builder
+    {
+        $query->forCurrentUser();
+
+        $shopId = $args['shop_id'] ?? request()->input('shop_id');
+        $productId = $args['product_id'] ?? request()->input('product_id');
+        $isPublished = $args['is_published'] ?? request()->input('is_published');
+        $rating = $args['rating'] ?? request()->input('rating');
+        $ratingMin = $args['rating_min'] ?? request()->input('rating_min');
+        $ratingMax = $args['rating_max'] ?? request()->input('rating_max');
+        $search = $args['search'] ?? request()->input('search');
+
+        if ($shopId !== null) {
+            $query->where('shop_id', $shopId);
+        }
+
+        if ($productId !== null) {
+            $query->where('product_id', $productId);
+        }
+
+        if ($isPublished !== null) {
+            $query->where('is_published', filter_var($isPublished, FILTER_VALIDATE_BOOLEAN));
+        }
+
+        if ($rating !== null) {
+            $query->where('rating', $rating);
+        }
+
+        if ($ratingMin !== null) {
+            $query->where('rating', '>=', $ratingMin);
+        }
+
+        if ($ratingMax !== null) {
+            $query->where('rating', '<=', $ratingMax);
+        }
+
+        if ($search !== null && $search !== '') {
+            $query->where(function (Builder $q) use ($search) {
+                $q->where('description', 'like', '%' . $search . '%')
+                  ->orWhere('author_name', 'like', '%' . $search . '%')
+                  ->orWhereHas('product', function (Builder $p) use ($search) {
+                      $p->where('title', 'like', '%' . $search . '%');
+                  })
+                  ->orWhereHas('shop', function (Builder $s) use ($search) {
+                      $s->where('title', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+
+        return $query;
+    }
+
+    /**
+     * Scope: сортировка по умолчанию (created_at DESC).
+     *
+     * orderColumn ограничен whitelist'ом: произвольная строка ушла бы в SQL
+     * как имя колонки (ORDER BY shop → Internal server error). Сортируемые
+     * relation-колонки фронта (shop, product) маппятся на JOIN по title.
+     */
+    public function scopeSorter(Builder $query, ?array $args = null): Builder
+    {
+        $ordering = $args['ordering'] ?? request()->input('ordering');
+
+        $allowedColumns = ['id', 'rating', 'is_published', 'created_at', 'updated_at'];
+        $joined = [];
+        $applied = false;
+
+        foreach ((array) $ordering as $order) {
+            $column = $order['orderColumn'] ?? null;
+            $direction = strtolower($order['orderBy'] ?? 'asc') === 'desc' ? 'desc' : 'asc';
+
+            if ($column === 'shop') {
+                if (!in_array('shops', $joined, true)) {
+                    $query->leftJoin('shops', 'shops.id', '=', 'product_reviews.shop_id');
+                    $joined[] = 'shops';
+                }
+                $query->orderBy('shops.title', $direction);
+                $applied = true;
+            } elseif ($column === 'product') {
+                if (!in_array('products', $joined, true)) {
+                    $query->leftJoin('products', 'products.id', '=', 'product_reviews.product_id');
+                    $joined[] = 'products';
+                }
+                $query->orderBy('products.title', $direction);
+                $applied = true;
+            } elseif (in_array($column, $allowedColumns, true)) {
+                $query->orderBy('product_reviews.' . $column, $direction);
+                $applied = true;
+            }
+            // неизвестные колонки молча игнорируются
+        }
+
+        if (!$applied) {
+            $query->orderBy('product_reviews.created_at', 'desc');
+        }
+
+        // Стабильный порядок при равных значениях сортировки
+        $query->orderBy('product_reviews.id', 'desc');
+
+        // JOIN не должен затирать колонки отзыва (id, rating и т.д.)
+        if (!empty($joined)) {
+            $query->select('product_reviews.*');
+        }
+
+        return $query;
+    }
+}

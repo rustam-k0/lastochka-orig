@@ -1,0 +1,22 @@
+# Вкладка «Спрос». Часто покупают вместе (basket affinity) - топ-50 пар.
+slice_name: Часто покупают вместе (basket affinity)
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - product_name_a
+  - product_name_b
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(orders_together)
+    label: Заказов вместе
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 50
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: f3b4d972-dad9-499c-b91d-3a4a5eca5031
+uuid: 3ed10209-492b-452b-a59f-3d398f4f761f
+version: 1.0.0

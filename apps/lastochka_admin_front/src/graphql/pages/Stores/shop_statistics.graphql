@@ -1,0 +1,36 @@
+query (
+  $shop_id: Int!
+  $month: String
+  $period_from: Date
+  $period_to: Date
+) {
+  shop_statistics(
+    shop_id: $shop_id
+    month: $month
+    period_from: $period_from
+    period_to: $period_to
+  ) {
+    revenue_today {
+      sum
+      orders_count
+    }
+    revenue_month {
+      sum
+      orders_count
+    }
+    revenue_period {
+      sum
+      orders_count
+    }
+    orders_today
+    orders_month
+    orders_period
+    active_orders {
+      new
+      waiting_collector
+      assembling
+      ready_for_delivery
+      in_delivery
+    }
+  }
+}

@@ -1,0 +1,13 @@
+query{
+  shops {
+    id
+    title
+  }
+  roles {
+    id
+    name_ru
+  }
+  staffEmailRequired: adminSetting(key: "staff_email_required") {
+    value
+  }
+}

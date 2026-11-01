@@ -1,0 +1,68 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Аудитории для возврата
+description: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - segment
+  metrics:
+  - &id001
+    expressionType: SQL
+    sqlExpression: COUNT(*)
+    label: Клиентов
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(*) / NULLIF(SUM(COUNT(*)) OVER (), 0)
+    label: Доля базы
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(monetary_365)
+    label: Выручка за 365 дней, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: AVG(recency_days)
+    label: Средняя давность, дней
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX(segment_action)
+    label: Рекомендуемое действие
+    hasCustomLabel: true
+  percent_metrics: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: last_order_at
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: false
+  show_totals: false
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  order_desc: true
+  column_config:
+    Клиентов:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    Доля базы:
+      d3NumberFormat: .1%
+      horizontalAlign: right
+    Выручка за 365 дней, ₽:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    Средняя давность, дней:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+  timeseries_limit_metric: *id001
+cache_timeout: null
+dataset_uuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+uuid: 810e98b4-86be-5ec1-99c8-07df681da57d
+version: 1.0.0

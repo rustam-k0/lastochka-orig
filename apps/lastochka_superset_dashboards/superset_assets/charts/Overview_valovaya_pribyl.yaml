@@ -1,0 +1,25 @@
+# ИСПРАВЛЕНО (финальная fix-волна, канон маржи #4 - docs/metric-keys.md):
+# revenue-нога переведена с orders.amount на order_line_revenue (сумма позиций
+# price_during_order*quantity WHERE oi.status_id<>3, djami_orders_core.yaml) -
+# симметрично с order_cogs (тот считается по order_items, не по amount).
+slice_name: Валовая прибыль
+viz_type: big_number
+params:
+  viz_type: big_number
+  metric:
+    expressionType: SQL
+    sqlExpression: (SUM(CASE WHEN status_id = 5 THEN order_line_revenue ELSE 0 END)
+      - SUM(CASE WHEN status_id = 5 THEN order_cogs END))
+    label: Валовая прибыль, ₽
+    hasCustomLabel: true
+  granularity_sqla: order_created_at
+  time_grain_sqla: P1D
+  adhoc_filters: []
+  compare_lag: ''
+  compare_suffix: ''
+  show_trend_line: true
+  start_y_axis_at_zero: true
+  y_axis_format: SMART_NUMBER
+dataset_uuid: d991fd22-7a5f-4c1f-977b-866968e97b0c
+uuid: c0edab82-46f0-4073-88d4-849515662d08
+version: 1.0.0

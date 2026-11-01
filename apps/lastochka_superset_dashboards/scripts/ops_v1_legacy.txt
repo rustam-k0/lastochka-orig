@@ -1,0 +1,29 @@
+# Ассеты «Операционных отчётов» v1 (20.10.2026), заменённые версией по ТЗ v2.1.
+# Удаляются из метабазы Superset: python scripts/delete_assets.py scripts/ops_v1_legacy.txt
+chart 74f28cb7-3dca-4d2a-8f1d-29d862903abe
+chart 34a040a0-70ed-4d01-9df8-a0294ff2a616
+chart 5792a447-9144-4ec1-b369-38092a24f314
+chart 21c53323-8721-4a1e-9350-81f2bd693c3d
+chart b59e3d52-82e2-4a19-ad4d-4f29c34e0375
+chart 1eed750c-d0ff-4ada-9c7d-b78ebb6cfbe8
+chart 19db8633-ce86-436a-88c8-fc56e60e61c9
+chart cbef56b3-d404-4781-8058-b567f81aed6b
+chart 250f0da4-0dc9-4abc-9bdf-35974172ea8d
+chart bd5a4bf6-6db1-471f-84dd-633447f29c5f
+chart deb77bdb-6382-4a19-b81c-ff91be84d8aa
+chart d2ac7f47-686d-43e3-827a-a5e26651b7b6
+chart e44b6c2a-7e6e-4ee7-aaa3-e603658c491a
+chart f1ee5735-4ea9-43d7-97f9-d096388e5995
+chart ed9df134-302f-4a3a-9c97-e550c2d30f6f
+chart bb16070f-190e-4581-9948-d00699c600c0
+chart db76900d-4278-48de-80d5-23cc35dc9a24
+chart bf71615a-0376-4c31-9fde-0e11d737952e
+chart a2f6b55e-9487-46ca-aa17-57a0ced3dbd0
+chart cfd3b1b7-6a92-497d-988a-dff92446d7f2
+chart 234d1129-e5de-4a80-8cb5-96c0a7ad13ae
+chart afc9f588-d630-4add-888b-72fe807bc1d6
+chart c5cceeac-0210-47b1-967a-934499145ada
+chart 9918cd1d-b0f8-47cc-8d01-cc2bd907eea4
+chart aa5855a1-6535-45b0-8ef6-809b1a49deba
+chart 02c5a4f8-35f4-4edd-a100-8221aa314181
+dataset e3f4b497-a07b-46b9-8b83-9291c7d55dab

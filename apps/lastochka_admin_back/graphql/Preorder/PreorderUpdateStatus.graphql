@@ -1,0 +1,6 @@
+extend type Mutation {
+  PreorderUpdateStatus(
+    id: Int!
+    status: String!
+  ): DefaultResponse @field(resolver: "Preorder\\PreorderUpdateStatus") @guard @can(ability: "onlyAdmin", model: "Admin")
+}

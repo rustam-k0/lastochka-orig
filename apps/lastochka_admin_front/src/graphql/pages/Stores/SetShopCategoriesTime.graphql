@@ -1,0 +1,12 @@
+mutation (
+  $shop_id: Int,
+  $items: [ShopCategoryInput]
+) {
+  SetShopCategoriesTime(
+    shop_id: $shop_id,
+    items: $items
+  ) {
+    code
+    message
+  }
+}

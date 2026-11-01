@@ -1,0 +1,13 @@
+mutation (
+  $id: Int,
+  $step: Int,
+  $type_id: Int,
+  $categories: [Int],
+  $products: [Int]
+  $title: String
+) {
+  ConvertorCreateOrUpdate(id: $id, title: $title type_id: $type_id, step: $step, categories: $categories, products: $products) {
+    code
+    message
+  }
+}

@@ -1,0 +1,36 @@
+type Attribute {
+  "ID"
+  id:Int
+  "Название"
+  title:String
+  "Системный код (slug, уникальный)"
+  code:String
+  "Описание (контент INFO-модалки в карточке товара)"
+  description:String
+  "Тип (строка, текст, дробное и т.д.)"
+  type_id:Int
+  "Тип категории (Состав, Параметры, Параметры упаковки и т. д.)"
+  category_type_id:Int
+  "Позиция"
+  position:Int
+  "Системный атрибут"
+  is_default:Boolean
+  "Варианты"
+  values:[AttributeValue] @hasMany(relation: "attributeValues")
+  "Семейства атрибутов"
+  families:[AttributeFamily] @belongsToMany
+}
+
+type AttributeValue {
+  id:Int
+  title:String
+  code:String
+}
+
+input AttributeValueInput {
+  id:Int
+  "Значение варианта"
+  title:String
+  "Машинный код значения (неизменен после первого использования)"
+  code:String
+}

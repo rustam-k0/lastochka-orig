@@ -1,0 +1,17 @@
+slice_name: LTV (средний пожизненный доход с клиента), руб.
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: AVG(monetary)
+    label: LTV, ₽
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: ''
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: fd10cf03-92d6-4378-b53d-89f878a9beff
+uuid: 922728ea-83f1-4435-8e39-6a64ad85ad0e
+version: 1.0.0

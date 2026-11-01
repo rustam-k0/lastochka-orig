@@ -1,0 +1,54 @@
+type Shop {
+  "ID"
+  id:Int
+  "Название"
+  title:String
+  "Временной слот"
+  slot_time:Int
+  "Адрес"
+  address:String
+  "Почта"
+  email:String
+  "Номер телефона"
+  phone:String
+  "Часы работы"
+  working_hours:[ShopWorkingHour] @hasMany(relation: "workingHours")
+  "Широта"
+  latitude:String
+  "Долгота"
+  longitude:String
+  img: Img @hasOne(relation:"img")
+  "График работы"
+  schedule:String
+  "Изображение лого"
+  logo_img:Img @hasOne(relation:"logoImg")
+  "Изображение бэкграунд"
+  background_img:Img @hasOne(relation:"backgroundImg")
+  "Популярный партнер"
+  is_popular:Boolean
+}
+
+type ShopWorkingHour {
+  """
+  Дни работы магазина
+  MONDAY = 1
+  TUESDAY = 2
+  WEDNESDAY = 3
+  THURSDAY = 4
+  FRIDAY = 5
+  SATURDAY = 6
+  SUNDAY = 7
+  """
+  day_of_week:Int
+  "Время открытия магазина. Нужно в случае type_id = 1"
+  opening_time:String
+  "Время закрытия магазина. Нужно в случае type_id = 1"
+  closing_time:String
+  """
+  Тип работы магазина
+  1 - Работает по графику
+  2 - Работает круглосуточно
+  """
+  type_id:Int
+}
+

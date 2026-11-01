@@ -1,0 +1,121 @@
+query {
+  parent_categories {
+    id
+    title
+    link
+    position
+    child_categories {
+      id
+      title
+      link
+      parent {
+        id
+        title
+        link
+      }
+      important
+      site_catalog_img {
+        id
+        path
+        origin_name
+        alt
+        size
+        type
+      }
+      site_square_img {
+        id
+        path
+        origin_name
+        alt
+        size
+        type
+      }
+      site_rect_img {
+        id
+        path
+        origin_name
+        alt
+        size
+        type
+      }
+      mobile_column_img {
+        id
+        path
+        origin_name
+        alt
+        size
+        type
+      }
+      mobile_square_img {
+        id
+        path
+        origin_name
+        alt
+        size
+        type
+      }
+      mobile_rect_img {
+        id
+        path
+        origin_name
+        alt
+        size
+        type
+      }
+    }
+    parent {
+      id
+      title
+      link
+    }
+    important
+    site_catalog_img {
+      id
+      path
+      origin_name
+      alt
+      size
+      type
+    }
+    site_square_img {
+      id
+      path
+      origin_name
+      alt
+      size
+      type
+    }
+    site_rect_img {
+      id
+      path
+      origin_name
+      alt
+      size
+      type
+    }
+    mobile_column_img {
+      id
+      path
+      origin_name
+      alt
+      size
+      type
+    }
+    mobile_square_img {
+      id
+      path
+      origin_name
+      alt
+      size
+      type
+    }
+    mobile_rect_img {
+      id
+      path
+      origin_name
+      alt
+      size
+      type
+    }
+  }
+}

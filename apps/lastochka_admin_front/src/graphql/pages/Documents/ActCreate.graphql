@@ -1,0 +1,6 @@
+mutation($title: String, $description: String, $header: Boolean, $footer: Boolean, $for_customers: Boolean, $company: Boolean, $partners: Boolean) {
+  ActCreate(title: $title, footer: $footer, header: $header, description: $description, for_customers: $for_customers, company: $company, partners: $partners) {
+    message
+    code
+  }
+}

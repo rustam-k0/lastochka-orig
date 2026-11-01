@@ -1,0 +1,21 @@
+type ObjectAddressDataType {
+    name: String!
+    contactName: String
+    contactPhone: String
+    company: String
+    liftSize: String
+    hasLift: Boolean
+    needsPass: Boolean
+    canOversized: Boolean
+    workingHoursFrom: String
+    workingHoursTo: String
+    is247: Boolean!
+    workingDays: [String!]!
+    isDaily: Boolean!
+    photos: [OrderAddressObjectPhoto!]!
+}
+
+type OrderAddressObjectPhoto {
+    url: String!
+    mime: String
+}

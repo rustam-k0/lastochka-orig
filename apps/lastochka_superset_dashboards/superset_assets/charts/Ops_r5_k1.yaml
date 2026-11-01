@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: К инкассации
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(cash_amount)
+    label: К инкассации
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: accepted_at
+  subheader: Наличные после возвратов, ₽
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: $,.0f
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 36a9cf7e-b5c0-4c80-a5be-79eaa4d1810a
+uuid: 893fdebb-467e-5fc5-a4e4-c97b3c3a7f34
+version: 1.0.0

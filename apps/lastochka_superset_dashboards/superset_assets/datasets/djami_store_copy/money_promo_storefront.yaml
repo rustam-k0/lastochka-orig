@@ -1,0 +1,50 @@
+# Вкладка «Деньги» (по магазину). Экономика промокодов на стороне сторфронта,
+# единственный потребитель - чарт «Экономика промо — таблица кампаний» (table).
+# Имя датасета verbatim из BUILD_PLAN. Статус: partial. Источник: djami_store_copy
+# (db2, MySQL).
+#
+# ИСПРАВЛЕНО против допущений BUILD_PLAN (проверено на dev через
+# information_schema.KEY_COLUMN_USAGE):
+#   - BUILD_PLAN джойнил `orders o JOIN promocode_usages pu ON pu.order_id = o.id
+#     JOIN order_promocodes pc ON pc.id = pu.promocode_id` - НЕВЕРНО:
+#     promocode_usages.promocode_id это FK на promocodes.id, НЕ на
+#     order_promocodes.id. order_promocodes вообще не связана с promocode_usages
+#     напрямую по этому пути.
+#   - Реальная связь: order_promocodes.order_id UNIQUE -> orders.id (снэпшот
+#     применённого промо на заказе: code/type/value/discount_amount уже готовы,
+#     promocode_usages для этого датасета не нужна вообще). Читаемое имя кампании
+#     - через order_promocodes.original_id -> promocodes.id (проверено сверкой
+#     данных: original_id 1:1 совпадает с promocodes.id и с promocode_usages.
+#     promocode_id для тех же заказов). Колонка - promocodes.title, не name.
+#   - stores.name - подтверждено, существует (в отличие от shops.title в db1).
+# Добавлено: o.deleted_at IS NULL (orders поддерживает SoftDeletes в db2).
+# Статус не фильтруется по паре paid/is_paid в SQL - is_paid оставлен колонкой
+# для нативного фильтра дашборда, как и было заявлено в примечании чарта BUILD_PLAN.
+table_name: money_promo_storefront
+main_dttm_col: order_date
+database_uuid: 22c13af4-950d-4550-9f16-1617f4df8d2f
+schema: null
+sql: |
+  SELECT
+      o.id                                          AS order_id,
+      o.store_id                                     AS store_id,
+      st.name                                         AS store_name,
+      o.created_at                                    AS order_date,
+      o.subtotal                                      AS subtotal,
+      o.discount                                      AS discount,
+      o.bonus_spent                                   AS bonus_spent,
+      o.total                                         AS total,
+      o.is_paid                                       AS is_paid,
+      op.original_id                                  AS promocode_id,
+      op.code                                         AS promocode_code,
+      pc.title                                        AS promocode_name,
+      op.discount_amount                              AS discount_amount
+  FROM orders o
+  JOIN order_promocodes op ON op.order_id = o.id
+  LEFT JOIN promocodes pc ON pc.id = op.original_id
+  LEFT JOIN stores st ON st.id = o.store_id
+  WHERE o.deleted_at IS NULL
+uuid: 90892047-5af6-478c-9308-72d3eda1cd27
+columns: []
+metrics: []
+version: 1.0.0

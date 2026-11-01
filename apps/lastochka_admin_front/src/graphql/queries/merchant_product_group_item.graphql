@@ -1,0 +1,47 @@
+query ($id: Int!) {
+  merchantProductGroup(id: $id) {
+    id
+    shop_id
+    title
+    description
+    meta
+    show_on_main
+    show_on_merchant_page
+    show_in_merchant_catalog
+    show_on_search
+    sort_order
+    is_active
+    is_recommended
+    is_cart_page
+    is_complex_solution
+    custom_checkboxes
+    fill_type
+    image {
+      id
+      path
+    }
+    shop {
+      id
+      title
+    }
+    products {
+      id
+      title
+      pivot_quantity
+      default_price {
+        value
+      }
+      images {
+        path
+      }
+    }
+    filterValues {
+      id
+      value
+      filter {
+        id
+        name
+      }
+    }
+  }
+}

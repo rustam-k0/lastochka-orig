@@ -1,0 +1,6 @@
+query {
+  orderCancelReasons {
+    id
+    title
+  }
+}

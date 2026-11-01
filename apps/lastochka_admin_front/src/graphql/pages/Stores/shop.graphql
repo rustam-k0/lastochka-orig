@@ -1,0 +1,107 @@
+query ($id: Int) {
+  shop(id: $id) {
+    id
+    code
+    status_id
+    title
+    city_id
+    is_default
+    address
+    latitude
+    longitude
+    slot_max_orders
+    slot_time
+    phone
+    email
+    schedule
+    payment_type_id
+    working_days
+    opening_time
+    closing_time
+    work_type_id
+    description
+    commission
+    area_sqm
+    deposit
+    type_id
+    is_popular
+    is_b2b
+    ignore_stock
+    is_bonus_enabled
+    bonus_earn_percent
+    bonus_spend_percent
+    is_pickup_enabled
+    min_pickup_order_amount
+    heavy_order_threshold
+    assembly_price
+    pickup_payment_methods
+    pickup_auto_cancel_enabled
+    pickup_wait_perishable_hours
+    pickup_wait_regular_hours
+    pickup_grace_period_hours
+    custom_checkboxes
+
+    categories {
+      id
+      title
+      child_categories {
+        id
+      }
+      shop_category(shop_id: $id) {
+        time_to_take
+        position
+      }
+    }
+    zones {
+      id
+      name
+      delivery_type
+      delivery_price
+      min_order_price
+      free_delivery_from
+      delivery_price_ranges {
+        from_amount
+        price
+      }
+      assembly_price
+      is_active
+    }
+    img {
+      id
+      alt
+      origin_name
+      path
+    }
+    background_img {
+      id
+      alt
+      origin_name
+      path
+    }
+    logo_img {
+      id
+      alt
+      origin_name
+      path
+    }
+    work_type_id
+    working_days
+    workers {
+      id
+      working_days
+      opening_time
+      closing_time
+      user {
+        id
+        name
+        surname
+        patronymic
+        email
+        phone
+        roles {
+          name_ru
+        }
+      }
+    }
+  }
+}

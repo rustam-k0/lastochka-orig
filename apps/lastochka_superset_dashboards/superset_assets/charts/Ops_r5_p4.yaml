@@ -1,0 +1,49 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Неполные подтверждения
+description: Число фактов без подтверждения по дням
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: delivered_day
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(is_cash_unconfirmed)
+    label: Заказов
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: accepted_at
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: is_cash_unconfirmed = 1
+  orientation: horizontal
+  row_limit: 5
+  show_value: true
+  show_legend: false
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: ',d'
+  truncateYAxis: false
+  zoomable: false
+  rich_tooltip: true
+  stack: null
+  only_total: true
+  comparison_type: values
+  order_desc: true
+  x_axis_title: ''
+  x_axis_title_margin: 30
+  y_axis_title: Заказов без отметки об оплате
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  x_axis_sort: delivered_day
+  x_axis_sort_asc: false
+cache_timeout: null
+dataset_uuid: 36a9cf7e-b5c0-4c80-a5be-79eaa4d1810a
+uuid: 4a2c8797-d425-5eba-9156-06e6c760c9f3
+version: 1.0.0

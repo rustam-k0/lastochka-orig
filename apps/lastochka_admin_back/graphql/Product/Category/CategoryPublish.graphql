@@ -1,0 +1,5 @@
+extend type Mutation {
+  CategoryPublish(id:Int):DefaultResponse  @field(resolver: "Category\\CategoryPublish")
+  @validator(class: "Category\\CategoryPublishValidator")
+  @guard @can(model: "Admin",ability: "onlyAdmin") @section(key: "categories")
+}

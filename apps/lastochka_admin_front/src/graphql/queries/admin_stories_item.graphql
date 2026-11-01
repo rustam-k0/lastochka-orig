@@ -1,0 +1,39 @@
+query ($id: Int!) {
+  admin_stories_item(id: $id) {
+    id
+    title
+    expires_at
+    link_type
+    product_id
+    shop_id
+    external_url
+    is_active
+    is_quick_category
+    custom_checkboxes
+    position
+    thumbnailImage {
+      id
+      path
+      type
+      alt
+      size
+      origin_name
+    }
+    images {
+      id
+      path
+      type
+      alt
+      size
+      origin_name
+    }
+    product {
+      id
+      title
+    }
+    shop {
+      id
+      title
+    }
+  }
+}

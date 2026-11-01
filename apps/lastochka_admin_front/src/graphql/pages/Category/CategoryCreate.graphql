@@ -1,0 +1,50 @@
+mutation(
+  $title: String
+  $parent: Int
+  $important: Boolean
+  $site_catalog_img: ImgInput
+  $site_square_img: ImgInput
+  $site_rect_img: ImgInput
+  $mobile_column_img: ImgInput
+  $mobile_square_img: ImgInput
+  $mobile_rect_img: ImgInput
+  $background_img: ImgInput
+  $is_cooking: Boolean,
+  $is_perishable: Boolean,
+  $show_on_main: Boolean,
+  $is_active: Boolean,
+  $without_blocking_price: Boolean
+  $attribute_family_id: Int
+  $assembly_zone_id: Int
+  $custom_checkboxes: String
+  $tag_text: String
+  $tag_color: String
+) {
+  CategoryCreate(
+    title: $title
+    parent: $parent
+    important: $important
+    site_catalog_img: $site_catalog_img
+    site_square_img: $site_square_img
+    site_rect_img: $site_rect_img
+    mobile_column_img: $mobile_column_img
+    mobile_square_img: $mobile_square_img
+    mobile_rect_img: $mobile_rect_img
+    background_img: $background_img
+    is_cooking: $is_cooking
+    is_perishable: $is_perishable
+    show_on_main: $show_on_main
+    is_active: $is_active
+    without_blocking_price: $without_blocking_price
+    attribute_family_id: $attribute_family_id
+    assembly_zone_id: $assembly_zone_id
+    custom_checkboxes: $custom_checkboxes
+    tag_text: $tag_text
+    tag_color: $tag_color
+  ) {
+    code
+    message
+  }
+}
+
+

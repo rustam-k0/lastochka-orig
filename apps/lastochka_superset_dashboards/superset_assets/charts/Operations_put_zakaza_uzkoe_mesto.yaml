@@ -1,0 +1,35 @@
+# Вкладка «Операции». Путь заказа — узкое место (bottleneck), тот же датасет
+# order_stage_funnel, что и воронка выше (визуально второй блок рядом с
+# funnel-чартом). Флаг bottleneck (максимальная просадка к предыдущей стадии)
+# реализуется через Superset Conditional Formatting поверх колонки "Заказов
+# на стадии" - настраивается в UI после импорта (в YAML недоступно: table
+# aggregate-метрика не поддерживает LAG() OVER внутри groupby-запроса), см.
+# тот же приём в BUILD_PLAN-примечании к этому виджету.
+#
+# FIX ROUND 2 (ревью, Important x2): датасет отдаёт только 5 прогрессивных
+# стадий - "Отменён" (терминальная ветка, не шаг пути заказа) убран из
+# датасета, отменам bottleneck-таблица не нужна (её задача - просадка внутри
+# линейного пути). order_id в датасете нормализован к родителю (split_part) -
+# без этого дочерние сплит-заказы раздували COUNT DISTINCT в нижних стадиях.
+slice_name: Путь заказа — узкое место (bottleneck)
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - stage_label
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      column_name: order_id
+    aggregate: COUNT_DISTINCT
+    label: Заказов на стадии
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 10
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 05e57b34-1a7b-4dfc-840d-a6ca2ccb3139
+uuid: e2ae477d-826a-4a95-83cb-a632a8ee76c0
+version: 1.0.0

@@ -1,0 +1,26 @@
+# FIX (по аналогии с Demand_cjm_voronka, ревью round 1 Task 4): funnel-чарт
+# Superset сортирует строки по метрике по убыванию, а не по dimension - на
+# разреженных данных порядок расходится с реальным порядком стадий.
+# sort_by_metric: false + числовой префикс в stage_name (датасет
+# b2c_funnel_events) делают алфавитную сортировку dimension равной порядку
+# стадий при любом распределении метрики.
+slice_name: Воронка B2C (стадии покупки)
+viz_type: funnel
+params:
+  viz_type: funnel
+  metric:
+    expressionType: SIMPLE
+    column:
+      column_name: session_id
+    aggregate: COUNT_DISTINCT
+    label: Сессии на стадии
+    hasCustomLabel: true
+  groupby:
+  - stage_name
+  adhoc_filters: []
+  row_limit: 10
+  number_format: SMART_NUMBER
+  sort_by_metric: false
+dataset_uuid: e2e68f53-6ea4-4faf-853b-215ca04cee3e
+uuid: 237541d3-3673-446e-8b5a-e3e3c96ea38f
+version: 1.0.0

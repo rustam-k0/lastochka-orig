@@ -1,0 +1,27 @@
+mutation(
+  $product_id: Int!
+  $title: String!
+  $file_path: String!
+  $original_name: String
+  $mime_type: String
+  $size: String
+  $group: String
+  $position: Int
+) {
+  ProductDocumentCreate(
+    product_id: $product_id
+    title: $title
+    file_path: $file_path
+    original_name: $original_name
+    mime_type: $mime_type
+    size: $size
+    group: $group
+    position: $position
+  ) {
+    id
+    title
+    file_path
+    group
+    position
+  }
+}

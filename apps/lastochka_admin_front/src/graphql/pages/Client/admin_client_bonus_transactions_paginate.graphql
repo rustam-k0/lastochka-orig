@@ -1,0 +1,26 @@
+query ($client_id: Int!, $page: Int, $first: Int) {
+  admin_client_bonus_transactions_paginate(client_id: $client_id, page: $page, first: $first) {
+    data {
+      id
+      type
+      amount
+      balance_after
+      source
+      description
+      status
+      reject_reason
+      reject_message
+      order_external_id
+      occurred_at
+      created_at
+      admin {
+        id
+        name
+        surname
+      }
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}

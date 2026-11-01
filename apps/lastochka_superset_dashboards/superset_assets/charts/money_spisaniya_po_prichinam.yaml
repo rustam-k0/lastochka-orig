@@ -1,0 +1,22 @@
+slice_name: Списания по причинам
+viz_type: pie
+params:
+  viz_type: pie
+  metric:
+    expressionType: SIMPLE
+    column:
+      column_name: item_amount
+    aggregate: SUM
+    label: Списано, ₽
+    hasCustomLabel: true
+  groupby:
+  - reason_name
+  adhoc_filters: []
+  row_limit: 100
+  show_labels_threshold: 5
+  label_type: key_value_percent
+  number_format: SMART_NUMBER
+  donut: true
+dataset_uuid: 8f513be5-3e1f-4b0c-8d9e-55e40eff35eb
+uuid: 4087d0db-0bc7-4721-9555-366dc217ba5a
+version: 1.0.0

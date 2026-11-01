@@ -1,0 +1,64 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Динамика по периодам
+description: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: raw
+  all_columns:
+  - period_label
+  - buyers
+  - new_clients
+  - repeat_clients
+  - returned_clients
+  - lost_clients
+  - active_end
+  - orders
+  - revenue
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: period_start
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: false
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  column_config:
+    buyers:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    new_clients:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    repeat_clients:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    returned_clients:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    lost_clients:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    active_end:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    orders:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    revenue:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+  order_by_cols:
+  - '["period_start", true]'
+cache_timeout: null
+dataset_uuid: 6267cc2a-b9c5-5319-934e-a0123cf13731
+uuid: 00945fad-843f-5426-b88b-330e0e1ac929
+version: 1.0.0

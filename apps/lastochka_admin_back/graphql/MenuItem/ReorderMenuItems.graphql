@@ -1,0 +1,8 @@
+extend type Mutation {
+    reorderMenuItems(
+        items: [MenuItemOrderInput!]!
+    ): [MenuItem!]!
+        @field(resolver: "MenuItem\\ReorderMenuItems")
+        @guard
+        @can(ability: "manageSettings", model: "Admin")
+}

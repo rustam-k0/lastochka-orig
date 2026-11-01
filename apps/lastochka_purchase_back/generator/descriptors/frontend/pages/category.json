@@ -1,0 +1,65 @@
+{
+  "type": "form",
+  "route": "categories",
+  "name": "Category",
+  "editOnly": false,
+  "addName": "Добавление категории",
+  "editName": "Редактирование категории",
+  "graphql": {
+    "create": {
+      "name": "CategoryCreate",
+      "type": "mutation",
+      "variables": [
+        {
+          "name": "title",
+          "type": "String"
+        }
+      ],
+      "body": {
+        "code": true,
+        "message": true
+      }
+    },
+    "update": {
+      "name": "CategoryUpdate",
+      "type": "mutation",
+      "variables": [
+        {
+          "name": "id",
+          "type": "Int"
+        },
+        {
+          "name": "title",
+          "type": "String"
+        }
+      ],
+      "body": {
+        "code": true,
+        "message": true
+      }
+    },
+    "get": {
+      "name": "admin_categories_item",
+      "type": "query",
+      "variables": [
+        {
+          "name": "id",
+          "type": "Int"
+        }
+      ],
+      "body": {
+        "id": true,
+        "title": true
+      }
+    }
+  },
+  "form": [
+    {
+      "field": "title",
+      "title": "Заголовок",
+      "type": "string"
+    }
+  ],
+  "aside": [
+  ]
+}

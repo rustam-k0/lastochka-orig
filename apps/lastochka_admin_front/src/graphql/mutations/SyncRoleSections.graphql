@@ -1,0 +1,5 @@
+mutation SyncRoleSections($role_id: Int!, $section_keys: [String!]!) {
+  syncRoleSections(role_id: $role_id, section_keys: $section_keys) {
+    id section_keys
+  }
+}

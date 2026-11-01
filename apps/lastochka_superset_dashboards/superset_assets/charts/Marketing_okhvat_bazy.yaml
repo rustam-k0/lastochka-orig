@@ -1,0 +1,21 @@
+# Вкладка «Маркетинг / CRM». KPI-карточка на агрегате без временной оси ->
+# big_number_total (НЕ big_number с трендлайном, урок Task 6).
+slice_name: 'Stat: Охват базы (прокси — всего зарегистрированных покупателей)'
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SIMPLE
+    column:
+      column_name: user_id
+    aggregate: COUNT_DISTINCT
+    label: Зарегистрированных покупателей
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: 'НЕ push-подписчики — общий охват storefront (нет флага push-подписки в схеме)'
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: 2ec80a66-02fa-4382-aacf-e08ea6d08fcc
+uuid: c726303e-4b9d-4f5f-b56a-d7295d6244e7
+version: 1.0.0

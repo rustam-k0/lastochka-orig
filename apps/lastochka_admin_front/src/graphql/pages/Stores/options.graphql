@@ -1,0 +1,23 @@
+query {
+  cities {
+    id
+    name
+    is_default
+  }
+  parent_categories {
+    id
+    title
+    child_categories {
+      id
+      title
+      child_categories {
+        id
+        title
+        child_categories {
+          id
+          title
+        }
+      }
+    }
+  }
+}

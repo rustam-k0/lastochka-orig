@@ -1,0 +1,7 @@
+"Товар в группе с количеством"
+input ProductGroupItemInput {
+  "ID товара"
+  product_id: Int!
+  "Количество товара в решении"
+  quantity: Int! = 1
+}

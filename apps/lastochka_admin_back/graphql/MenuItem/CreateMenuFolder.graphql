@@ -1,0 +1,9 @@
+extend type Mutation {
+    createMenuFolder(
+        title: String!
+        icon: String
+    ): MenuItem!
+        @field(resolver: "MenuItem\\CreateMenuFolder")
+        @guard
+        @can(ability: "manageSettings", model: "Admin")
+}

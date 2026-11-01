@@ -1,0 +1,23 @@
+mutation (
+  $challenge: String
+  $code: String
+) {
+  VerifyTwoFactor(
+    challenge: $challenge
+    code: $code
+  ) {
+    token
+    two_factor
+    user {
+      id
+      name
+      email
+      roles {
+        id
+        name_ru
+      }
+    }
+    code
+    message
+  }
+}

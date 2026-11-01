@@ -1,0 +1,19 @@
+extend type Mutation {
+
+    AssemblyZoneCreate(
+        "Название зоны"
+        title: String!
+        "Цветовое обозначение (HEX)"
+        color: String
+        "Активность зоны (вкл/выкл)"
+        is_active: Boolean
+        "Описание / комментарий"
+        description: String
+        "Позиция"
+        position: Int
+    ): DefaultResponse
+        @field(resolver: "AssemblyZone\\AssemblyZoneCreate")
+        @validator(class: "AssemblyZone\\AssemblyZoneCreateValidator")
+        @guard @can(model: "Admin", ability: "onlyAdmin")
+
+}

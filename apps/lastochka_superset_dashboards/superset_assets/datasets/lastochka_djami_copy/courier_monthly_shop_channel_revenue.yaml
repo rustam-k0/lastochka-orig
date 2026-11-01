@@ -1,0 +1,45 @@
+# Вкладка «Клиенты» (по магазину). Месячная выручка курьерской системы по
+# магазину в разрезе способа получения (самовывоз vs курьерская доставка) -
+# ПРОКСИ "офлайн-кассы" (см. blocked-виджет «Онлайн vs офлайн-касса» в
+# BUILD_PLAN, секция «Заблокированные виджеты» -> «Клиенты»). Единственный
+# потребитель - «Прокси 'Офлайн': самовывоз vs курьерская доставка по
+# месяцам». Имя датасета verbatim из BUILD_PLAN.
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1 - o.paid = true (BUILD_PLAN) -> o.status_id = 5 (реализованные
+#     заказы, тот же довод что и во всех money_*/courier_client_* датасетах).
+#   Правило 2 - WHERE o.parent_order_id IS NULL (был в BUILD_PLAN, сохранён).
+#   Правило 4 - CASE WHEN o.shipping_method = 'pickup' (BUILD_PLAN, значение
+#     НЕ существует - реальный enum shipping_method: own_courier/cdek/
+#     russian_post, условие никогда не сработало бы, все заказы попали бы в
+#     "Курьерская доставка") -> CASE WHEN o.type_id = 1 (самовывоз - реальный
+#     смысл из orders.type_id: 1 самовывоз, 2 курьерская доставка, 3 СДЭК,
+#     4 Почта России, 5 Яндекс Доставка).
+#   Правило 7 - DATE_TRUNC('month', x) -> DATE(DATE_SUB(x, INTERVAL
+#     (DAYOFMONTH(x)-1) DAY)) (первый день месяца как DATE, не строка).
+#
+# ВАЖНО (перенесено из notes BUILD_PLAN): это НЕ настоящая офлайн-касса -
+# самовывоз всё равно оформлен онлайн в системе (заказ существует в БД),
+# просто клиент физически забирает товар в магазине без курьера. Использовать
+# только как временную иллюстрацию с явной подписью на дашборде.
+#
+# Проверено на dev (SELECT-прогон перед записью YAML): 4 строки по месяцам,
+# самовывоз представлен (2026-06: 3 заказа/2003 руб.), курьерская доставка -
+# 24 заказа за май-июль. Оба канала присутствуют в данных - НЕ пусто.
+table_name: courier_monthly_shop_channel_revenue
+main_dttm_col: order_month
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      o.shop_id                                                                        AS shop_id,
+      DATE(DATE_SUB(o.created_at, INTERVAL (DAYOFMONTH(o.created_at) - 1) DAY))         AS order_month,
+      CASE WHEN o.type_id = 1 THEN 'Самовывоз (прокси офлайн)' ELSE 'Курьерская доставка' END AS channel_proxy,
+      o.id                                                                              AS order_id,
+      o.amount                                                                          AS amount
+  FROM orders o
+  WHERE o.status_id = 5 AND o.parent_order_id IS NULL
+uuid: 440db63f-7a7e-4f4c-aebf-a5c513b736ab
+columns: []
+metrics: []
+version: 1.0.0

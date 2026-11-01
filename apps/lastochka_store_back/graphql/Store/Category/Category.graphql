@@ -1,0 +1,28 @@
+type Category {
+  "ID"
+  id:Int
+  "Название"
+  title:String
+  "название на английском(slug)"
+  link:String
+  "Дочерние категории"
+  child_categories:[Category] @hasMany(relation: "childCategories")
+  "Изображение для каталога(Сайт)"
+  site_catalog_img: Img @hasOne(relation:"siteCatalogImg")
+  "Изображение квадрат (Сайт)"
+  site_square_img: Img @hasOne(relation:"siteSquareImg")
+  "Изображение прямоугольник(Сайт)"
+  site_rect_img: Img @hasOne(relation:"siteRectImg")
+  "Изображение колонка(Мобильная версия)"
+  mobile_column_img: Img @hasOne(relation:"mobileColumnImg")
+  "Изображение квадрат(Мобильная версия)"
+  mobile_square_img: Img @hasOne(relation:"mobileSquareImg")
+  "Изображение прямоугольник(Мобильная версия)"
+  mobile_rect_img: Img @hasOne(relation:"mobileRectImg")
+  "Товары"
+  products:[Product] @belongsToMany(type: PAGINATOR,defaultCount: 10)
+  "Родительская категория"
+  parent:Category @hasOne
+  "Есть дети"
+  has_children:Boolean @method(name: "hasChildren") @with(relation: "childCategories")
+}

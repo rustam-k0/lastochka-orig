@@ -1,0 +1,6 @@
+mutation ($id: Int!, $position: Int!) {
+  VacancyChangePosition(id: $id, position: $position) {
+    id
+    position
+  }
+}

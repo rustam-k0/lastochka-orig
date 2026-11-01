@@ -1,0 +1,5 @@
+mutation SyncRoleOrderActions($role_id: Int!, $action_keys: [String!]!) {
+  syncRoleOrderActions(role_id: $role_id, action_keys: $action_keys) {
+    id order_action_keys
+  }
+}

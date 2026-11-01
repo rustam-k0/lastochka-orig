@@ -1,0 +1,13 @@
+mutation AssignMenuItemToFolder($name: String!, $parentName: String) {
+    assignMenuItemToFolder(name: $name, parentName: $parentName) {
+        id
+        name
+        title
+        icon
+        position
+        is_visible
+        accesses
+        is_folder
+        parent_id
+    }
+}

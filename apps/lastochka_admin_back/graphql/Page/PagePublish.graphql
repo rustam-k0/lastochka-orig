@@ -1,0 +1,15 @@
+extend type Mutation {
+  "Публикация страницы: становится видна в мобильном приложении и на сайте"
+  PagePublish(
+    "ID страницы"
+    id: Int!
+  ): Page! @field(resolver: "Page\\PagePublish")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "pages")
+
+  "Снятие страницы с публикации"
+  PageUnpublish(
+    "ID страницы"
+    id: Int!
+  ): Page! @field(resolver: "Page\\PageUnpublish")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "pages")
+}

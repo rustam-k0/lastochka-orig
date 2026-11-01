@@ -1,0 +1,10 @@
+mutation UnlinkCategories1c($category_1c_ids: [Int!]!) {
+  unlink_categories_1c(category_1c_ids: $category_1c_ids) {
+    id
+    showcase_categories {
+      id
+      title
+    }
+    linked_at
+  }
+}

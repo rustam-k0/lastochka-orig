@@ -1,0 +1,35 @@
+query (
+  $footer: Boolean
+  $header: Boolean
+  $for_customers: Boolean,
+  $company: Boolean,
+  $partners: Boolean
+  $first: Int
+  $page: Int
+  $ordering: [DefaultOrdering]
+) {
+  admin_acts_paginate (
+    footer: $footer
+    header: $header
+    first: $first
+    for_customers: $for_customers
+    company: $company
+    partners: $partners
+    page: $page
+    ordering: $ordering
+  ) {
+    data {
+      id
+      title
+      footer
+      header
+      partners
+      for_customers
+      company
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}
+

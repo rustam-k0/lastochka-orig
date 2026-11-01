@@ -1,0 +1,48 @@
+# Вкладка «Спрос» (по магазину). Позиции, отменённые/заменённые сборщиком с
+# указанием причины. Потребители: «Сигналы по ассортименту: упущенная выручка
+# (оценка)» (big_number), «Дефициты: отмены/замены товара сборщиком».
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 3 - item_total_price = oi.price_during_order * oi.quantity (у oi.price
+#     смешанная семантика - ни SUM(price), ни SUM(price*quantity); price_during_order
+#     стабильно за единицу). Cancel-фильтр cancel_reason_id IS NULL здесь НЕ уместен:
+#     датасет ПО ОПРЕДЕЛЕНИЮ отбирает отменённые сборщиком позиции (WHERE
+#     cancel_reason_id IS NOT NULL) - это оценка упущенной выручки по дефициту.
+#   Справочник причин - таблица product_cancel_reasons (BUILD_PLAN предполагал
+#     несуществующую cancel_reasons; проверено information_schema - в БД
+#     единая таблица product_cancel_reasons: id/title/is_active/position/
+#     deleted_at). Правило 9 - LEFT JOIN ... AND cr.deleted_at IS NULL.
+#   Правило 2, ИСКЛЮЧЕНИЕ (как в djami_order_items_assembly, Task 2) - НЕ
+#     добавлен WHERE o.parent_order_id IS NULL. Проверено на dev: из 4 позиций
+#     с cancel_reason_id IS NOT NULL - 3 живут на дочерних заказах сплита
+#     (order_id 184->parent 182, order_id 223->parent 222 x2), только 1 на
+#     родителе (order_id 216). Фильтр по родителю вырезал бы 75% сигнала
+#     дефицита ассортимента - сборка происходит на уровне дочернего заказа.
+#
+# Проверено на dev: product_cancel_reasons содержит 5 активных причин (Нет в
+# наличии id=1, Брак товара id=2, Истёк срок годности id=3, Повреждена
+# упаковка id=4, Клиент отказался id=5). Точное название "Нет в наличии"
+# (капитализация как в БД) используется в чарте «упущенная выручка».
+table_name: lj_assembly_stockout_signals
+main_dttm_col: order_date
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      o.shop_id                                   AS shop_id,
+      CAST(o.created_at AS DATE)                  AS order_date,
+      oi.order_id                                 AS order_id,
+      oi.product_id                               AS product_id,
+      p.title                                     AS product_name,
+      (oi.price_during_order * oi.quantity)        AS item_total_price,
+      oi.cancel_reason_id                          AS cancel_reason_id,
+      cr.title                                     AS cancel_reason_name
+  FROM order_items oi
+  JOIN orders o ON o.id = oi.order_id
+  LEFT JOIN products p ON p.id = oi.product_id
+  LEFT JOIN product_cancel_reasons cr ON cr.id = oi.cancel_reason_id AND cr.deleted_at IS NULL
+  WHERE oi.cancel_reason_id IS NOT NULL
+uuid: 7ae780b2-d156-49c3-8031-21bb037bbccf
+columns: []
+metrics: []
+version: 1.0.0

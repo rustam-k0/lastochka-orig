@@ -1,0 +1,4 @@
+extend type Query {
+  "Справочник сетевых принтеров печати (активные) — для печати из приложения"
+  printers:[Printer] @all(scopes: ["active"]) @guard
+}

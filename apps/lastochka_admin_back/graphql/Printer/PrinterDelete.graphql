@@ -1,0 +1,7 @@
+extend type Mutation {
+  PrinterDelete(
+    "ID принтера"
+    id: Int!
+  ): DefaultResponse @field(resolver: "Printer\\PrinterDelete")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "printers")
+}

@@ -1,0 +1,12 @@
+extend type Mutation {
+  OrderCancelReasonCreate(
+    "Причина отмены"
+    title: String!
+    "Активна"
+    is_active: Boolean
+    "Позиция сортировки"
+    position: Int
+  ): DefaultResponse @field(resolver: "OrderCancelReason\\OrderCancelReasonCreate")
+  @validator(class: "OrderCancelReason\\OrderCancelReasonCreateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

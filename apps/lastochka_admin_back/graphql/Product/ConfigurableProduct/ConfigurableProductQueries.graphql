@@ -1,0 +1,7 @@
+extend type Query {
+  admin_configurable_product_item(
+    id: Int! @eq
+  ): ConfigurableProductItem
+    @field(resolver: "ConfigurableProduct\\ConfigurableProductItem")
+    @guard @can(model: "Admin", ability: "onlyShop")
+}

@@ -1,0 +1,6 @@
+mutation ($clientId: ID!, $isB2b: Boolean!) {
+  updateClientB2bStatus(clientId: $clientId, isB2b: $isB2b) {
+    code
+    message
+  }
+}

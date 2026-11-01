@@ -1,0 +1,30 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Группа B
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: COUNT(*)
+    label: Группа B
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: order_date
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: abc_class = 'B'
+  subheader: SKU · около 15% выручки, доля в кольце
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',d'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 0c964450-5adb-4c83-9968-c05efd2a5aed
+uuid: 5466575a-a9cc-515e-98e4-0840b48ee3ca
+version: 1.0.0

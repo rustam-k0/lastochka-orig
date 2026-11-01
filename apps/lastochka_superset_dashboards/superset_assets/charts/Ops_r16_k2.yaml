@@ -1,0 +1,30 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Покрытие геоданными
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(has_coords * is_delivered) / NULLIF(SUM(is_delivered), 0)
+    label: Покрытие геоданными
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: ordered_at
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: point_type = 'Доставка'
+  subheader: '% доставленных'
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: .1%
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 0ad2564e-be6f-53d8-a3ed-a4902d02ed88
+uuid: fb9aa803-62e7-5d0a-b33d-a6bfe7bc315e
+version: 1.0.0

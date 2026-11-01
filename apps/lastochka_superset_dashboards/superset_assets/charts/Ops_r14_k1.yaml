@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Клиентов в выборке
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: COUNT(*)
+    label: Клиентов в выборке
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: last_order_at
+  subheader: На втором срезе есть покупка
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',d'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+uuid: c763be0e-1596-5f12-a348-0aaec9b22fb8
+version: 1.0.0

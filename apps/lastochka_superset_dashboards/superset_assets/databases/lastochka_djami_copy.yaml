@@ -1,0 +1,20 @@
+# Подключение db1 - курьерская система (копия). УЖЕ существует в Superset.
+# Импортёр матчит по uuid и НЕ трогает пароль: реальный пароль берётся из метабазы
+# (см. load_configs → db_passwords). XXXXXXXXXX - стандартная маска Superset (PASSWORD_MASK).
+# ВАЖНО: sqlalchemy_uri обязан совпадать со стором, иначе overwrite сломает подключение.
+database_name: Lastochka Djami (курьерка, копия)
+uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+sqlalchemy_uri: mysql+mysqldb://superset_ro:XXXXXXXXXX@127.0.0.1:3306/lastochka_djami_copy?charset=utf8mb4
+cache_timeout: null
+expose_in_sqllab: true
+allow_run_async: false
+allow_ctas: false
+allow_cvas: false
+allow_dml: false
+allow_file_upload: false
+extra:
+  metadata_params: {}
+  engine_params: {}
+  metadata_cache_timeout: {}
+  schemas_allowed_for_file_upload: []
+version: 1.0.0

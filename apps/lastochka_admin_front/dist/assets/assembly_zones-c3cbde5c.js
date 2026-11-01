@@ -1,0 +1,11 @@
+var s={kind:"Document",definitions:[{kind:"OperationDefinition",operation:"query",variableDefinitions:[],directives:[],selectionSet:{kind:"SelectionSet",selections:[{kind:"Field",name:{kind:"Name",value:"assembly_zones"},arguments:[],directives:[],selectionSet:{kind:"SelectionSet",selections:[{kind:"Field",name:{kind:"Name",value:"id"},arguments:[],directives:[]},{kind:"Field",name:{kind:"Name",value:"title"},arguments:[],directives:[]},{kind:"Field",name:{kind:"Name",value:"color"},arguments:[],directives:[]},{kind:"Field",name:{kind:"Name",value:"is_active"},arguments:[],directives:[]},{kind:"Field",name:{kind:"Name",value:"description"},arguments:[],directives:[]},{kind:"Field",name:{kind:"Name",value:"position"},arguments:[],directives:[]}]}}]}}],loc:{start:0,end:103}};s.loc.source={body:`query {
+  assembly_zones {
+    id
+    title
+    color
+    is_active
+    description
+    position
+  }
+}
+`,name:"GraphQL request",locationOffset:{line:1,column:1}};function a(e,i){if(e.kind==="FragmentSpread")i.add(e.name.value);else if(e.kind==="VariableDefinition"){var n=e.type;n.kind==="NamedType"&&i.add(n.name.value)}e.selectionSet&&e.selectionSet.selections.forEach(function(t){a(t,i)}),e.variableDefinitions&&e.variableDefinitions.forEach(function(t){a(t,i)}),e.definitions&&e.definitions.forEach(function(t){a(t,i)})}var o={};(function(){s.definitions.forEach(function(i){if(i.name){var n=new Set;a(i,n),o[i.name.value]=n}})})();export{s as d};

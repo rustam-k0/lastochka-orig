@@ -1,0 +1,7 @@
+extend type Mutation {
+  CityDelete(
+    "ID города"
+    id: Int!
+  ): DefaultResponse @field(resolver: "App\\GraphQL\\Mutations\\EntityDelete")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

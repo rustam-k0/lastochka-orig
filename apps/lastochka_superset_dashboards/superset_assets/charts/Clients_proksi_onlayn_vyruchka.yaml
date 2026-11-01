@@ -1,0 +1,24 @@
+# Прокси "Онлайн" выручки (см. notes датасета store_monthly_revenue -
+# store_id НЕ маппится на shop_id курьерки, нативный фильтр вкладки «по
+# магазину» этим датасетом не управляет).
+slice_name: 'Прокси ''Онлайн'': выручка интернет-магазина по месяцам'
+viz_type: echarts_timeseries_line
+params:
+  viz_type: echarts_timeseries_line
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(total)
+    label: Выручка storefront, ₽
+    hasCustomLabel: true
+  groupby:
+  - store_id
+  x_axis: order_month
+  time_grain_sqla: P1M
+  adhoc_filters: []
+  row_limit: 10000
+  comparison_type: values
+  x_axis_sort_asc: true
+  y_axis_format: SMART_NUMBER
+dataset_uuid: a1fd27f3-664b-4c5e-b26f-bca1a95d5b2c
+uuid: 3f6928da-d593-4f1b-85fd-852a3cb71789
+version: 1.0.0

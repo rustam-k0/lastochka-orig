@@ -1,0 +1,6 @@
+mutation ($id: Int!, $is_active: Boolean!) {
+  ShopZoneSetActive(id: $id, is_active: $is_active) {
+    code
+    message
+  }
+}

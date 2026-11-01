@@ -1,0 +1,101 @@
+# Сгенерировано scripts/ops_datasets.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками: описание правил расчёта - в генераторе.
+table_name: ops_courier_stats
+main_dttm_col: accepted_at
+database_uuid: cf57c09a-89dc-4014-ad28-5dc33efa8cd9
+schema: null
+sql: "{% set period = get_time_filter('accepted_at', remove_filter=True, target_type='DATETIME') %}\n{% set shops = filter_values('shop_name', remove_filter=True) %}\n{% set zones = filter_values('zone_name', remove_filter=True) %}\nWITH base AS (\nSELECT * FROM (\nSELECT\n    d.id                                            AS delivery_order_id,\n    o.id                                            AS order_id,\n    o.shop_id                                       AS shop_id,\n    s.title                                         AS shop_name,\n    dl.user_id                                      AS courier_id,\n    COALESCE(NULLIF(TRIM(CONCAT_WS(' ', u.surname, u.name)), ''), CONCAT('Курьер #', dl.user_id))           AS courier_name,\n    o.zone_id                                       AS zone_id,\n    COALESCE(z.name, 'Зона не определена')          AS zone_name,\n    d.created_at                                    AS accepted_at,\n    d.started_at                                    AS picked_up_at,\n\
+  \    d.finished_at                                   AS delivered_at,\n    DATE(d.finished_at)                             AS delivered_date,\n    DATE_FORMAT(d.finished_at, '%Y-%m-%d')          AS delivered_day,\n    CASE WHEN o.status_id = 5 THEN 1 ELSE 0 END     AS is_delivered,\n    CASE WHEN o.status_id = 6 THEN 1 ELSE 0 END     AS is_cancelled,\n    CASE WHEN COALESCE(ret.refund_amount, 0) > 0 THEN 1 ELSE 0 END AS has_return,\n    CASE WHEN o.status_id = 5 AND TIMESTAMPDIFF(SECOND, d.created_at, d.finished_at) >= 60\n         THEN TIMESTAMPDIFF(SECOND, d.created_at, d.finished_at) / 60 END AS delivery_minutes,\n    CASE WHEN o.status_id = 5 AND TIMESTAMPDIFF(SECOND, d.created_at, d.finished_at) >= 60\n              AND d.started_at >= d.created_at AND d.started_at <= d.finished_at\n         THEN TIMESTAMPDIFF(SECOND, d.created_at, d.started_at) / 60 END AS accept_to_pickup_minutes,\n    CASE WHEN o.status_id = 5 AND TIMESTAMPDIFF(SECOND, d.created_at, d.finished_at) >= 60\n     \
+  \         AND d.started_at >= d.created_at AND d.started_at <= d.finished_at\n         THEN TIMESTAMPDIFF(SECOND, d.started_at, d.finished_at) / 60 END AS pickup_to_deliver_minutes,\n    CASE WHEN o.status_id = 5 AND TIMESTAMPDIFF(SECOND, d.created_at, d.finished_at) < 60\n         THEN 1 ELSE 0 END                          AS is_backdated,\n    CASE WHEN o.status_id = 5 AND o.slot_end_date IS NOT NULL AND d.finished_at <= o.slot_end_date\n         THEN 1 ELSE 0 END                          AS is_on_time,\n    CASE o.payment_type_id WHEN 1 THEN 'Онлайн' WHEN 2 THEN 'Наличные' ELSE 'Другое' END AS payment_method,\n    CASE WHEN o.status_id = 5 AND o.payment_type_id = 2 THEN 1 ELSE 0 END AS is_cash_delivered,\n    CASE WHEN o.status_id = 5 AND o.payment_type_id = 1 THEN 1 ELSE 0 END AS is_online_delivered,\n    CASE WHEN o.status_id = 5 AND o.payment_type_id = 2\n         THEN o.amount - COALESCE(ret.refund_amount, 0) ELSE 0 END AS cash_amount,\n    CASE WHEN o.status_id = 5 AND o.payment_type_id\
+  \ = 1\n         THEN o.amount - COALESCE(ret.refund_amount, 0) ELSE 0 END AS online_amount,\n    CASE WHEN o.status_id = 5 THEN o.amount - COALESCE(ret.refund_amount, 0) ELSE 0 END AS delivered_amount,\n    CASE WHEN o.status_id = 5 AND o.payment_type_id = 2 AND COALESCE(o.payment_status, '') <> 'paid'\n         THEN 1 ELSE 0 END                          AS is_cash_unconfirmed,\n    o.amount                                        AS order_amount,\n    COALESCE(\n        CAST(JSON_UNQUOTE(JSON_EXTRACT(o.delivery_price_snapshot, '$.base_price')) AS DECIMAL(10, 2)),\n        z.delivery_price\n    )                                               AS zone_tariff,\n    CASE WHEN JSON_EXTRACT(o.delivery_price_snapshot, '$.base_price') IS NULL THEN 1 ELSE 0 END AS tariff_is_approx,\n    CONCAT(COALESCE(z.name, 'Зона не определена'), ' · ', FORMAT(COALESCE(\n        CAST(JSON_UNQUOTE(JSON_EXTRACT(o.delivery_price_snapshot, '$.base_price')) AS DECIMAL(10, 2)),\n        z.delivery_price\n    ), 0,\
+  \ 'ru_RU'), ' ₽')                            AS zone_tariff_label,\n    CASE WHEN o.status_id = 5 THEN COALESCE(\n        CAST(JSON_UNQUOTE(JSON_EXTRACT(o.delivery_price_snapshot, '$.base_price')) AS DECIMAL(10, 2)),\n        z.delivery_price\n    ) ELSE 0 END                                    AS courier_earning,\n    rv.rating                                       AS review_rating\nFROM delivery_orders d\nJOIN orders o      ON o.id = d.order_id\nJOIN deliveries dl ON dl.id = d.delivery_id\nLEFT JOIN users u  ON u.id = dl.user_id\nLEFT JOIN shops s  ON s.id = o.shop_id\nLEFT JOIN shop_zones z ON z.id = o.zone_id\nLEFT JOIN (\n    SELECT ro.id AS order_id, SUM(ri.returned_quantity * ri.price_during_order) AS refund_amount\n    FROM orders ro\n    JOIN order_items ri ON ri.order_id = ro.id\n    WHERE ro.parent_order_id IS NULL AND ri.returned_quantity > 0 AND ri.deleted_at IS NULL\n    GROUP BY ro.id\n) ret ON ret.order_id = o.id\nLEFT JOIN (\n    SELECT order_id, MAX(id) AS review_id FROM\
+  \ order_reviews\n    WHERE deleted_at IS NULL GROUP BY order_id\n) rl ON rl.order_id = o.id\nLEFT JOIN order_reviews rv ON rv.id = rl.review_id\nWHERE o.deleted_at IS NULL\n  AND o.parent_order_id IS NULL\n  AND COALESCE(o.client_id, 0) <> 35\n  AND d.id = (\n      SELECT MAX(d2.id) FROM delivery_orders d2\n      WHERE d2.order_id = d.order_id\n        AND (d2.deleted_at IS NULL OR o.status_id = 6)\n  )\n  AND COALESCE(CONCAT_WS(' ', u.surname, u.name), '') NOT LIKE '%тест%'\n) b\nWHERE 1 = 1\n  {% if period.from_expr %}AND b.accepted_at >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND b.accepted_at < {{ period.to_expr }}{% endif %}\n  {% if shops %}AND b.shop_name IN {{ shops | where_in }}{% endif %}\n  {% if zones %}AND b.zone_name IN {{ zones | where_in }}{% endif %}\n),\nranked AS (\n    SELECT courier_id, delivery_minutes,\n           ROW_NUMBER() OVER (PARTITION BY courier_id ORDER BY delivery_minutes) AS rn,\n           COUNT(*) OVER (PARTITION BY courier_id)\
+  \                          AS cnt\n    FROM base\n    WHERE delivery_minutes IS NOT NULL\n),\npct AS (\n    SELECT courier_id,\n           AVG(CASE WHEN rn IN (FLOOR((cnt + 1) / 2), CEIL((cnt + 1) / 2)) THEN delivery_minutes END) AS median_minutes,\n           MIN(CASE WHEN rn >= CEIL(0.9 * cnt) THEN delivery_minutes END)                          AS p90_minutes\n    FROM ranked\n    GROUP BY courier_id\n),\nsh AS (\n    SELECT user_id AS courier_id,\n           COUNT(*) AS shifts,\n           SUM(TIMESTAMPDIFF(SECOND, created_at, finished_at)) / 3600 AS shift_hours\n    FROM shifts\n    WHERE deleted_at IS NULL AND finished_at IS NOT NULL\n      {% if period.from_expr %}AND created_at >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND created_at < {{ period.to_expr }}{% endif %}\n    GROUP BY user_id\n)\nSELECT\n    MAX(b.accepted_at)                                AS accepted_at,\n    MAX(b.shop_name)                                  AS shop_name,\n    b.courier_name,\n\
+  \    {% if zones %}'Выбранные зоны'{% else %}'Все зоны'{% endif %} AS zone_name,\n    SUM(b.is_delivered)                               AS delivered,\n    SUM(b.is_cancelled)                               AS cancelled,\n    SUM(b.has_return)                                 AS returned,\n    100 * SUM(b.is_cancelled) / NULLIF(COUNT(*), 0)   AS cancel_pct,\n    AVG(b.delivery_minutes)                           AS avg_minutes,\n    MAX(pct.median_minutes)                           AS median_minutes,\n    MAX(pct.p90_minutes)                              AS p90_minutes,\n    AVG(b.accept_to_pickup_minutes)                   AS accept_to_pickup_minutes,\n    AVG(b.pickup_to_deliver_minutes)                  AS pickup_to_deliver_minutes,\n    100 * SUM(b.is_on_time) / NULLIF(SUM(b.is_delivered), 0) AS on_time_pct,\n    SUM(b.is_delivered) / NULLIF(MAX(sh.shift_hours), 0) AS orders_per_hour,\n    SUM(b.is_delivered) / NULLIF(MAX(sh.shifts), 0)   AS orders_per_shift,\n    AVG(b.review_rating)\
+  \                              AS avg_rating\nFROM base b\nLEFT JOIN pct ON pct.courier_id = b.courier_id\nLEFT JOIN sh  ON sh.courier_id = b.courier_id\nGROUP BY b.courier_id, b.courier_name\n"
+uuid: 15a85a3c-0644-53c0-b0c7-d155c71e56b8
+columns:
+- column_name: accepted_at
+  is_dttm: true
+- column_name: shop_name
+  is_dttm: false
+  verbose_name: Магазин
+  groupby: true
+  filterable: true
+- column_name: courier_name
+  is_dttm: false
+  verbose_name: Курьер
+  groupby: true
+  filterable: true
+- column_name: zone_name
+  is_dttm: false
+  verbose_name: Зона
+  groupby: true
+  filterable: true
+- column_name: delivered
+  is_dttm: false
+  verbose_name: Доставлено
+  groupby: true
+  filterable: true
+- column_name: cancelled
+  is_dttm: false
+  verbose_name: Отмены
+  groupby: true
+  filterable: true
+- column_name: returned
+  is_dttm: false
+  verbose_name: Возвраты
+  groupby: true
+  filterable: true
+- column_name: cancel_pct
+  is_dttm: false
+  verbose_name: '% отмен'
+  groupby: true
+  filterable: true
+- column_name: avg_minutes
+  is_dttm: false
+  verbose_name: Среднее, мин
+  groupby: true
+  filterable: true
+- column_name: median_minutes
+  is_dttm: false
+  verbose_name: Медиана, мин
+  groupby: true
+  filterable: true
+- column_name: p90_minutes
+  is_dttm: false
+  verbose_name: p90, мин
+  groupby: true
+  filterable: true
+- column_name: accept_to_pickup_minutes
+  is_dttm: false
+  verbose_name: Принял → забрал, мин
+  groupby: true
+  filterable: true
+- column_name: pickup_to_deliver_minutes
+  is_dttm: false
+  verbose_name: Забрал → выдал, мин
+  groupby: true
+  filterable: true
+- column_name: on_time_pct
+  is_dttm: false
+  verbose_name: В срок, %
+  groupby: true
+  filterable: true
+- column_name: orders_per_hour
+  is_dttm: false
+  verbose_name: Заказов/ч
+  groupby: true
+  filterable: true
+- column_name: orders_per_shift
+  is_dttm: false
+  verbose_name: Заказов/смена
+  groupby: true
+  filterable: true
+- column_name: avg_rating
+  is_dttm: false
+  verbose_name: Оценка
+  groupby: true
+  filterable: true
+metrics: []
+version: 1.0.0

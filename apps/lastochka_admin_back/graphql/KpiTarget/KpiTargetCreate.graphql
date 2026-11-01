@@ -1,0 +1,22 @@
+extend type Mutation {
+  KpiTargetCreate(
+    "Ключ метрики"
+    metric_key: String!
+    "ID магазина (null = вся сеть)"
+    shop_id: Int
+    "ID категории"
+    category_id: Int
+    "Начало периода"
+    period_start: Date!
+    "Конец периода"
+    period_end: Date!
+    "Целевое значение"
+    target_value: Float!
+    "Комментарий"
+    comment: String
+    "Активно"
+    is_active: Boolean
+  ): DefaultResponse @field(resolver: "KpiTarget\\KpiTargetCreate")
+  @validator(class: "KpiTarget\\KpiTargetCreateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

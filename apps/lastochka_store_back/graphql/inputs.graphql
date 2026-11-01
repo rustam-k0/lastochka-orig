@@ -1,0 +1,5 @@
+input DefaultOrdering {
+  orderColumn: String!
+  orderBy: String! @rules(apply: ["in:asc,desc,ASC,DESC"])
+}
+

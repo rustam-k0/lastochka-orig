@@ -1,0 +1,11 @@
+query Roles {
+  roles {
+    id
+    name
+    name_ru
+    scope_type
+    is_system
+    section_keys
+    order_action_keys
+  }
+}

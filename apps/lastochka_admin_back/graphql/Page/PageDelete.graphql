@@ -1,0 +1,8 @@
+extend type Mutation {
+  "Удаление страницы (soft delete). Системную страницу удалить нельзя"
+  PageDelete(
+    "ID страницы"
+    id: Int!
+  ): DefaultResponse @field(resolver: "Page\\PageDelete")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "pages")
+}

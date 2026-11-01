@@ -1,0 +1,4 @@
+type ExplainReason {
+  id:Int
+  title:String
+}

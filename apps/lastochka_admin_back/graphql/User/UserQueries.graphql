@@ -1,0 +1,27 @@
+extend type Query {
+
+  users(
+    ordering:[DefaultOrdering]
+  ):[User] @all(scopes: ["notMe","sorter","accessible"])
+  @guard @can(model: "Admin",ability: "onlyShop") @section(key: "staffs")
+
+  users_paginate(
+    ordering:[DefaultOrdering]
+    search:String
+  ):[User] @paginate(scopes: ["notMe","sorter","search","accessible"])
+  @guard @can(model: "Admin",ability: "onlyShop") @section(key: "staffs")
+
+  user(id:Int @eq):User @find(scopes: ["notMe","accessible"])
+  @guard @can(model: "Admin",ability: "onlyShop") @section(key: "staffs")
+
+  "Сборщики"
+  collectors(
+    shop_id:Int
+  ):[User] @all(scopes: ["notMe","filter","collector","accessible"]) @can(model: "Admin",ability: "onlyShop")
+
+  "Курьеры"
+  couriers(
+    shop_id:Int
+  ):[User] @all(scopes: ["notMe","filter","courier","accessible"]) @can(model: "Admin",ability: "onlyShop")
+
+}

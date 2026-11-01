@@ -1,0 +1,28 @@
+extend type Mutation {
+  "Обновление баннера мерчанта"
+  merchantBannerUpdate(id: Int!, input: MerchantBannerUpdateInput! @spread): MerchantBanner!
+    @field(resolver: "MerchantBanner\\MerchantBannerUpdate")
+    @validator(class: "MerchantBanner\\MerchantBannerUpdateValidator")
+    @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-banners")
+}
+
+input MerchantBannerUpdateInput {
+  "Название баннера"
+  title: String
+  "Тип перехода"
+  link_type: MerchantBannerLinkType
+  "ID товара (обязательно если link_type = product)"
+  product_id: Int
+  "ID категории (обязательно если link_type = category)"
+  category_id: Int
+  "ID категории, на странице которой показывать баннер (null = главная)"
+  display_category_id: Int
+  "Активность"
+  is_active: Boolean
+  "Позиция сортировки"
+  position: Int
+  "Изображение баннера"
+  image: ImgInput
+  "Динамические чекбоксы (JSON-строка map field => bool)"
+  custom_checkboxes: String
+}

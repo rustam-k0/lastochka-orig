@@ -1,0 +1,27 @@
+type AttributeFamily {
+  "ID"
+  id: Int
+  "Название"
+  title: String
+  "Код"
+  code: String
+  "Системное семейство"
+  is_system: Boolean
+  "Позиция"
+  position: Int
+  "Атрибуты семейства (с pivot данными)"
+  attributes: [AttributeFamilyAttribute] @field(resolver: "App\\GraphQL\\Queries\\AttributeFamilyAttributesResolver")
+}
+
+type AttributeFamilyAttribute {
+  "ID pivot"
+  id: Int
+  "Атрибут"
+  attribute: Attribute
+  "Позиция"
+  position: Int
+  "Обязательный"
+  is_required: Boolean
+  "Конфигурируемый (вариативность)"
+  is_configurable: Boolean
+}

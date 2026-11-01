@@ -1,0 +1,5 @@
+type SupplementValue {
+  id:Int
+  title:String
+  price:Int
+}

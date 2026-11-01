@@ -1,0 +1,22 @@
+# Вкладка «Операции». Экономика замен — замен на 100 заказов. Статус: ready
+# (единственная из 4 карточек, не зависящая от допущений о статусах заказа -
+# только от базовой структуры order_items.parent_id/replace_reason_id).
+# ПУСТО-ОЖИДАЕМО: 0 замен на dev (см. assembly_product_stats.yaml) - карточка
+# корректно посчитается и покажет 0.
+slice_name: Экономика замен — замен на 100 заказов
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: 100.0 * COUNT(DISTINCT CASE WHEN is_replaced = 1 THEN order_id END) / NULLIF(COUNT(DISTINCT order_id), 0)
+    label: Замен на 100 заказов
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: за период
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: a39a8a84-d892-4d13-bd24-96190a61989a
+uuid: 59b83044-109b-4711-af7f-87dc22623887
+version: 1.0.0

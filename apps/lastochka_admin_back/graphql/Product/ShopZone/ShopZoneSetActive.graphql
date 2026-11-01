@@ -1,0 +1,10 @@
+extend type Mutation {
+  "Включить/выключить зону доставки"
+  ShopZoneSetActive(
+    "ID зоны"
+    id:Int!
+    "Активность зоны"
+    is_active:Boolean!
+  ):DefaultResponse  @field(resolver:"ShopZone\\ShopZoneSetActive")
+  @guard @can(model: "Admin",ability: "onlyAdmin")
+}

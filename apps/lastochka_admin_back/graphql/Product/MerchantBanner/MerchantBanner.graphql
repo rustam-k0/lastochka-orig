@@ -1,0 +1,45 @@
+"Тип перехода баннера"
+enum MerchantBannerLinkType {
+  NONE @enum(value: "none")
+  PRODUCT @enum(value: "product")
+  CATEGORY @enum(value: "category")
+}
+
+"Баннер мерчанта"
+type MerchantBanner {
+  "ID"
+  id: Int!
+  "Название баннера"
+  title: String!
+  "Тип перехода"
+  link_type: MerchantBannerLinkType!
+  "ID товара (если link_type = product)"
+  product_id: Int
+  "ID категории (если link_type = category)"
+  category_id: Int
+  "ID категории, на странице которой показывается баннер (null = главная)"
+  display_category_id: Int
+  "ID магазина"
+  shop_id: Int!
+  "Активность"
+  is_active: Boolean!
+  "Позиция сортировки"
+  position: Int!
+  "Динамические чекбоксы (JSON-строка map field => bool)"
+  custom_checkboxes: String
+  "Дата создания"
+  created_at: DateTime
+  "Дата обновления"
+  updated_at: DateTime
+
+  "Магазин"
+  shop: Shop! @belongsTo
+  "Связанный товар"
+  product: Product @belongsTo
+  "Связанная категория"
+  category: Category @belongsTo
+  "Категория, на странице которой показывается баннер"
+  display_category: Category @belongsTo(relation: "displayCategory")
+  "Изображение баннера"
+  image: Img @hasOne(relation: "image")
+}

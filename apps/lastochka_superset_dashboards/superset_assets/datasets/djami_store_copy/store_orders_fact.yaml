@@ -1,0 +1,59 @@
+# Вкладка «Стратегия» (по магазину). Заказы storefront (сайт/приложение
+# покупателя) на уровне строки заказа - по определению 'собственный канал'
+# компании (не через агрегатор). Имя датасета verbatim из BUILD_PLAN.
+# Потребитель - «[Временная замена] Динамика заказов и выручки собственного
+# канала по месяцам». Источник: djami_store_copy (db2, MySQL).
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 9 - добавлен o.deleted_at IS NULL (orders поддерживает
+#     SoftDeletes в db2, подтверждено information_schema - колонка есть).
+#
+# ДОПУЩЕНИЕ BUILD_PLAN (не опровергнуто схемой): orders.created_at - обычный
+# timestamp, столбцы subtotal/discount/bonus_spent/delivery_cost/
+# assembly_cost/total/status/is_paid/payment_type - ВСЕ подтверждены
+# реальной схемой djami_store_copy.orders (SHOW COLUMNS на dev), в отличие
+# от большинства других BUILD_PLAN-допущений в этом проекте это совпало
+# один-в-один.
+#
+# ИСПРАВЛЕНО (финальная fix-волна): датасет не фильтровал выручку по статусу -
+# SUM(total) в чарте-потребителе суммировал ВСЕ активные заказы, включая
+# созданные/отменённые/в процессе (не только реализованные), в отличие от
+# соседнего store_monthly_revenue.yaml (там WHERE o.status = 'delivered' -
+# аналог правила 1 для storefront, is_paid НЕ отражает завершённость заказа).
+# Т.к. этот датасет остаётся order-level (питает метрику "Заказов" - COUNT по
+# ВСЕМ активным заказам, не только доставленным), полнострочный WHERE
+# status='delivered' сломал бы её семантику. Вместо этого добавлена колонка
+# delivered_total = CASE WHEN o.status = 'delivered' THEN o.total END (та же
+# семантика status='delivered', что и store_monthly_revenue.yaml, но
+# по-колоночно, чтобы не терять строки для COUNT). Чарт
+# Strategy_dinamika_sobstvennogo_kanala переведён с SUM(total) на
+# SUM(delivered_total).
+#
+# Проверено на dev (SELECT-прогон перед записью YAML): 115 активных заказов
+# (deleted_at IS NULL), период 2026-05-14..2026-07-14 - НЕ пусто.
+table_name: store_orders_fact
+main_dttm_col: order_created_at
+database_uuid: 22c13af4-950d-4550-9f16-1617f4df8d2f
+schema: null
+sql: |
+  SELECT
+      o.id                                          AS order_id,
+      o.store_id                                     AS store_id,
+      o.user_id                                      AS user_id,
+      o.created_at                                    AS order_created_at,
+      o.subtotal                                      AS subtotal,
+      o.discount                                      AS discount,
+      o.bonus_spent                                   AS bonus_spent,
+      o.delivery_cost                                 AS delivery_cost,
+      o.assembly_cost                                 AS assembly_cost,
+      o.total                                         AS total,
+      o.status                                        AS status,
+      o.is_paid                                       AS is_paid,
+      o.payment_type                                  AS payment_type,
+      CASE WHEN o.status = 'delivered' THEN o.total END AS delivered_total
+  FROM orders o
+  WHERE o.deleted_at IS NULL
+uuid: d333eb4f-09f4-4e19-8f2c-11ee93b65365
+columns: []
+metrics: []
+version: 1.0.0

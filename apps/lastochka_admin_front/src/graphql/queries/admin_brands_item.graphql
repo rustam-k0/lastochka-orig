@@ -1,0 +1,24 @@
+query ($id: Int!) {
+  admin_brands_item(id: $id) {
+    id
+    title
+    link
+    country_origin
+    country_origin_code
+    country_production
+    country_production_code
+    certificate_path
+    certificate_name
+    is_active
+    position
+    custom_checkboxes
+    logoImage {
+      id
+      path
+      type
+      alt
+      size
+      origin_name
+    }
+  }
+}

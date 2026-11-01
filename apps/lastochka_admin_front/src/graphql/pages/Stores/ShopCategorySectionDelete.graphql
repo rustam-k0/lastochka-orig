@@ -1,0 +1,12 @@
+mutation (
+  $shop_id: Int!,
+  $category_id: Int!
+) {
+  ShopCategorySectionDelete(
+    shop_id: $shop_id,
+    category_id: $category_id
+  ) {
+    code
+    message
+  }
+}

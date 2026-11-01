@@ -1,0 +1,6 @@
+mutation ($id: Int!) {
+  CityDelete(id: $id) {
+    message
+    code
+  }
+}

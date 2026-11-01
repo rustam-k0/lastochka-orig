@@ -1,0 +1,9 @@
+extend type Mutation {
+  "Начать сборку заказа"
+  OrderPrepare(
+    "ID заказа"
+    id:Int
+  ):DefaultResponse @guard @field(resolver: "Order\\OrderPrepare")
+  @validator(class: "Order\\OrderPrepareValidator")
+  @can(model: "Admin",ability: "onShift")
+}

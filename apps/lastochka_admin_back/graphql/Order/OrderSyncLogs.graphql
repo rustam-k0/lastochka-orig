@@ -1,0 +1,16 @@
+type OrderSyncLog {
+    id: ID!
+    order_id: ID!
+    shop_order_id: ID
+    status: String!
+    attempt_number: Int!
+    message: String
+    created_at: DateTime!
+}
+
+extend type Query {
+    "Журнал синхронизации заказа с 1С (по номеру заказа)"
+    orderSyncLogs(order_number: String!): [OrderSyncLog!]!
+        @field(resolver: "App\\GraphQL\\Queries\\Order\\OrderSyncLogsQuery")
+        @guard
+}

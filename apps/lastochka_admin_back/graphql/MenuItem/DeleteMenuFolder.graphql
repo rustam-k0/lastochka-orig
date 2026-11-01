@@ -1,0 +1,8 @@
+extend type Mutation {
+    deleteMenuFolder(
+        name: String!
+    ): Boolean!
+        @field(resolver: "MenuItem\\DeleteMenuFolder")
+        @guard
+        @can(ability: "manageSettings", model: "Admin")
+}

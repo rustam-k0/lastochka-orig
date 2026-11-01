@@ -1,0 +1,14 @@
+query {
+  admin_shop_alert_rules {
+    id
+    name
+    metric_key
+    comparison
+    threshold_value
+    recommended_action_text
+    shop_id
+    shop { id title }
+    is_active
+    position
+  }
+}

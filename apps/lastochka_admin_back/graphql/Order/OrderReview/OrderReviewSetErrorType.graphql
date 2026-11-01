@@ -1,0 +1,7 @@
+extend type Mutation {
+  "Проставить или снять тип ошибки сборки у отзыва на заказ (null — не ошибка сборки)"
+  setOrderReviewErrorType(id: Int!, error_type: String): OrderReview!
+    @field(resolver: "OrderReview\\SetOrderReviewErrorType")
+    @validator(class: "OrderReview\\SetOrderReviewErrorTypeValidator")
+    @guard @can(model: "Admin", ability: "onlyShop")
+}

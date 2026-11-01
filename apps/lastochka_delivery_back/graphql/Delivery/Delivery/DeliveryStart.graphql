@@ -1,0 +1,9 @@
+extend type Mutation {
+  "Начать доставку"
+  DeliveryStart(
+    "Отправлять TRUE всегда"
+    delivery:Boolean!
+  ):DefaultResponse @guard @field(resolver: "Delivery\\DeliveryStart")
+  @validator(class: "Delivery\\DeliveryStartValidator")
+  @can(model: "Admin",ability: "driverOnShift")
+}

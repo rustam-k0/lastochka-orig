@@ -1,0 +1,11 @@
+extend type Mutation {
+  "Отменить ранее отмеченный возврат позиции (до завершения доставки)"
+  OrderItemReturnCancelByCourier(
+    "DeliveryOrder -> id"
+    delivery_order_id: Int!
+    "OrderItem -> id"
+    order_item_id: Int!
+  ): DefaultResponse @guard @field(resolver: "Order\\OrderItemReturnCancelByCourier")
+  @validator(class: "Order\\OrderItemReturnCancelByCourierValidator")
+  @can(model: "Admin", ability: "driverOnShift")
+}

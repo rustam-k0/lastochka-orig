@@ -1,0 +1,6 @@
+mutation ($id: Int!, $table: String!) {
+  EntityDelete(id: $id, table: $table) {
+    code
+    message
+  }
+}

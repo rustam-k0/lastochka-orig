@@ -1,0 +1,22 @@
+query ($id: Int!) {
+  admin_vacancies_item(id: $id) {
+    id
+    title
+    city
+    work_format
+    employment_type
+    work_schedule
+    salary
+    short_description
+    description
+    responsibilities
+    requirements
+    conditions
+    link_title
+    link_url
+    position
+    is_published
+    published_at
+    created_at
+  }
+}

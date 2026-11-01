@@ -1,0 +1,15 @@
+mutation (
+  $name: String
+  $surname: String
+  $patronymic: String
+  $phone: String
+  $newsletter_subscribed: Boolean
+  $email: String
+  $birthday: DateTime
+  $is_b2b: Boolean
+) {
+  ClientCreate (phone: $phone, surname: $surname, name: $name, patronymic: $patronymic, newsletter_subscribed: $newsletter_subscribed, email: $email, birthday: $birthday, is_b2b: $is_b2b){
+    code
+    message
+  }
+}

@@ -1,0 +1,6 @@
+mutation ($id: Int!, $name: String, $metric_key: String, $comparison: String, $threshold_value: Float, $recommended_action_text: String, $shop_id: Int, $is_active: Boolean, $position: Int) {
+  ShopAlertRuleUpdate(id: $id, name: $name, metric_key: $metric_key, comparison: $comparison, threshold_value: $threshold_value, recommended_action_text: $recommended_action_text, shop_id: $shop_id, is_active: $is_active, position: $position) {
+    code
+    message
+  }
+}

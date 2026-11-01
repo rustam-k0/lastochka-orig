@@ -1,0 +1,10 @@
+mutation (
+  $code: Int
+) {
+  UserPhoneConfirm(
+    code: $code
+  ) {
+    token
+    refresh_token
+  }
+}

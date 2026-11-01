@@ -1,0 +1,27 @@
+mutation ConfigurableProductCreate(
+  $title: String!
+  $description: String
+  # В сетевом каталоге магазин не выбирается: переменная опускается целиком,
+  # бэкенд подставляет якорный магазин сети. Вне сетевого режима отсутствие
+  # магазина по-прежнему отвергается валидацией мутации.
+  $shop_id: Int
+  $category_id: Int
+  $configurable_attribute_ids: [Int!]!
+  $children_ids: [Int!]!
+  $img: ImgInput
+  $images: [ImgInput]
+) {
+  ConfigurableProductCreate(
+    title: $title
+    description: $description
+    shop_id: $shop_id
+    category_id: $category_id
+    configurable_attribute_ids: $configurable_attribute_ids
+    children_ids: $children_ids
+    img: $img
+    images: $images
+  ) {
+    code
+    message
+  }
+}

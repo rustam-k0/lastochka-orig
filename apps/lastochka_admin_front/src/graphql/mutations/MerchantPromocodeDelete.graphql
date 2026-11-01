@@ -1,0 +1,6 @@
+mutation ($id: Int!) {
+  deleteMerchantPromocode(id: $id) {
+    code
+    message
+  }
+}

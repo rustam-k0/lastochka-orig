@@ -1,0 +1,34 @@
+extend type Query {
+  collector(
+    order_id:Int!
+  ):User @guard
+
+  courier(
+    order_id:Int!
+  ):User @guard
+
+  """
+  Курьеры на смене магазина текущего сборщика (экран назначения курьеров:
+  модули heavy_orders и courier_assignment). Занятые курьеры остаются в выдаче
+  с is_busy = true — экран показывает их как «На заказе» и блокирует выбор.
+  Пустой список = на смене нет ни одного курьера
+  """
+  shift_couriers: [User]
+  @guard
+  @can(model: "Admin", ability: "collectorOnShift")
+
+  "Включён ли модуль «Тяжёлые заказы» (heavy_orders в project_modules) — для гейтинга экранов в мобильном приложении"
+  heavy_orders_enabled: Boolean
+
+  "Включён ли модуль «Назначение курьера сборщиком» (courier_assignment в project_modules) — для гейтинга экранов в мобильном приложении"
+  courier_assignment_enabled: Boolean
+
+  "Включён ли модуль «Списание оплаты сборщиком» (collector_payment в project_modules) — для гейтинга кнопки «Списать оплату» в мобильном приложении"
+  collector_payment_enabled: Boolean
+
+  "Включён ли модуль «Оформление заказа без слотов» (checkout_without_slots в project_modules) — при true приложения сборщика/курьера не показывают слот доставки заказа (доставка в ближайшее время)"
+  checkout_without_slots_enabled: Boolean
+
+  "Включён ли модуль «Честный знак» (honest_sign в project_modules) — при true приложение сборщика требует скан кода маркировки у товаров с is_marked (MarkingCodeScan) перед ProductConfirm"
+  honest_sign_enabled: Boolean
+}

@@ -1,0 +1,4 @@
+extend type Query {
+  "Справочник причин замены товара (активные) — для выбора сборщиком"
+  product_replace_reasons:[ProductReplaceReason] @all(scopes: ["active"]) @guard
+}

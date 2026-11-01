@@ -1,0 +1,8 @@
+type Manufacturer {
+  "ID"
+  id:Int
+  "Название"
+  title:String
+  "Иконка (SVG)"
+  icon:String
+}

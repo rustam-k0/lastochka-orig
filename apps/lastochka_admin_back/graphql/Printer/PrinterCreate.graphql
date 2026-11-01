@@ -1,0 +1,14 @@
+extend type Mutation {
+  PrinterCreate(
+    "Название принтера"
+    title: String!
+    "IP-адрес"
+    ip_address: String!
+    "Порт"
+    port: Int!
+    "Активен"
+    is_active: Boolean
+  ): DefaultResponse @field(resolver: "Printer\\PrinterCreate")
+  @validator(class: "Printer\\PrinterCreateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "printers")
+}

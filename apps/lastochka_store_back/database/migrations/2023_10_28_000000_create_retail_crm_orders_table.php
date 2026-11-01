@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateRetailCrmOrdersTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('retail_crm_orders', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('order_id')->unique();
+            $table->string('retail_crm_id')->unique();
+            $table->string('retail_crm_status');
+            $table->timestamp('last_sync_at')->nullable();
+            $table->timestamps();
+
+            $table->foreign('order_id')
+                ->references('id')
+                ->on('orders')
+                ->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('retail_crm_orders');
+    }
+}

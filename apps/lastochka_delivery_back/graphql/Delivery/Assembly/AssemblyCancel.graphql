@@ -1,0 +1,9 @@
+extend type Mutation {
+  "Приостановить сборку"
+  AssemblyCancel(
+    "ID сборки"
+    id:Int
+  ):DefaultResponse @guard @field(resolver: "Assembly\\AssemblyCancel")
+  @validator(class: "Assembly\\AssemblyCancelValidator")
+  @can(model: "Admin",ability: "onShift")
+}

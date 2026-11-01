@@ -1,0 +1,33 @@
+extend type Query {
+
+  "Список клиентов"
+  admin_clients(
+    title:String
+    is_b2b:Boolean
+  ):[Client] @all(scopes: ["filter","sorter"])
+  @guard @can(ability: "onlyAdmin",model: "Admin") @section(key: "clients")
+
+  "Список клиентов. Пагинация"
+  admin_clients_paginate(
+    ordering:[DefaultOrdering]
+    title:String
+    is_b2b:Boolean
+  ):[Client] @paginate(scopes: ["filter","sorter"])
+  @guard @can(ability: "onlyAdmin",model: "Admin") @section(key: "clients")
+
+  "Список клиентов. Пагинация"
+  admin_clients_item(
+    id:Int! @eq
+  ):Client @find
+  @guard @can(ability: "onlyAdmin",model: "Admin") @section(key: "clients")
+
+  clients_count:Int @count(model: "Client")
+  @guard @can(ability: "onlyAdmin",model: "Admin") @section(key: "clients")
+
+  "История операций по баллам клиента. Пагинация"
+  admin_client_bonus_transactions_paginate(
+    client_id:Int! @eq
+  ):[ClientBonusTransaction] @paginate(scopes: ["latestFirst"], defaultCount: 25)
+  @guard @can(ability: "onlyAdmin",model: "Admin") @section(key: "clients")
+
+}

@@ -1,0 +1,44 @@
+"Статус акции мерчанта"
+enum MerchantSaleStatus {
+  UPCOMING @enum(value: "upcoming")
+  ACTIVE @enum(value: "active")
+  EXPIRED @enum(value: "expired")
+}
+
+"Акция мерчанта"
+type MerchantSale {
+  "ID"
+  id: Int!
+  "Название акции"
+  title: String!
+  "Описание акции"
+  description: String
+  "ID магазина"
+  shop_id: Int!
+  "Процент скидки"
+  discount_percent: Int!
+  "Дата и время начала акции"
+  starts_at: DateTime!
+  "Дата и время окончания акции"
+  ends_at: DateTime!
+  "Активность"
+  is_active: Boolean
+  "Динамические чекбоксы (JSON-строка map field => bool)"
+  custom_checkboxes: String
+  "Дата создания"
+  created_at: DateTime
+  "Дата обновления"
+  updated_at: DateTime
+
+  "Вычисляемый статус: upcoming, active, expired"
+  status: MerchantSaleStatus! @method(name: "getStatusAttribute")
+  "Количество товаров в акции"
+  products_count: Int @method(name: "getProductsCountAttribute")
+
+  "Изображение акции"
+  image: Img @hasOne(relation: "image")
+  "Магазин"
+  shop: Shop! @belongsTo
+  "Товары акции"
+  products: [Product!] @belongsToMany
+}

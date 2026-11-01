@@ -1,0 +1,16 @@
+{
+  "name": "Backend",
+  "schemaPath": "./src/graphql/schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "PurchaseEndPoint": {
+        "url": "https://cronmarket.comrades.dev/graphql-purchase",
+        "introspect": false
+      },
+      "AdminEndPoint": {
+        "url": "https://cronmarket.comrades.dev/graphql-admin",
+        "introspect": false
+      }
+    }
+  }
+}

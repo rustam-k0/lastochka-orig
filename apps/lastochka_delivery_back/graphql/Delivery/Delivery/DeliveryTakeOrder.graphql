@@ -1,0 +1,8 @@
+extend type Mutation {
+  "Взять заказ в доставку"
+  DeliveryTakeOrder(
+    order_id:Int
+  ):DefaultResponse @guard @field(resolver: "Delivery\\DeliveryTakeOrder")
+  @validator(class: "Delivery\\DeliveryTakeOrderValidator")
+  @can(model: "Admin",ability: "driverOnShift")
+}

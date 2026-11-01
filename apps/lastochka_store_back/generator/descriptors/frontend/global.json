@@ -1,0 +1,113 @@
+{
+  "routes": [
+    {
+      "path": "/admin/category/:id?",
+      "name": "categories",
+      "allowedRoles": [
+        "*"
+      ]
+    },
+    {
+      "path": "/admin/test",
+      "name": "test",
+      "allowedRoles": [
+        "*"
+      ]
+    },
+    {
+      "path": "/admin",
+      "name": "home",
+      "allowedRoles": [
+        "*"
+      ]
+    }
+  ],
+  "addModalLinks": [
+    {
+      "to": {
+        "name": "course-list"
+      },
+      "allowedRoles": [
+        "*"
+      ],
+      "title": "Список курсов"
+    },
+    {
+      "to": {
+        "name": "course-list"
+      },
+      "allowedRoles": [
+        "*"
+      ],
+      "title": "Вложенный 1"
+    },
+    {
+      "to": {
+        "name": "course-list"
+      },
+      "allowedRoles": [
+        "*"
+      ],
+      "title": "Вложенный 2"
+    }
+  ],
+  "headerLinks": [
+    {
+      "title": "Список курсов",
+      "to": {
+        "name": "course-list"
+      },
+      "icon": {
+        "category": "system",
+        "name": "alarm-line"
+      },
+      "allowedRoles": [
+        "*"
+      ],
+      "list": [
+        {
+          "title": "Вложенный 1",
+          "to": {
+            "name": "course-list"
+          },
+          "allowedRoles": [
+            "*"
+          ]
+        },
+        {
+          "title": "Вложенный 2",
+          "to": {
+            "name": "course-list"
+          },
+          "allowedRoles": [
+            "*"
+          ],
+          "list": [
+            {
+              "title": "Под под под под раздел",
+              "to": {
+                "name": "course-list"
+              },
+              "allowedRoles": [
+                "*"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Тест",
+      "to": {
+        "name": "test"
+      },
+      "icon": {
+        "category": "system",
+        "name": "alarm-line"
+      },
+      "allowedRoles": [
+        "*"
+      ]
+    }
+  ]
+}

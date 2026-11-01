@@ -1,0 +1,82 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Магазин → район
+description: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - shop_name
+  - district
+  metrics:
+  - &id001
+    expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN is_delivered = 1 THEN order_id END)
+    label: Заказов
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(is_delivered) / NULLIF(SUM(SUM(is_delivered)) OVER (), 0)
+    label: Доля
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: AVG(CASE WHEN is_delivered = 1 THEN distance_km END)
+    label: Средняя дальность, км
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: AVG(CASE WHEN is_delivered = 1 THEN delivery_minutes END)
+    label: Среднее время, мин
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: AVG(CASE WHEN is_delivered = 1 THEN total END)
+    label: Средний чек, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(is_cancelled) / NULLIF(COUNT(*), 0)
+    label: '% отмен'
+    hasCustomLabel: true
+  percent_metrics: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: ordered_at
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: point_type = 'Доставка'
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: false
+  show_totals: false
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  order_desc: true
+  column_config:
+    Заказов:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    Доля:
+      d3NumberFormat: .1%
+      horizontalAlign: right
+    Средняя дальность, км:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+    Среднее время, мин:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+    Средний чек, ₽:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    '% отмен':
+      d3NumberFormat: .1%
+      horizontalAlign: right
+  timeseries_limit_metric: *id001
+cache_timeout: null
+dataset_uuid: 0ad2564e-be6f-53d8-a3ed-a4902d02ed88
+uuid: 6704f827-3f73-5ec5-a2c8-943c7187bbac
+version: 1.0.0

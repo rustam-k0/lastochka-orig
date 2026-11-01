@@ -1,0 +1,6 @@
+mutation($items: [ServiceEmailInput]) {
+  ServiceEmailUpdate(items: $items) {
+    message
+    code
+  }
+}

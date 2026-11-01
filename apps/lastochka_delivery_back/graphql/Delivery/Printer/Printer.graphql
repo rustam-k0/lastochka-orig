@@ -1,0 +1,6 @@
+type Printer {
+  id:Int
+  title:String
+  ip_address:String
+  port:Int
+}

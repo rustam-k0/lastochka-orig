@@ -1,0 +1,7 @@
+extend type Query {
+
+  countries(
+    ordering:[DefaultOrdering]
+  ):[Country] @all(scopes: ["sorter","filter",])
+
+}

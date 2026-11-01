@@ -1,0 +1,20 @@
+extend type Query {
+  "Список отзывов на товары с пагинацией"
+  productReviews(
+    shop_id: Int
+    product_id: Int
+    is_published: Boolean
+    rating: Int
+    rating_min: Int
+    rating_max: Int
+    search: String
+    ordering: [DefaultOrdering]
+  ): [ProductReview] @paginate(defaultCount: 10, scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "product-reviews")
+
+  "Получение отзыва на товар по ID"
+  productReview(
+    id: Int @eq
+  ): ProductReview @find
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "product-reviews")
+}

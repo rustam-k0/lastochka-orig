@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Собрано заказов
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN is_finished = 1 THEN order_id END)
+    label: Собрано заказов
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: assembly_started_at
+  subheader: Только завершённые задачи
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',d'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 7f64de2b-ba11-4e40-a875-f5f51593a14d
+uuid: 7efc34b9-7a87-58a7-b878-f1afbb1de4ac
+version: 1.0.0

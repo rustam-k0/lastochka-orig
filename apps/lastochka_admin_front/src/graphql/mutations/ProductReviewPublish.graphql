@@ -1,0 +1,6 @@
+mutation PublishProductReview($id: Int!, $is_published: Boolean!) {
+  publishProductReview(id: $id, is_published: $is_published) {
+    id
+    is_published
+  }
+}

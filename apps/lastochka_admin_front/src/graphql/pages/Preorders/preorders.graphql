@@ -1,0 +1,27 @@
+query preorders($page: Int, $perPage: Int, $status: String, $shop_id: Int) {
+  preorders(page: $page, perPage: $perPage, status: $status, shop_id: $shop_id, orderBy: [{ column: CREATED_AT, order: DESC }]) {
+    data {
+      id
+      full_name
+      phone
+      email
+      quantity
+      comment
+      status
+      created_at
+      product {
+        id
+        title
+      }
+      shop {
+        id
+        title
+      }
+    }
+    paginatorInfo {
+      currentPage
+      lastPage
+      total
+    }
+  }
+}

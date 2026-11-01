@@ -1,0 +1,6 @@
+mutation($id: Int, $courier_id: Int) {
+  OrderCourierUpdate(id: $id, courier_id: $courier_id) {
+    code
+    message
+  }
+}

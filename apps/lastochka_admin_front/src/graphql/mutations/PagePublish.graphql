@@ -1,0 +1,7 @@
+mutation ($id: Int!) {
+  PagePublish(id: $id) {
+    id
+    is_published
+    published_at
+  }
+}

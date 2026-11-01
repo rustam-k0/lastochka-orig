@@ -1,0 +1,43 @@
+"Отзыв на заказ"
+type OrderReview {
+  "ID отзыва"
+  id: Int!
+  "ID заказа"
+  order_id: Int!
+  "Сквозной номер заказа (= номер заказа в сторфронте)"
+  order_number: String @with(relation: "order")
+  "ID клиента (автор отзыва)"
+  user_id: Int
+  "Оценка (1-5)"
+  rating: Int!
+  "Текст отзыва"
+  description: String
+  "Имя автора"
+  author_name: String
+  "Телефон автора"
+  author_phone: String
+  "Источник отзыва"
+  source: String
+  "Тип ошибки сборки: shortage (недовоз), wrong_item (пересорт), expired (просрочка), other (другое); null — не ошибка сборки"
+  error_type: String
+  "Название типа ошибки сборки"
+  error_type_label: String
+  "Дата создания"
+  created_at: DateTime
+  "Дата обновления"
+  updated_at: DateTime
+  "Дата удаления"
+  deleted_at: DateTime
+
+  "Клиент, оставивший отзыв"
+  client: Client @belongsTo
+}
+
+
+"Тип ошибки сборки по отзыву на заказ"
+type OrderReviewErrorTypeOption {
+  "Код: shortage, wrong_item, expired, other"
+  value: String!
+  "Название"
+  label: String!
+}

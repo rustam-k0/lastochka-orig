@@ -1,0 +1,23 @@
+type ProductSet {
+  id:Int @cacheKey
+  "Название"
+  title:String
+  "Описание"
+  description:String
+  "Белки"
+  proteins:String
+  "Жиры"
+  fats:String
+  "Углеводы"
+  carbohydrates:String
+  "Калории"
+  calories:String
+  "Товары"
+  products:[Product] @belongsToMany
+  "Количество товаров в наборе"
+  products_count:Int @count(relation: "products")
+  "Категории"
+  categories:[SetCategory] @belongsToMany
+  "Изображение"
+  img: Img @hasOne(relation:"img")
+}

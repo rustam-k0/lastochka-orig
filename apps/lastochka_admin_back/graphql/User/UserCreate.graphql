@@ -1,0 +1,28 @@
+extend type Mutation {
+
+  UserCreate(
+    "Имя"
+    name:String
+    "Фамилия"
+    surname:String
+    "Отчество"
+    patronymic:String
+    "Номер телефона"
+    phone:String
+    "Почта"
+    email:String
+    "ID роли"
+    role_id:Int
+    "Магазины, в которых работает пользователь"
+    shops:[Int]
+    "Пароль"
+    password:String
+    "Подтверждение пароля"
+    password_confirmation:String
+    "Отправить учётные данные по SMS (по умолчанию: true если автогенерация, false если ручной)"
+    send_credentials:Boolean
+  ):DefaultResponse @field(resolver:"User\\UserCreate")
+  @validator(class:"User\\UserCreateValidator")
+  @guard @can(model: "Admin",ability: "onlyShop") @section(key: "staffs")
+
+}

@@ -1,0 +1,6 @@
+type OrderItemSupplement {
+  id:Int
+  supplement:Supplement @belongsTo
+  amount:Int
+  values:[SupplementValue] @belongsToMany
+}

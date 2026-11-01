@@ -1,0 +1,44 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/php/Dockerfile
+    container_name: ${COMPOSE_PROJECT_NAME}
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www/html
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./:/var/www/html
+      - ./storage/logs:/var/www/html/storage/logs
+    networks:
+      - app-network
+      - alladin_retail
+
+  nginx:
+    image: nginx:alpine
+    container_name: ${COMPOSE_PROJECT_NAME}-nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8180:80"
+    volumes:
+      - ./:/var/www/html
+      - ./.docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+      - alladin_retail
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - app
+
+networks:
+  app-network:
+    driver: bridge
+  alladin_retail:
+    external: true

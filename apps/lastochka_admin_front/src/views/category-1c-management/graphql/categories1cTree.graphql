@@ -1,0 +1,3 @@
+query CategoriesOneCTree($shop_id: Int!) {
+  categories_1c_tree(shop_id: $shop_id)
+}

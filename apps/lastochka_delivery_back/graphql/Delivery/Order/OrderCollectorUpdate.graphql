@@ -1,0 +1,11 @@
+extend type Mutation {
+  "Сменить сборщика в заказе"
+  OrderCollectorUpdate(
+    "ID заказа"
+    id:Int
+    "ID сборщика"
+    collector_id:Int
+  ):DefaultResponse @guard @field(resolver: "Order\\OrderCollectorUpdate")
+  @validator(class: "Order\\OrderCollectorUpdateValidator")
+  @can(model: "Admin",ability: "assignCollector")
+}

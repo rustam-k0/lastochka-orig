@@ -1,0 +1,7 @@
+extend type Mutation {
+  OperatingCostDelete(
+    "ID правила"
+    id: Int!
+  ): DefaultResponse @field(resolver: "OperatingCost\\OperatingCostDelete")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

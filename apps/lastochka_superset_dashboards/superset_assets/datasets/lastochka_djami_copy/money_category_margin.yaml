@@ -1,0 +1,68 @@
+# Вкладка «Деньги» (по магазину). Маржа по категориям - item-level, единственный
+# потребитель - чарт «Маржа по категориям» (dist_bar). СНЯТО с blocked правилом 8
+# (products.cost_price теперь существует) + правилом 5 (категории через pivot).
+# Имя датасета новое (BUILD_PLAN не давал реального имени - плейсхолдер
+# money_category_margin_NOT_AVAILABLE был для полностью заблокированного виджета).
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 2 - WHERE o.parent_order_id IS NULL.
+#   Правило 1 - WHERE o.status_id = 5 (маржа считается по реализованной выручке).
+#   Правило 3 - item_revenue = oi.price_during_order * oi.quantity. У oi.price
+#     СМЕШАННАЯ семантика (unit при создании, итог после сборки) - нельзя ни
+#     SUM(price), ни SUM(price*quantity); price_during_order стабильно за единицу.
+#     Реализованная выручка -> WHERE ... AND oi.status_id <> 3 (отменённые при
+#     сборке позиции не входят в выручку/COGS категории). ИСПРАВЛЕНО (ревью
+#     Task 8, round 2): было oi.cancel_reason_id IS NULL - унифицировано на
+#     канонический фильтр status_id<>3 (cancel_reason_id заполнен лишь у 1 из
+#     15 отменённых позиций на dev, вырезал бы почти ничего).
+#   Правило 5 - категория через pivot category_product (первая категория =
+#     минимальный position, tie-break по category_id при равном position -
+#     см. финальную fix-волну ниже), products.category_id НЕ существует.
+#   Правило 8 - item_cogs = oi.quantity * p.cost_price, NULL-safe (пока
+#     cost_price пуст у ВСЕХ 13042 товаров на dev - item_cogs = NULL везде,
+#     revenue по категориям считается, margin_pct в чарте = NULL до 1С).
+#   Правило 9 - categories.deleted_at IS NULL.
+# Наблюдение по схеме: categories.name НЕ существует (только categories.title) -
+# BUILD_PLAN (правило 5 в conversion-rules.md) ошибочно предполагал c.name.
+#
+# ИСПРАВЛЕНО (финальная fix-волна, правило 5 - pivot tie-break): старый JOIN
+# cp.position = (SELECT MIN(position)...) недетерминирован при НЕСКОЛЬКИХ
+# category_product строках товара с ОДИНАКОВЫМ минимальным position (тогда
+# LEFT JOIN расфанивается на несколько строк -> задвоение item_revenue/
+# item_cogs при агрегации). Заменено на коррелированный подзапрос
+# cp.category_id = (SELECT cp2.category_id FROM category_product cp2 WHERE
+# cp2.product_id = p.id ORDER BY cp2.position, cp2.category_id LIMIT 1) -
+# гарантированно возвращает ОДНУ строку (position, затем category_id как
+# детерминированный tie-break).
+table_name: money_category_margin
+main_dttm_col: order_date
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      c.id                                        AS category_id,
+      c.title                                      AS category_name,
+      o.shop_id                                    AS shop_id,
+      sh.title                                      AS shop_name,
+      DATE(COALESCE(o.paid_at, o.finished_at))     AS order_date,
+      (oi.price_during_order * oi.quantity)        AS item_revenue,
+      (oi.quantity * p.cost_price)                 AS item_cogs
+  FROM order_items oi
+  JOIN orders o ON o.id = oi.order_id
+  LEFT JOIN shops sh ON sh.id = o.shop_id
+  LEFT JOIN products p ON p.id = oi.product_id
+  LEFT JOIN category_product cp
+         ON cp.product_id = p.id
+        AND cp.category_id = (
+              SELECT cp2.category_id
+              FROM category_product cp2
+              WHERE cp2.product_id = p.id
+              ORDER BY cp2.position, cp2.category_id
+              LIMIT 1
+            )
+  LEFT JOIN categories c ON c.id = cp.category_id AND c.deleted_at IS NULL
+  WHERE o.parent_order_id IS NULL AND o.status_id = 5 AND oi.status_id <> 3
+uuid: d008a91e-bcfc-4d7a-9126-9b266fe0b8cb
+columns: []
+metrics: []
+version: 1.0.0

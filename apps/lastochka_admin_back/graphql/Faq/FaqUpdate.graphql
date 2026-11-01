@@ -1,0 +1,14 @@
+extend type Mutation {
+  FaqUpdate(
+    "ID вопроса"
+    id: Int!
+    "Вопрос"
+    question: String
+    "Ответ"
+    answer: String
+    "Активен"
+    is_active: Boolean
+  ): DefaultResponse @field(resolver: "Faq\\FaqUpdate")
+  @validator(class: "Faq\\FaqUpdateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

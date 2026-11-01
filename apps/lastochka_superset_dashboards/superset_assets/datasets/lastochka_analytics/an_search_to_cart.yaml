@@ -1,0 +1,54 @@
+# Вкладка «Спрос» (по магазину). Связка поискового события с последующим
+# добавлением товара в корзину той же сессией в течение 30 минут, для
+# search-to-cart конверсии. db3 Postgres.
+#
+# Конверсии применены (docs/conversion-rules.md, правило 6):
+#   event_type 'b2c.search.performed'/'b2c.cart.item_added' (не существуют)
+#     -> 'search.performed'/'cart.item_added' (whitelist config/analytics.php
+#     + фактические строки на dev).
+#   ae.shop_id -> ae.store_id.
+#
+# ДОПУЩЕНИЕ (перенесено из BUILD_PLAN, не опровергнуто и не подтверждено):
+# сам механизм привязки поиска к последующему cart.item_added по session_id +
+# 30-минутное окно - эвристика, а не задокументированный контракт. Payload
+# cart.item_added на dev НЕ содержит ссылки на предшествующий поиск (только
+# product_id/quantity/client_id/device_client_id) - привязка возможна только
+# через session_id + временное окно, как и предполагал BUILD_PLAN.
+#
+# ПУСТО-ОЖИДАЕМО: на dev 1 search.performed и 1 cart.item_added в одной
+# сессии в пределах 80 секунд - выборка из 1 строки, конверсия либо 100%,
+# либо 0% в зависимости от периода фильтра, статистической значимости нет.
+table_name: an_search_to_cart
+main_dttm_col: event_date
+database_uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+schema: null
+sql: |
+  WITH searches AS (
+      SELECT session_id, occurred_at AS search_at, payload->>'query' AS search_query, store_id
+      FROM analytics_events
+      WHERE event_type = 'search.performed'
+  ),
+  cart_adds AS (
+      SELECT session_id, occurred_at AS cart_at
+      FROM analytics_events
+      WHERE event_type = 'cart.item_added'
+  )
+  SELECT
+      s.store_id                                   AS store_id,
+      CAST(s.search_at AS DATE)                     AS event_date,
+      s.session_id                                  AS session_id,
+      s.search_query                                AS search_query,
+      MIN(c.cart_at)                                AS first_cart_add_at,
+      CASE
+          WHEN MIN(c.cart_at) IS NOT NULL
+           AND MIN(c.cart_at) > s.search_at
+           AND MIN(c.cart_at) < s.search_at + INTERVAL '30 minutes'
+          THEN 1 ELSE 0
+      END AS converted_to_cart
+  FROM searches s
+  LEFT JOIN cart_adds c ON c.session_id = s.session_id
+  GROUP BY s.store_id, s.search_at, s.session_id, s.search_query
+uuid: 78814ce4-81b6-4746-8941-124f468929ad
+columns: []
+metrics: []
+version: 1.0.0

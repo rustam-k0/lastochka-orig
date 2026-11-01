@@ -1,0 +1,16 @@
+query {
+  convertors {
+    id
+    type_id
+    step
+    title
+    categories {
+      id
+      title
+    }
+    products {
+      id
+      title
+    }
+  }
+}

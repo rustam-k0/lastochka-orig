@@ -1,0 +1,9 @@
+extend type Query {
+  productIssueReports(
+    page: Int
+    perPage: Int
+    type: String @eq
+    shop_id: Int @eq
+    product_id: Int @eq
+  ): [ProductIssueReport!]! @paginate(defaultCount: 20, scopes: ["latestFirst"]) @guard @can(ability: "onlyAdmin", model: "Admin")
+}

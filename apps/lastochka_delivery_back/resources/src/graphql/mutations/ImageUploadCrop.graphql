@@ -1,0 +1,26 @@
+mutation (
+  $image: Upload!
+  $x: Int!
+  $y: Int!
+  $width: Int!
+  $height: Int!
+  $rotate: Int!
+  $scaleX: Int!
+  $scaleY: Int!
+) {
+  ImageUploadCrop(
+    image: $image
+    x: $x
+    y: $y
+    width: $width
+    height: $height
+    rotate: $rotate
+    scaleX: $scaleX
+    scaleY: $scaleY
+  ) {
+    path
+    origin_name
+    type
+    size
+  }
+}

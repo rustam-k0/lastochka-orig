@@ -1,0 +1,6 @@
+mutation ProductGroupFilterValueCreate($product_group_filter_id: Int!, $value: String!, $image_path: String, $position: Int, $is_active: Boolean) {
+  ProductGroupFilterValueCreate(product_group_filter_id: $product_group_filter_id, value: $value, image_path: $image_path, position: $position, is_active: $is_active) {
+    code
+    message
+  }
+}

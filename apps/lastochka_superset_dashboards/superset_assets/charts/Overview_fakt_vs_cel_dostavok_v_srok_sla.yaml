@@ -1,0 +1,20 @@
+slice_name: 'Факт vs цель: % доставок в срок (SLA)'
+viz_type: gauge_chart
+params:
+  viz_type: gauge_chart
+  metric:
+    expressionType: SQL
+    sqlExpression: AVG(is_on_time_delivery) * 100.0
+    label: SLA, %
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters: []
+  row_limit: 10
+  start_angle: 225
+  end_angle: -45
+  min_val: 0
+  max_val: 100
+  value_formatter: '{value}'
+dataset_uuid: d991fd22-7a5f-4c1f-977b-866968e97b0c
+uuid: 8a7d5e8f-1c74-48b3-827d-9654e8367644
+version: 1.0.0

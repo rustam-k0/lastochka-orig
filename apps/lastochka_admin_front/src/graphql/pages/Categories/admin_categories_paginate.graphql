@@ -1,0 +1,40 @@
+query (
+  $first: Int
+  $page: Int
+  $ordering: [DefaultOrdering]
+) {
+  admin_categories_paginate (
+    first: $first
+    page: $page
+    ordering: $ordering
+  ) {
+    data {
+      id
+      title
+      link
+      child_categories {
+        id
+        title
+        link
+      }
+      parent {
+        id
+        title
+        link
+      }
+      important
+      site_catalog_img {
+        id
+        path
+        origin_name
+        alt
+        size
+        type
+      }
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}
+

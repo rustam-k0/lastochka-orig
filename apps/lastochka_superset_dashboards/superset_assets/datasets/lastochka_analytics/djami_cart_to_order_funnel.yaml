@@ -1,0 +1,32 @@
+# Вкладка «Обзор» (по магазину). Гейдж «Конверсия корзина -> заказ %», db3 Postgres.
+#
+# Конверсии применены (docs/conversion-rules.md, правило 6):
+#   ae.shop_id (не существует, колонки нет) -> ae.store_id (varchar).
+#   event_type IN ('b2c.add_to_cart','b2c.cart_updated','b2c.checkout_started',
+#     'order.created') (допущения BUILD_PLAN, не существуют) -> реальные значения
+#     'cart.item_added', 'checkout.started', 'order.created' (проверено
+#     SELECT DISTINCT event_type на dev lastochka_analytics).
+#
+# ПУСТО-ОЖИДАЕМО: b2c-поток единичный (мобилка/сайт не выпущены в полную
+# эксплуатацию) - на dev всего 1 событие cart.item_added, 1 checkout.started,
+# 8 order.created (из них 7 без session_id - атрибуция заказа к сессии корзины
+# отсутствует). Конверсия посчитается по join через session_id и покажет
+# околонулевую выборку - это норма для текущего состояния данных, не баг датасета.
+table_name: djami_cart_to_order_funnel
+main_dttm_col: occurred_at
+database_uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+schema: null
+sql: |
+  SELECT
+      ae.store_id      AS store_id,
+      ae.occurred_at   AS occurred_at,
+      ae.session_id    AS session_id,
+      ae.client_id     AS client_id,
+      ae.order_id      AS order_id,
+      ae.event_type    AS event_type
+  FROM analytics_events ae
+  WHERE ae.event_type IN ('cart.item_added', 'checkout.started', 'order.created')
+uuid: 162bb79b-22a4-4bf5-878a-e0e2908e62b8
+columns: []
+metrics: []
+version: 1.0.0

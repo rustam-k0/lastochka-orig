@@ -1,0 +1,10 @@
+extend type Mutation {
+  "Завершить сборку"
+  AssemblyStartCooking(
+    "ID сборки"
+    id:Int
+  ):DefaultResponse @guard @field(resolver: "Assembly\\AssemblyStartCooking")
+  @validator(class: "Assembly\\AssemblyStartCookingValidator")
+  @can(model: "Admin",ability: "onShift")
+
+}

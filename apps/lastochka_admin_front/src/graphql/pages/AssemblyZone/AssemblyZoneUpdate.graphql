@@ -1,0 +1,20 @@
+mutation (
+  $id: Int!
+  $title: String
+  $color: String
+  $is_active: Boolean
+  $description: String
+  $position: Int
+) {
+  AssemblyZoneUpdate(
+    id: $id
+    title: $title
+    color: $color
+    is_active: $is_active
+    description: $description
+    position: $position
+  ) {
+    code
+    message
+  }
+}

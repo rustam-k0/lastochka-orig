@@ -1,0 +1,6 @@
+mutation($items: [ServicePhoneInput]) {
+  ServicePhoneUpdate(items: $items) {
+    message
+    code
+  }
+}

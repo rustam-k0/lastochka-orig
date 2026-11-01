@@ -1,0 +1,32 @@
+# Вкладка «Спрос». Линия факта выручки/заказов по дням. Forecast (проекция) -
+# встроенная Superset-функция Predictive Analytics для time-series чартов,
+# требует statsmodels/pmdarima на инстансе - не проверено, показываем факт.
+# Правило 1 - выручка условлена по status_id = 5 внутри метрики (не paid).
+# FIX ROUND 1 (ревью, Minor/правило 1): метрика "Заказы, шт" считала
+#   COUNT(DISTINCT order_id) без фильтра статуса - включала отменённые
+#   заказы, что несогласованно с соседней метрикой выручки. Теперь тоже
+#   считает только status_id = 5 (Доставлен), как и выручка.
+slice_name: Прогноз выручки (факт + прогноз)
+viz_type: echarts_timeseries_line
+params:
+  viz_type: echarts_timeseries_line
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END)
+    label: Выручка (факт), ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN status_id = 5 THEN order_id END)
+    label: Заказы, шт
+    hasCustomLabel: true
+  groupby: []
+  x_axis: order_date
+  time_grain_sqla: P1D
+  adhoc_filters: []
+  row_limit: 10000
+  comparison_type: values
+  x_axis_sort_asc: true
+  y_axis_format: SMART_NUMBER
+dataset_uuid: 471d90c0-8c7a-4ed0-b944-397e02e50fe2
+uuid: aae6c3ab-ead4-4721-893f-db32917a41af
+version: 1.0.0

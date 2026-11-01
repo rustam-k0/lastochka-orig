@@ -1,0 +1,50 @@
+extend type Mutation {
+  "Превью объединения дублей (без сохранения): офферы/остатки/конфликты (§8.3.1)"
+  previewMergePlatformProducts(
+    ids: [Int!]!
+    targetId: Int!
+  ): MergePreviewResult!
+    @field(resolver: "Aggregator\\PreviewMergePlatformProducts")
+    @validator(class: "Aggregator\\MergePlatformProductsValidator")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Объединить дубли платформенных товаров (офферы/остатки/штрихкоды → target, источник в архив)"
+  mergeDuplicatePlatformProducts(
+    ids: [Int!]!
+    targetId: Int!
+  ): PlatformProduct!
+    @field(resolver: "Aggregator\\MergeDuplicatePlatformProducts")
+    @validator(class: "Aggregator\\MergePlatformProductsValidator")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Добавить штрихкод к платформенной карточке (проверка что EAN не занят)"
+  addPlatformProductBarcode(
+    platformProductId: Int!
+    ean: String!
+  ): PlatformProduct!
+    @field(resolver: "Aggregator\\AddPlatformProductBarcode")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Удалить штрихкод"
+  removePlatformProductBarcode(barcodeId: Int!): DefaultResponse
+    @field(resolver: "Aggregator\\RemovePlatformProductBarcode")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Сделать штрихкод основным (primary)"
+  setPrimaryPlatformProductBarcode(barcodeId: Int!): PlatformProduct!
+    @field(resolver: "Aggregator\\SetPrimaryPlatformProductBarcode")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Карантин no_ean: проставить штрихкод товару и закрыть запись (ре-синк привяжет)"
+  resolveQuarantineSetBarcode(
+    id: Int!
+    ean: String!
+  ): DefaultResponse
+    @field(resolver: "Aggregator\\ResolveQuarantineSetBarcode")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Пометить запись карантина разрешённой (например, после объединения)"
+  resolveQuarantine(id: Int!): DefaultResponse
+    @field(resolver: "Aggregator\\ResolveQuarantine")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+}

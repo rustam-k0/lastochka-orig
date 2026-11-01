@@ -1,0 +1,18 @@
+mutation (
+  $title: String!
+  $color: String
+  $is_active: Boolean
+  $description: String
+  $position: Int
+) {
+  AssemblyZoneCreate(
+    title: $title
+    color: $color
+    is_active: $is_active
+    description: $description
+    position: $position
+  ) {
+    code
+    message
+  }
+}

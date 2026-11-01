@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "F8885MUM5K.com.greenapple.firstapp",
+        "paths": ["*"]
+      }
+    ]
+  }
+}

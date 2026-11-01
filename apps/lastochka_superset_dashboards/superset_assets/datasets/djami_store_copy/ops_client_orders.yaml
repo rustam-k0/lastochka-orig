@@ -1,0 +1,24 @@
+# Сгенерировано scripts/ops_datasets.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками: описание правил расчёта - в генераторе.
+table_name: ops_client_orders
+main_dttm_col: ordered_at
+database_uuid: 22c13af4-950d-4550-9f16-1617f4df8d2f
+schema: null
+sql: "{% set period = get_time_filter('ordered_at', target_type='DATETIME') %}\nSELECT\n    t.*,\n    {% if period.from_expr %}CASE WHEN t.first_order_at < {{ period.from_expr }} THEN 1 ELSE 0 END{% else %}0{% endif %} AS is_repeat_client\nFROM (\n    SELECT\n        co.*,\n        MIN(co.ordered_at) OVER (PARTITION BY co.client_id)                     AS first_order_at,\n        LAG(co.ordered_at) OVER (PARTITION BY co.client_id ORDER BY co.ordered_at, co.order_id) AS prev_order_at,\n        CASE WHEN co.ordered_at = MIN(co.ordered_at) OVER (PARTITION BY co.client_id) THEN 1 ELSE 0 END AS is_first,\n        CASE WHEN DATEDIFF(co.ordered_at,\n                           LAG(co.ordered_at) OVER (PARTITION BY co.client_id ORDER BY co.ordered_at, co.order_id)) >= 90\n             THEN 1 ELSE 0 END                                                  AS is_returned\n    FROM (SELECT\n        o.id                                         AS order_id,\n        o.user_id                             \
+  \       AS client_id,\n        o.created_at                                 AS ordered_at,\n        o.total                                      AS total,\n        st.name                                      AS shop_name\n    FROM orders o\n    LEFT JOIN stores st ON st.id = o.store_id\n    WHERE o.deleted_at IS NULL\n      AND o.status = 'delivered'\n      AND o.user_id IS NOT NULL\n      AND o.user_id NOT IN (21, 26, 27)) co\n) t\n"
+uuid: 989670f4-23de-57af-8bc4-4041a638c7a1
+columns:
+- column_name: ordered_at
+  is_dttm: true
+- column_name: shop_name
+  is_dttm: false
+  verbose_name: Магазин
+  groupby: true
+  filterable: true
+- column_name: client_id
+  is_dttm: false
+  verbose_name: ID клиента
+  groupby: true
+  filterable: true
+metrics: []
+version: 1.0.0

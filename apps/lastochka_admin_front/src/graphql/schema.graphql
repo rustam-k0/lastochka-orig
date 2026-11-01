@@ -1,0 +1,1762 @@
+# This file was generated. Do not edit manually.
+
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type AppInfo {
+  version: String
+}
+
+type Attribute {
+  "Тип категории (Состав, Параметры и т. д.)"
+  category_type_id: Int
+  "ID"
+  id: Int
+  "Позиция"
+  position: Int
+  "Название"
+  title: String
+  "Тип (строка, текст, дробное и т.д.)"
+  type_id: Int
+  "Варианты"
+  values: [AttributeValue]
+}
+
+"A paginated list of Attribute items."
+type AttributePaginator {
+  "A list of Attribute items."
+  data: [Attribute!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type AttributeValue {
+  id: Int
+  title: String
+}
+
+type Brand {
+  "На страницу категорий"
+  categories_page: Boolean
+  created_at: DateTime
+  id: Int
+  img: Img
+  "Популярный бренд"
+  is_popular: Boolean
+  "Название"
+  title: String
+  updated_at: DateTime
+}
+
+"A paginated list of Brand items."
+type BrandPaginator {
+  "A list of Brand items."
+  data: [Brand!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type Category {
+  "Атрибуты"
+  attributes: [Attribute]
+  "Дочерние категории"
+  child_categories: [Category]
+  created_at: DateTime
+  "ID"
+  id: Int
+  "Важные категории"
+  important: Boolean
+  "Является ли категория кулинарной"
+  is_cooking: Boolean
+  "название на английском(slug)"
+  link: String
+  "Минимальные остатки для публикации"
+  min_quantity: Int
+  "Изображение колонка(Мобильная версия)"
+  mobile_column_img: Img
+  "Изображение прямоугольник(Мобильная версия)"
+  mobile_rect_img: Img
+  "Изображение квадрат(Мобильная версия)"
+  mobile_square_img: Img
+  "Родительская категория"
+  parent: Category
+  "Позиция"
+  position: Int
+  shop_category(shop_id: Int): ShopCategory
+  "Изображение для каталога(Сайт)"
+  site_catalog_img: Img
+  "Изображение прямоугольник(Сайт)"
+  site_rect_img: Img
+  "Изображение квадрат (Сайт)"
+  site_square_img: Img
+  "Название"
+  title: String
+  updated_at: DateTime
+  "Без скрытия товара при отсутствии товаров"
+  without_blocking_price: Boolean
+}
+
+"A paginated list of Category items."
+type CategoryPaginator {
+  "A list of Category items."
+  data: [Category!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type Client {
+  "Дата рождения"
+  birthday: DateTime
+  "Дата создания"
+  created_at: DateTime
+  "Почта"
+  email: String
+  "Гендер 1- Мужчина, 2 - женщина"
+  gender_type_id: Int
+  "ID"
+  id: Int
+  "Авторизован ли пользователь"
+  is_authorized: Boolean
+  "Имя"
+  name: String
+  "Общая сумма оплаченных заказов"
+  orders_amount: Int
+  "Средняя сумма оплаченных заказов"
+  orders_avg: Int
+  "Кол-во заказов"
+  orders_count: Int
+  "Отчество"
+  patronymic: String
+  "Номер телефона"
+  phone: String
+  "Фамилия"
+  surname: String
+}
+
+"A paginated list of Client items."
+type ClientPaginator {
+  "A list of Client items."
+  data: [Client!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type CookTime {
+  end_time: String
+  id: Int
+  start_time: String
+}
+
+type Country {
+  created_at: DateTime
+  "Иконка (SVG)"
+  icon: String
+  id: Int
+  "Название"
+  title: String
+  updated_at: DateTime
+}
+
+"A paginated list of Country items."
+type CountryPaginator {
+  "A list of Country items."
+  data: [Country!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type DefaultResponse {
+  code: Int
+  message: String
+}
+
+"Файл"
+type Document {
+  "Текст при неуспешной загрузке файла"
+  alt: String
+  "id файла (table: documents)"
+  id: Int
+  "Название файла"
+  origin_name: String
+  "Путь к изображению"
+  path: String
+  "Размер файла (1.3 Мб)"
+  size: String
+  "Тип файла (docx, pdf)"
+  type: String
+}
+
+type EmailConfirmResponse {
+  code: Int
+  message: String
+  token: String
+  user: User
+}
+
+type FileResponse {
+  origin_name: String
+  path: String
+  size: String
+  type: String
+}
+
+type ImageLink {
+  id: Int
+  "Путь к изображению"
+  path: String
+  "Параметры изображения"
+  query: String
+}
+
+"Изображение"
+type Img {
+  "Текст при неуспешной загрузке изображения"
+  alt: String
+  "id изображения (table: img)"
+  id: Int
+  links: [ImageLink]
+  "Название изображения"
+  origin_name: String
+  "Путь к изображению"
+  path: String
+  "Размер изображения (1.3 Мб)"
+  size: String
+  "Тип изображения (jpg, png)"
+  type: String
+}
+
+type LoginResponse {
+  code: Int
+  message: String
+  token: String
+  user: User
+}
+
+type Manufacturer {
+  created_at: DateTime
+  "Иконка (SVG)"
+  icon: String
+  id: Int
+  "Название"
+  title: String
+  updated_at: DateTime
+}
+
+"A paginated list of Manufacturer items."
+type ManufacturerPaginator {
+  "A list of Manufacturer items."
+  data: [Manufacturer!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type Mutation {
+  "Авторизация админа"
+  AdminLogin(email: String, password: String): LoginResponse
+  AttributeCreate(
+    "Название атрибута"
+    title: String,
+    "Варианты атрибута"
+    values: [AttributeValueInput]
+  ): DefaultResponse
+  AttributeUpdate(
+    "ID"
+    id: Int,
+    "Название атрибута"
+    title: String,
+    "Варианты атрибута"
+    values: [AttributeValueInput]
+  ): DefaultResponse
+  BrandCreate(
+    "На страницу категорий"
+    categories_page: Boolean,
+    img: ImgInput,
+    "Популярный бренд"
+    is_popular: Boolean,
+    "Название"
+    title: String
+  ): DefaultResponse
+  BrandUpdate(
+    "На страницу категорий"
+    categories_page: Boolean,
+    id: Int,
+    img: ImgInput,
+    "Популярный бренд"
+    is_popular: Boolean,
+    "Название"
+    title: String
+  ): DefaultResponse
+  "Обновление позиций категорий"
+  CategoryChangePosition(items: [CategoryPosition]): DefaultResponse
+  CategoryCreate(
+    "Атрибуты категории"
+    attributes: [Int],
+    "Важные категории"
+    important: Boolean,
+    "Является ли категория кулинарной"
+    is_cooking: Boolean,
+    "Минимальные остатки для публикации"
+    min_quantity: Int,
+    "Изображение колонка(Мобильная версия)"
+    mobile_column_img: ImgInput,
+    "Изображение прямоугольник(Мобильная версия)"
+    mobile_rect_img: ImgInput,
+    "Изображение квадрат(Мобильная версия)"
+    mobile_square_img: ImgInput,
+    "Родительская категория"
+    parent: Int,
+    "Изображение для каталога(Сайт)"
+    site_catalog_img: ImgInput,
+    "Изображение прямоугольник(Сайт)"
+    site_rect_img: ImgInput,
+    "Изображение квадрат (Сайт)"
+    site_square_img: ImgInput,
+    "Название"
+    title: String,
+    "Без скрытия товара при отсутствии товаров"
+    without_blocking_price: Boolean
+  ): DefaultResponse
+  CategoryUpdate(
+    "Атрибуты категории"
+    attributes: [Int],
+    id: Int,
+    "Важные категории"
+    important: Boolean,
+    "Является ли категория кулинарной"
+    is_cooking: Boolean,
+    "Минимальные остатки для публикации"
+    min_quantity: Int,
+    "Изображение колонка(Мобильная версия)"
+    mobile_column_img: ImgInput,
+    "Изображение прямоугольник(Мобильная версия)"
+    mobile_rect_img: ImgInput,
+    "Изображение квадрат(Мобильная версия)"
+    mobile_square_img: ImgInput,
+    "Родительская категория"
+    parent: Int,
+    "Изображение для каталога(Сайт)"
+    site_catalog_img: ImgInput,
+    "Изображение прямоугольник(Сайт)"
+    site_rect_img: ImgInput,
+    "Изображение квадрат (Сайт)"
+    site_square_img: ImgInput,
+    "Название"
+    title: String,
+    "Без скрытия товара при отсутствии товаров"
+    without_blocking_price: Boolean
+  ): DefaultResponse
+  ClientCreate(
+    "Дата рождения"
+    birthday: DateTime,
+    "Почта"
+    email: String,
+    "Имя"
+    name: String,
+    "Согласие на новостную рассылку"
+    newsletter_subscribed: Boolean,
+    "Отчество"
+    patronymic: String,
+    "Телефонный номер"
+    phone: String,
+    "Фамилия"
+    surname: String
+  ): DefaultResponse
+  CountryCreate(
+    "Иконка (SVG)"
+    icon: String,
+    "Название"
+    title: String
+  ): DefaultResponse
+  CountryUpdate(
+    "Иконка (SVG)"
+    icon: String,
+    id: Int,
+    "Название"
+    title: String
+  ): DefaultResponse
+  "Удаление записи"
+  EntityDelete(id: Int!, table: String!): DefaultResponse
+  "Публикация либо скрытие записи"
+  EntityHideOrPublish(id: Int!, table: String!): DefaultResponse
+  """
+
+  Загрузка файла на сервер
+  возвращает путь к файлу
+  """
+  FilesUpload(
+    "Файл"
+    files: [Upload],
+    path: String
+  ): [FileResponse]
+  "Загрузка и обрезка изображения"
+  ImageUploadCrop(height: Int!, image: Upload!, rotate: Int!, scaleX: Int!, scaleY: Int!, width: Int!, x: Int!, y: Int!): UploadedImage
+  ManufacturerCreate(
+    "Иконка (SVG)"
+    icon: String,
+    "Название"
+    title: String
+  ): DefaultResponse
+  ManufacturerUpdate(
+    "Иконка (SVG)"
+    icon: String,
+    id: Int,
+    "Название"
+    title: String
+  ): DefaultResponse
+  ProductCreate(
+    "Значения атрибутов"
+    attributes: [AttributeInput],
+    "Бренд"
+    brand_id: Int,
+    "Категории"
+    category_ids: [Int!],
+    "Страна"
+    country_id: Int,
+    "Описание"
+    description: String,
+    "Слайдер"
+    images: [ImgInput],
+    "Главное изображение"
+    img: ImgInput,
+    "Информация: количество товара"
+    info_weight: Int,
+    """
+
+    ""Информация: ед. измерения количества товара
+    1 -  шт
+    2 -  грамм
+    3 -  килограмм
+    4 -  литр
+    5 -  миллилитр
+    """
+    info_weight_type_id: Int,
+    "Производитель"
+    manufacturer_id: Int,
+    "Мета описание"
+    meta_description: String,
+    "Мета ключевые слова"
+    meta_keywords: String,
+    "Мета заголовок"
+    meta_title: String,
+    "Цена"
+    price: Int,
+    shop_id: Int,
+    supplements: [SupplementInput],
+    "Название"
+    title: String,
+    "Вес товара (Необходимо только в случае если товар штучный)"
+    weight: Int
+  ): DefaultResponse
+  "Обновление позиций товарных групп"
+  ProductGroupChangePosition(items: [ProductGroupPosition]): DefaultResponse
+  ProductGroupCreate(
+    "После кулинарии"
+    after_cooking: Boolean,
+    "фильтры товаров в формате JSON"
+    filters: String,
+    "Позиция"
+    position: Int,
+    "Товары"
+    products: [Int],
+    "Межу наборами и кулинарией"
+    sets_cooking: Boolean,
+    "Между акциями и наборами"
+    stocks_sets: Boolean,
+    "Название"
+    title: String,
+    "Тип (Выбор товаров, ссылка с фильтром)"
+    type_id: Int
+  ): DefaultResponse
+  ProductGroupUpdate(
+    "После кулинарии"
+    after_cooking: Boolean,
+    "фильтры товаров в формате JSON"
+    filters: String,
+    id: Int,
+    "Позиция"
+    position: Int,
+    "Товары"
+    products: [Int],
+    "Межу наборами и кулинарией"
+    sets_cooking: Boolean,
+    "Между акциями и наборами"
+    stocks_sets: Boolean,
+    "Название"
+    title: String,
+    "Тип (Выбор товаров, ссылка с фильтром)"
+    type_id: Int
+  ): DefaultResponse
+  ProductHide(id: Int): DefaultResponse
+  ProductPublish(id: Int): DefaultResponse
+  ProductSetCreate(
+    "Калории"
+    calories: String,
+    "Углеводы"
+    carbohydrates: String,
+    "Категории"
+    categories: [Int],
+    "Описание"
+    description: String,
+    "Жиры"
+    fats: String,
+    "Изображение"
+    img: ImgInput,
+    "Вывести на главную"
+    main: Boolean,
+    "Товары"
+    products: [Int],
+    "Белки"
+    proteins: String,
+    "Название"
+    title: String
+  ): DefaultResponse
+  ProductSetUpdate(
+    "Калории"
+    calories: String,
+    "Углеводы"
+    carbohydrates: String,
+    "Категории"
+    categories: [Int],
+    "Описание"
+    description: String,
+    "Жиры"
+    fats: String,
+    id: Int,
+    "Изображение"
+    img: ImgInput,
+    "Вывести на главную"
+    main: Boolean,
+    "Товары"
+    products: [Int],
+    "Белки"
+    proteins: String,
+    "Название"
+    title: String
+  ): DefaultResponse
+  ProductUpdate(
+    "Значения атрибутов"
+    attributes: [AttributeInput],
+    "Бренд"
+    brand_id: Int,
+    "Категории"
+    category_ids: [Int!],
+    "Готовность товара, до"
+    cook_end_time: String,
+    "Готовность товара, от"
+    cook_start_time: String,
+    "Страна"
+    country_id: Int,
+    "Описание"
+    description: String,
+    "ID"
+    id: Int,
+    "Слайдер"
+    images: [ImgInput],
+    "Главное изображение"
+    img: ImgInput,
+    "Информация: количество товара"
+    info_weight: Int,
+    """
+
+    ""Информация: ед. измерения количества товара
+    1 -  шт
+    2 -  грамм
+    3 -  килограмм
+    4 -  литр
+    5 -  миллилитр
+    """
+    info_weight_type_id: Int,
+    "Производитель"
+    manufacturer_id: Int,
+    "Мета описание"
+    meta_description: String,
+    "Мета ключевые слова"
+    meta_keywords: String,
+    "Мета заголовок"
+    meta_title: String,
+    "Цена"
+    price: Int,
+    shop_id: Int,
+    supplements: [SupplementInput],
+    "Название"
+    title: String,
+    "Вес товара (Необходимо только в случае если товар штучный)"
+    weight: Int
+  ): DefaultResponse
+  PromoCreate(
+    "Категории"
+    categories: [Int],
+    "Клиенты"
+    clients: [Int],
+    "Дата окончания действия"
+    end_date: DateTime,
+    "Процент скидки"
+    percent: Int,
+    "Товары"
+    products: [Int],
+    "Промокод"
+    promo: String,
+    "Многоразовый"
+    reusable: Boolean,
+    "Дата начала действия"
+    start_date: DateTime,
+    "Название"
+    title: String,
+    "Тип промокода: 1 - на товары, 2 - на категории"
+    type_id: Int
+  ): DefaultResponse
+  PromoUpdate(
+    "Категории"
+    categories: [Int],
+    "Клиенты"
+    clients: [Int],
+    "Дата окончания действия"
+    end_date: DateTime,
+    "ID"
+    id: Int,
+    "Процент скидки"
+    percent: Int,
+    "Товары"
+    products: [Int],
+    "Промокод"
+    promo: String,
+    "Многоразовый"
+    reusable: Boolean,
+    "Дата начала действия"
+    start_date: DateTime,
+    "Название"
+    title: String,
+    "Тип промокода: 1 - на товары, 2 - на категории"
+    type_id: Int
+  ): DefaultResponse
+  SetCategoryCreate(title: String): DefaultResponse
+  SetCategoryUpdate(id: Int, title: String): DefaultResponse
+  "Установить время для сборки категорий для определенного магазина"
+  SetShopCategoriesTime(
+    "Категории"
+    items: [ShopCategoryInput],
+    "ID магазина"
+    shop_id: Int
+  ): DefaultResponse
+  "Установить график работы магазина"
+  SetShopWorkingHours(
+    "Время закрытия магазина. Нужно в случае type_id = 1"
+    closing_time: String,
+    """
+
+    Дни работы магазина
+    MONDAY = 1
+    TUESDAY = 2
+    WEDNESDAY = 3
+    THURSDAY = 4
+    FRIDAY = 5
+    SATURDAY = 6
+    SUNDAY = 7
+    """
+    days: [Int],
+    "Время открытия магазина. Нужно в случае type_id = 1"
+    opening_time: String,
+    "ID магазина"
+    shop_id: Int,
+    """
+
+    Тип работы магазина
+    1 - Работает по графику
+    2 - Работает круглосуточно
+    """
+    type_id: Int
+  ): DefaultResponse
+  "Установить график работы сотрудников"
+  SetUserWorkingHours(
+    "Время закрытия магазина. Нужно в случае type_id = 1"
+    closing_time: String,
+    """
+
+    Дни работы магазина
+    MONDAY = 1
+    TUESDAY = 2
+    WEDNESDAY = 3
+    THURSDAY = 4
+    FRIDAY = 5
+    SATURDAY = 6
+    SUNDAY = 7
+    """
+    days: [Int],
+    "Время открытия магазина. Нужно в случае type_id = 1"
+    opening_time: String,
+    "ID связки магазина и пользователя"
+    user_shop_id: Int
+  ): DefaultResponse
+  ShopBrandCreate(
+    "Название"
+    title: String
+  ): DefaultResponse
+  ShopBrandUpdate(
+    "ID"
+    id: Int,
+    "Название"
+    title: String
+  ): DefaultResponse
+  ShopCreate(
+    "Адрес"
+    address: String,
+    "Изображение на фоне"
+    background_img: ImgInput,
+    "Бренд партнера"
+    brand_id: Int,
+    "Родительские категории"
+    categories: [Int],
+    "Комиссия агрегатора"
+    commission: Float,
+    "Депозит"
+    deposit: Float,
+    "Описание"
+    description: String,
+    "Почта"
+    email: String,
+    "ID"
+    id: Int,
+    "Изображение"
+    img: ImgInput,
+    "Популярный партнер"
+    is_popular: Boolean,
+    "Не учитывать остатки"
+    ignore_stock: Boolean,
+    "Бонусная программа включена"
+    is_bonus_enabled: Boolean,
+    "Процент начисления бонусов"
+    bonus_earn_percent: Int,
+    "Процент списания бонусов"
+    bonus_spend_percent: Int,
+    "Широта"
+    latitude: Float,
+    "Изображение лого"
+    logo_img: ImgInput,
+    "Долгота"
+    longitude: Float,
+    """
+
+    Когда списывать средства
+    1 - Списывание оплаты после сборки заказа
+    2 - Списывание оплаты после оформления заказа
+    3 - Списывание оплаты после начала сборки
+    4 - Списывание оплаты после доставки
+    """
+    payment_type_id: Int,
+    "Номер телефона"
+    phone: String,
+    "График работы"
+    schedule: String,
+    "Максимальное количество заказов за слот"
+    slot_max_orders: Int,
+    "Временной слот"
+    slot_time: Int,
+    "Ниша"
+    sphere_id: Int,
+    "Название"
+    title: String,
+    "Тип заведения: 1 - магазин, 2 - кафе"
+    type_id: Int
+  ): DefaultResponse
+  "Удалить партнера"
+  ShopDelete(
+    "ID"
+    id: Int
+  ): DefaultResponse
+  ShopUpdate(
+    "Адрес"
+    address: String,
+    "Изображение на фоне"
+    background_img: ImgInput,
+    "Бренд партнера"
+    brand_id: Int,
+    "Родительские категории"
+    categories: [Int],
+    "Комиссия агрегатора"
+    commission: Float,
+    "Депозит"
+    deposit: Float,
+    "Описание"
+    description: String,
+    "Почта"
+    email: String,
+    "ID"
+    id: Int,
+    "Изображение"
+    img: ImgInput,
+    "Популярный партнер"
+    is_popular: Boolean,
+    "Не учитывать остатки"
+    ignore_stock: Boolean,
+    "Бонусная программа включена"
+    is_bonus_enabled: Boolean,
+    "Процент начисления бонусов"
+    bonus_earn_percent: Int,
+    "Процент списания бонусов"
+    bonus_spend_percent: Int,
+    "Широта"
+    latitude: Float,
+    "Изображение лого"
+    logo_img: ImgInput,
+    "Долгота"
+    longitude: Float,
+    """
+
+    Когда списывать средства
+    1 - Списывание оплаты после сборки заказа
+    2 - Списывание оплаты после оформления заказа
+    3 - Списывание оплаты после начала сборки
+    4 - Списывание оплаты после доставки
+    """
+    payment_type_id: Int,
+    "Номер телефона"
+    phone: String,
+    "График работы"
+    schedule: String,
+    "Максимальное количество заказов за слот"
+    slot_max_orders: Int,
+    "Временной слот"
+    slot_time: Int,
+    "Ниша"
+    sphere_id: Int,
+    "Название"
+    title: String,
+    "Тип заведения: 1 - магазин, 2 - кафе"
+    type_id: Int
+  ): DefaultResponse
+  "Создать/Редактировать зону доставки магазина"
+  ShopZoneCreteOrUpdate(
+    "Цена доставки"
+    delivery_price: Int,
+    "Диапазоны стоимости доставки от суммы заказа; при передаче порог бесплатной доставки вычисляется из них"
+    delivery_price_ranges: [ShopZoneDeliveryPriceRangeInput!],
+    "Сумма заказа для бесплатной доставки"
+    free_delivery_from: Int,
+    "Файл geojson с координатами"
+    geojson: Upload,
+    "ID зоны"
+    id: Int,
+    "Минимальная сумма для заказа"
+    min_order_price: Int,
+    "Название зоны"
+    name: String,
+    "Тип доставки (own/yandex)"
+    delivery_type: String,
+    "ID магазина"
+    shop_id: Int
+  ): DefaultResponse
+  "Создать/Редактировать зону доставки магазина"
+  ShopZoneDelete(
+    "ID зоны"
+    id: Int
+  ): DefaultResponse
+  SphereCreate(
+    img: ImgInput,
+    "Название"
+    title: String
+  ): DefaultResponse
+  SphereUpdate(
+    id: Int,
+    img: ImgInput,
+    "Название"
+    title: String
+  ): DefaultResponse
+  UserCreate(
+    "Почта"
+    email: String,
+    "Имя"
+    name: String,
+    "Отчество"
+    patronymic: String,
+    "Номер телефона"
+    phone: String,
+    "ID роли"
+    role_id: Int,
+    "Магазины, в которых работает пользователь"
+    shops: [Int],
+    "Фамилия"
+    surname: String
+  ): DefaultResponse
+  "Удалить пользователя"
+  UserDelete(
+    "ID"
+    id: Int
+  ): DefaultResponse
+  UserUpdate(
+    "Почта"
+    email: String,
+    "ID"
+    id: Int,
+    "Имя"
+    name: String,
+    "Отчество"
+    patronymic: String,
+    "Номер телефона"
+    phone: String,
+    "Магазины, в которых работает пользователь"
+    shops: [Int],
+    "Фамилия"
+    surname: String
+  ): DefaultResponse
+}
+
+"Information about pagination using a Relay style cursor connection."
+type PageInfo {
+  "Number of nodes in the current page."
+  count: Int!
+  "Index of the current page."
+  currentPage: Int!
+  "The cursor to continue paginating forwards."
+  endCursor: String
+  "When paginating forwards, are there more items?"
+  hasNextPage: Boolean!
+  "When paginating backwards, are there more items?"
+  hasPreviousPage: Boolean!
+  "Index of the last available page."
+  lastPage: Int!
+  "The cursor to continue paginating backwards."
+  startCursor: String
+  "Total number of nodes in the paginated connection."
+  total: Int!
+}
+
+"Information about pagination using a fully featured paginator."
+type PaginatorInfo {
+  "Number of items in the current page."
+  count: Int!
+  "Index of the current page."
+  currentPage: Int!
+  "Index of the first item in the current page."
+  firstItem: Int
+  "Are there more pages after this one?"
+  hasMorePages: Boolean!
+  "Index of the last item in the current page."
+  lastItem: Int
+  "Index of the last available page."
+  lastPage: Int!
+  "Number of items per page."
+  perPage: Int!
+  "Number of total available items."
+  total: Int!
+}
+
+"""
+
+Цена за определенное количество товара
+Например если value = 100, step = 3
+значит 3 единицы товара это минимум, который может купить клиент
+
+так же он может добавить step, т. е. купить 6 единиц за 200
+"""
+type Price {
+  "Магазин"
+  shop: Shop
+  "Минимальное количество товара для покупки"
+  step: Float
+  "Цена за шаг"
+  value: Float
+}
+
+type Product {
+  "Артикул"
+  articul: String
+  "Код товара из 1С"
+  code: Int
+  "Атрибуты со значениями"
+  attributes: [ProductAttribute]
+  "Штрихкод"
+  barcode: String
+  "Бренд"
+  brand: Brand
+  "Категории товара"
+  categories: [Category]
+  "Время готовности товара, если он принадлежит как категории кулинарии"
+  cook_time: CookTime
+  "Время готовности товара, ежедневное (null = не задано)"
+  ready_fixed_time: String
+  "Страна"
+  country: Country
+  "Цена по умолчанию"
+  default_price: Price
+  "Описание"
+  description: String
+  "Процент заполнения"
+  fill_percent: Int
+  "ID"
+  id: Int
+  "Слайдер изображений"
+  images: [Img]
+  "Изображение"
+  img: Img
+  "Информация: количество товара"
+  info_weight: Int
+  """
+
+  ""Информация: ед. измерения количества товара
+  1 -  шт
+  2 -  грамм
+  3 -  килограмм
+  4 -  литр
+  5 -  миллилитр
+  """
+  info_weight_type_id: Int
+  "Производитель"
+  manufacturer: Manufacturer
+  "Маркетинговое описание"
+  meta_description: String
+  "Ключевые слова"
+  meta_keywords: String
+  "Мета заголовок"
+  meta_title: String
+  "Остатки по каждому магазину"
+  remains: [Remain]
+  "Статус"
+  status_id: Int
+  "Добавки"
+  supplements: [Supplement]
+  "Название"
+  title: String
+  "Код кванта (грамм, шт...)"
+  unit_type_id: Int
+  "Вес товара (Необходимо только в случае если товар штучный)"
+  weight: Int
+}
+
+type ProductAttribute {
+  "Атрибут"
+  attribute: Attribute
+  "Выбранный вариант атрибута"
+  attribute_value: AttributeValue
+  "ID варианта атрибута"
+  attribute_value_id: Int
+  "Дробное значение"
+  float_value: Float
+  "ID"
+  id: Int
+  "Целочисленное значение"
+  int_value: Int
+  "Строковое значение"
+  string_value: String
+  "Текстовое значение"
+  text_value: String
+}
+
+type ProductGroup {
+  "После кулинарии"
+  after_cooking: Boolean
+  created_at: DateTime
+  "фильтры товаров в формате JSON"
+  filters: String
+  id: Int
+  "Позиция"
+  position: Int
+  "Товары"
+  products: [Product]
+  "Межу наборами и кулинарией"
+  sets_cooking: Boolean
+  "Статус"
+  status_id: Int
+  "Между акциями и наборами"
+  stocks_sets: Boolean
+  "Название"
+  title: String
+  "Тип (Выбор товаров, ссылка с фильтром)"
+  type_id: Int
+  updated_at: DateTime
+}
+
+"A paginated list of ProductGroup items."
+type ProductGroupPaginator {
+  "A list of ProductGroup items."
+  data: [ProductGroup!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+"A paginated list of Product items."
+type ProductPaginator {
+  "A list of Product items."
+  data: [Product!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type ProductSet {
+  "Калории"
+  calories: String
+  "Углеводы"
+  carbohydrates: String
+  "Категории"
+  categories: [SetCategory]
+  created_at: DateTime
+  "Описание"
+  description: String
+  "Жиры"
+  fats: String
+  id: Int
+  "Изображение"
+  img: Img
+  "Вывести на главную"
+  main: Boolean
+  "Товары"
+  products: [Product]
+  "Белки"
+  proteins: String
+  "Название"
+  title: String
+  "Тип (системный, авторский)"
+  type_id: Int
+  updated_at: DateTime
+}
+
+"A paginated list of ProductSet items."
+type ProductSetPaginator {
+  "A list of ProductSet items."
+  data: [ProductSet!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type Promo {
+  "Категории"
+  categories: [Category]
+  "Клиенты"
+  clients: [Client]
+  "Дата окончания действия"
+  end_date: DateTime
+  "ID"
+  id: Int
+  "Процент скидки"
+  percent: Int
+  "Товары"
+  products: [Product]
+  "Промокод"
+  promo: String
+  "Многоразовый"
+  reusable: Boolean
+  "Дата начала действия"
+  start_date: DateTime
+  "Название"
+  title: String
+  "Тип промокода: 1 - на товары, 2 - на категории"
+  type_id: Int
+}
+
+"A paginated list of Promo items."
+type PromoPaginator {
+  "A list of Promo items."
+  data: [Promo!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type Query {
+  admin_brands(is_popular: Boolean, ordering: [DefaultOrdering], title: String): [Brand]
+  admin_brands_item(id: Int): Brand
+  admin_brands_paginate(
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    is_popular: Boolean,
+    ordering: [DefaultOrdering],
+    "The offset from which items are returned."
+    page: Int,
+    title: String
+  ): BrandPaginator
+  admin_categories(ordering: [DefaultOrdering]): [Category]
+  admin_categories_item(id: Int, ordering: [DefaultOrdering]): Category
+  admin_categories_paginate(
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    ordering: [DefaultOrdering],
+    "The offset from which items are returned."
+    page: Int,
+    title: String
+  ): CategoryPaginator
+  "Список клиентов"
+  admin_clients(title: String): [Client]
+  "Список клиентов. Пагинация"
+  admin_clients_item(id: Int!): Client
+  "Список клиентов. Пагинация"
+  admin_clients_paginate(
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    ordering: [DefaultOrdering],
+    "The offset from which items are returned."
+    page: Int,
+    title: String
+  ): ClientPaginator
+  admin_countries(ordering: [DefaultOrdering], title: String): [Country]
+  admin_countries_item(id: Int, ordering: [DefaultOrdering]): Country
+  admin_countries_paginate(
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    ordering: [DefaultOrdering],
+    "The offset from which items are returned."
+    page: Int,
+    title: String
+  ): CountryPaginator
+  admin_manufacturers(ordering: [DefaultOrdering], title: String): [Manufacturer]
+  admin_manufacturers_item(id: Int, ordering: [DefaultOrdering]): Manufacturer
+  admin_manufacturers_paginate(
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    ordering: [DefaultOrdering],
+    "The offset from which items are returned."
+    page: Int,
+    title: String
+  ): ManufacturerPaginator
+  admin_product_groups(ordering: [DefaultOrdering], status_id: Int, title: String): [ProductGroup]
+  admin_product_groups_item(id: Int, ordering: [DefaultOrdering]): ProductGroup
+  admin_product_groups_paginate(
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    ordering: [DefaultOrdering],
+    "The offset from which items are returned."
+    page: Int,
+    status_id: Int,
+    title: String
+  ): ProductGroupPaginator
+  admin_product_sets(ordering: [DefaultOrdering]): [ProductSet]
+  admin_product_sets_item(id: Int, ordering: [DefaultOrdering]): ProductSet
+  admin_product_sets_paginate(
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    ordering: [DefaultOrdering],
+    "The offset from which items are returned."
+    page: Int
+  ): ProductSetPaginator
+  admin_products_item(id: Int, ordering: [DefaultOrdering]): Product
+  admin_products_paginate(
+    categories: [Int],
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    ordering: [DefaultOrdering],
+    "The offset from which items are returned."
+    page: Int,
+    shop_id: Int,
+    title: String
+  ): ProductPaginator
+  admin_promos(ordering: [DefaultOrdering]): [Promo]
+  admin_promos_item(id: Int, ordering: [DefaultOrdering]): Promo
+  admin_promos_paginate(
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    ordering: [DefaultOrdering],
+    "The offset from which items are returned."
+    page: Int
+  ): PromoPaginator
+  admin_set_categories(ordering: [DefaultOrdering]): [SetCategory]
+  admin_set_categories_item(id: Int, ordering: [DefaultOrdering]): SetCategory
+  admin_set_categories_paginate(
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    ordering: [DefaultOrdering],
+    "The offset from which items are returned."
+    page: Int
+  ): SetCategoryPaginator
+  admin_shop_brands(ordering: [DefaultOrdering]): [ShopBrand]
+  admin_shop_brands_item(id: Int, ordering: [DefaultOrdering]): ShopBrand
+  admin_shop_brands_paginate(
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    ordering: [DefaultOrdering],
+    "The offset from which items are returned."
+    page: Int
+  ): ShopBrandPaginator
+  admin_spheres(ordering: [DefaultOrdering]): [Sphere]
+  admin_spheres_item(id: Int): Sphere
+  admin_spheres_paginate(
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    ordering: [DefaultOrdering],
+    "The offset from which items are returned."
+    page: Int
+  ): SpherePaginator
+  app_info: AppInfo
+  "Динамические атрибуты"
+  attributes(
+    "Получить атрибуты по категории, а так же атрибуты родителей данной категории"
+    category_id: Int
+  ): [Attribute]
+  "Динамический атрибут"
+  attributes_item(id: Int): Attribute
+  "Динамические атрибуты пагинация"
+  attributes_paginate(
+    "Получить атрибуты по категории, а так же атрибуты родителей данной категории"
+    category_id: Int,
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    "The offset from which items are returned."
+    page: Int
+  ): AttributePaginator
+  brands(is_popular: Boolean, ordering: [DefaultOrdering], title: String): [Brand]
+  categories(ordering: [DefaultOrdering]): [Category]
+  "Получить категории, у которых нет дочерних категорий"
+  child_categories: [Category]
+  clients_count: Int
+  "Сборщики"
+  collectors(shop_id: Int): [User]
+  countries(ordering: [DefaultOrdering]): [Country]
+  "Курьеры"
+  couriers(shop_id: Int): [User]
+  "Системные атрибуты"
+  default_attributes: [Attribute]
+  manufacturers(ordering: [DefaultOrdering]): [Manufacturer]
+  "Получение авторизованного пользователя"
+  me: User
+  my_shop: Shop
+  "Родительские категории"
+  parent_categories: [Category]
+  "Список ролей в системе"
+  roles: [Role]
+  set_categories(ordering: [DefaultOrdering]): [SetCategory]
+  shop(id: Int): Shop
+  "Получить категории, которые закреплены за партнером"
+  shop_categories(shop_id: Int): [Category]
+  shop_zone(id: Int, shop_id: Int): ShopZone
+  shops(title: String, type_id: Int): [Shop]
+  shops_paginate(
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    "The offset from which items are returned."
+    page: Int,
+    title: String,
+    type_id: Int
+  ): ShopPaginator
+  user(id: Int): User
+  users(ordering: [DefaultOrdering]): [User]
+  users_paginate(
+    "Limits number of fetched items. Maximum allowed value: 100."
+    first: Int = 10,
+    ordering: [DefaultOrdering],
+    "The offset from which items are returned."
+    page: Int
+  ): UserPaginator
+}
+
+type Remain {
+  quantity: Float
+}
+
+type Role {
+  id: Int
+  name: String
+  name_ru: String
+}
+
+type SetCategory {
+  created_at: DateTime
+  id: Int
+  title: String
+  updated_at: DateTime
+}
+
+"A paginated list of SetCategory items."
+type SetCategoryPaginator {
+  "A list of SetCategory items."
+  data: [SetCategory!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type Shop {
+  "Адрес"
+  address: String
+  "Изображение бэкграунд"
+  background_img: Img
+  "Бренд партнера"
+  brand: ShopBrand
+  "Категории партнера"
+  categories: [Category]
+  "Время закрытия магазина."
+  closing_time: String
+  "Комиссия агрегатора"
+  commission: Float
+  "Депозит"
+  deposit: Float
+  "Описание"
+  description: String
+  "Почта"
+  email: String
+  "ID"
+  id: Int
+  "Главное изображение"
+  img: Img
+  is_popular: Boolean
+  ignore_stock: Boolean
+  is_bonus_enabled: Boolean
+  bonus_earn_percent: Int
+  bonus_spend_percent: Int
+  "Широта"
+  latitude: String
+  "Изображение лого"
+  logo_img: Img
+  "Долгота"
+  longitude: String
+  "Время открытия магазина."
+  opening_time: String
+  """
+
+  Когда списывать средства
+  1 - Списывание оплаты после сборки заказа
+  2 - Списывание оплаты после оформления заказа
+  3 - Списывание оплаты после начала сборки
+  4 - Списывание оплаты после доставки
+  """
+  payment_type_id: Int
+  "Телефон"
+  phone: String
+  "График работы"
+  schedule: String
+  "Макс. количество заказов на 1 слот"
+  slot_max_orders: String
+  "Временной слот"
+  slot_time: String
+  "Ниша партнера"
+  sphere: Sphere
+  status_id: Int
+  "Название"
+  title: String
+  "Тип заведения: 1 - магазин, 2 - кафе"
+  type_id: Int
+  "Тип работы магазина"
+  work_type_id: Int
+  "Сотрудники, работающие в магазине"
+  workers: [UserShop]
+  "Часы работы"
+  working_days: [Int]
+  "Зоны доставки"
+  zones: [ShopZone]
+}
+
+type ShopBrand {
+  "ID"
+  id: Int
+  "Название"
+  title: String
+}
+
+"A paginated list of ShopBrand items."
+type ShopBrandPaginator {
+  "A list of ShopBrand items."
+  data: [ShopBrand!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type ShopCategory {
+  "Категория"
+  category: Category
+  "Приоритет сборки"
+  position: Int
+  "Время на сборку"
+  time_to_take: Int
+}
+
+"A paginated list of Shop items."
+type ShopPaginator {
+  "A list of Shop items."
+  data: [Shop!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type ShopWorkingHour {
+  "Время закрытия магазина. Нужно в случае type_id = 1"
+  closing_time: String
+  """
+
+  Дни работы магазина
+  MONDAY = 1
+  TUESDAY = 2
+  WEDNESDAY = 3
+  THURSDAY = 4
+  FRIDAY = 5
+  SATURDAY = 6
+  SUNDAY = 7
+  """
+  day_of_week: Int
+  "Время открытия магазина. Нужно в случае type_id = 1"
+  opening_time: String
+  """
+
+  Тип работы магазина
+  1 - Работает по графику
+  2 - Работает круглосуточно
+  """
+  type_id: Int
+}
+
+type ShopZone {
+  "Загружены ли координаты"
+  coordinates_loaded: Boolean
+  "Цена доставки"
+  delivery_price: Int
+  "Диапазоны стоимости доставки от суммы заказа"
+  delivery_price_ranges: [ShopZoneDeliveryPriceRange!]
+  "Сумма заказа для бесплатной доставки"
+  free_delivery_from: Int
+  "ID"
+  id: Int
+  "Минимальная сумма для заказа"
+  min_order_price: Int
+  "Название зоны"
+  name: String
+  "Тип доставки (own/yandex)"
+  delivery_type: String
+}
+
+"Диапазон стоимости доставки зоны: от суммы заказа from_amount доставка стоит price (0 = бесплатно)"
+type ShopZoneDeliveryPriceRange {
+  "Сумма заказа, от которой действует диапазон, ₽"
+  from_amount: Int!
+  "Стоимость доставки, ₽"
+  price: Int!
+}
+
+"Information about pagination using a simple paginator."
+type SimplePaginatorInfo {
+  "Number of items in the current page."
+  count: Int!
+  "Index of the current page."
+  currentPage: Int!
+  "Index of the first item in the current page."
+  firstItem: Int
+  "Are there more pages after this one?"
+  hasMorePages: Boolean!
+  "Index of the last item in the current page."
+  lastItem: Int
+  "Number of items per page."
+  perPage: Int!
+}
+
+type Sphere {
+  created_at: DateTime
+  id: Int
+  img: Img
+  "Название"
+  title: String
+  updated_at: DateTime
+}
+
+"A paginated list of Sphere items."
+type SpherePaginator {
+  "A list of Sphere items."
+  data: [Sphere!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type Supplement {
+  id: Int
+  is_required: Boolean
+  title: String
+  "one - выбор одного , many - можно выбрать неограниченно"
+  type: String
+  "Вариации добавок"
+  values: [SupplementValue]
+}
+
+type SupplementValue {
+  id: Int
+  max_quantity: Int
+  position: Int
+  price: Int
+  product: Product
+  product_id: Int
+  title: String
+  track_stock: Boolean
+}
+
+type UploadedImage {
+  origin_name: String
+  path: String
+  size: String
+  type: String
+}
+
+type User {
+  "Почта"
+  email: String
+  id: Int
+  "Имя"
+  name: String
+  "Отчество"
+  patronymic: String
+  "Телефонный номер"
+  phone: String
+  "Роли"
+  roles: [Role]
+  "Магазины, в которых работает юзер"
+  shops: [UserShop]
+  "Фамилия"
+  surname: String
+}
+
+"A paginated list of User items."
+type UserPaginator {
+  "A list of User items."
+  data: [User!]!
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
+type UserShop {
+  "Время закрытия магазина."
+  closing_time: String
+  id: Int
+  "Время открытия магазина."
+  opening_time: String
+  shop: Shop
+  shop_id: Int
+  user: User
+  "Часы работы"
+  working_days: [Int]
+}
+
+"Aggregate functions when ordering by a relation without specifying a column."
+enum OrderByRelationAggregateFunction {
+  "Amount of items."
+  COUNT
+}
+
+"Aggregate functions when ordering by a relation that may specify a column."
+enum OrderByRelationWithColumnAggregateFunction {
+  "Average."
+  AVG
+  "Amount of items."
+  COUNT
+  "Maximum."
+  MAX
+  "Minimum."
+  MIN
+  "Sum."
+  SUM
+}
+
+"Directions for ordering a list of records."
+enum SortOrder {
+  "Sort records in ascending order."
+  ASC
+  "Sort records in descending order."
+  DESC
+}
+
+"Specify if you want to include or exclude trashed results from a query."
+enum Trashed {
+  "Only return trashed results."
+  ONLY
+  "Return both trashed and non-trashed results."
+  WITH
+  "Only return non-trashed results."
+  WITHOUT
+}
+
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date
+
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime
+
+"Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec"
+scalar Upload
+
+input AttributeInput {
+  attribute_id: Int
+  attribute_value_id: Int
+  float_value: Float
+  id: Int
+  int_value: Int
+  string_value: String
+  text_value: String
+}
+
+input AttributeValueInput {
+  id: Int
+  "Значение варианта"
+  title: String
+}
+
+input CategoryPosition {
+  "ID товарной группы"
+  id: Int!
+  "Позиция товарной группы"
+  position: Int
+}
+
+input DefaultOrdering {
+  orderBy: String!
+  orderColumn: String!
+}
+
+input ImgInput {
+  "Текст при неуспешной загрузке изображения"
+  alt: String
+  id: Int
+  "Название изображения"
+  origin_name: String!
+  "Путь к изображению"
+  path: String!
+  "Размер изображения (1.3 Мб)"
+  size: String
+  "Тип изображения"
+  type: String
+}
+
+"Allows ordering a list of records."
+input OrderByClause {
+  "The column that is used for ordering."
+  column: String!
+  "The direction that is used for ordering."
+  order: SortOrder!
+}
+
+input PriceInput {
+  shop_id: Int
+  value: Int
+}
+
+input ProductGroupPosition {
+  "ID товарной группы"
+  id: Int!
+  "Позиция товарной группы"
+  position: Int
+}
+
+input ShopCategoryInput {
+  "ID категории"
+  category_id: Int
+  "Приоритет категории"
+  position: Int
+  "Время на сборку"
+  time_to_take: Int
+}
+
+input ShopZoneDeliveryPriceRangeInput {
+  "Сумма заказа, от которой действует диапазон, ₽"
+  from_amount: Int!
+  "Стоимость доставки, ₽ (0 = бесплатно)"
+  price: Int!
+}
+
+input SupplementInput {
+  id: Int
+  is_required: Boolean
+  title: String
+  "one - выбор одного , many - можно выбрать неограниченно"
+  type: String
+  "Вариации добавок"
+  values: [SupplementValueInput]
+}
+
+input SupplementValueInput {
+  id: Int
+  max_quantity: Int
+  position: Int
+  price: Int
+  product_id: Int
+  title: String
+  track_stock: Boolean
+}

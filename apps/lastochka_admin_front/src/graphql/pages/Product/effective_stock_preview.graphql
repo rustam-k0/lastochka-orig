@@ -1,0 +1,7 @@
+query ($category_ids: [Int!], $shop_id: Int, $unit_type_id: Int) {
+  effective_stock_preview(category_ids: $category_ids, shop_id: $shop_id, unit_type_id: $unit_type_id) {
+    mode
+    fixed
+    fixed_unit_type_id
+  }
+}

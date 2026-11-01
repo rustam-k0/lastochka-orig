@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Заказы с заменой
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: COUNT(DISTINCT replaced_delivered_order_id)
+    label: Заказы с заменой
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: order_created_at
+  subheader: Доставленные заказы, где была замена
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',d'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 47fddec7-0198-47af-bebf-6193d5235a0d
+uuid: 1217ff55-1244-50e8-b8ef-5c8dece11064
+version: 1.0.0

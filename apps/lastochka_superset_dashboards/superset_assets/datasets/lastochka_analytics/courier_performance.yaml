@@ -1,0 +1,94 @@
+# Вкладка «Операции» (по магазину). Заказы в разрезе рейса курьера, датасет
+# «Метрики курьеров». db3 Postgres. Та же логика перестройки на db3, что и в
+# assembler_performance.yaml (см. комментарий там) - тайминги через события
+# delivery.courier_assigned -> delivery.finished, коррелированные по
+# payload->>'delivery_id' (числовой id db1 deliveries, есть в обоих
+# event_type, проверено на dev).
+#
+# ДОПОЛНИТЕЛЬНО к BUILD_PLAN: BUILD_PLAN считал метрику "км на заказ"
+# принципиально невычислимой ("НЕВОЗМОЖНО, нет данных о пройденном
+# расстоянии"). Это было верно для db1 (deliveries/delivery_orders
+# действительно не хранят километраж), но с вводом B2E-эпика появилось
+# событие delivery.distance_logged (payload.distance_m, мутация
+# DeliveryLogDistance) - JOIN по delivery_id даёт distance_m ИМЕННО для
+# конкретного заказа/доставки. Это не полный трек курьера за смену, но
+# закрывает метрику "расстояние по этой доставке" из макета. На dev всего 1
+# событие delivery.distance_logged - пусто-ожидаемо для большинства строк,
+# но поле включено и корректно.
+#
+# slot_end_date/order_amount в payload delivery.finished присутствуют НЕ у
+# всех событий: поля добавлены в orderContext() бэкендом 2026-07-15 (см.
+# analytics-collection-layer.md, эпик B2E #11595) - события ДО этой даты
+# (например order 115, 2026-07-10) их не содержат, is_late для них будет
+# NULL (корректно исключается из AVG), а не ложный 0.
+#
+# employee_id - courier_id в сыром виде (см. то же ограничение кросс-DB join
+# в assembler_performance.yaml - имени курьера в этом датасете нет).
+#
+# ПУСТО/СКУДНО-ОЖИДАЕМО: на dev 2 delivery.courier_assigned / 2
+# delivery.finished события (B2E-инструментация delivery.* включена
+# 2026-07-15) - результат датасета будет 1-2 строки, это текущее состояние
+# данных.
+table_name: courier_performance
+main_dttm_col: delivery_finished_at
+database_uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+schema: null
+sql: |
+  WITH assigned AS (
+      SELECT
+          (payload ->> 'delivery_id')::bigint AS delivery_id,
+          occurred_at                          AS courier_assigned_at
+      FROM analytics_events
+      WHERE event_type = 'delivery.courier_assigned'
+  ),
+  finished AS (
+      SELECT
+          (payload ->> 'delivery_id')::bigint        AS delivery_id,
+          order_id,
+          (payload ->> 'order_local_id')::bigint      AS order_local_id,
+          store_id,
+          employee_id,
+          role,
+          session_id,
+          occurred_at                                 AS delivery_finished_at,
+          NULLIF(payload ->> 'slot_end_date', '')::timestamptz AS slot_end_date,
+          (payload ->> 'order_amount')::numeric       AS order_amount,
+          (payload ->> 'all_returned')::boolean       AS all_returned
+      FROM analytics_events
+      WHERE event_type = 'delivery.finished'
+  ),
+  distance AS (
+      SELECT
+          (payload ->> 'delivery_id')::bigint             AS delivery_id,
+          AVG((payload ->> 'distance_m')::numeric)         AS distance_m
+      FROM analytics_events
+      WHERE event_type = 'delivery.distance_logged'
+      GROUP BY 1
+  )
+  SELECT
+      f.delivery_id,
+      f.order_id,
+      f.order_local_id,
+      f.store_id,
+      f.employee_id,
+      f.role,
+      f.session_id,
+      a.courier_assigned_at,
+      f.delivery_finished_at,
+      CAST(f.delivery_finished_at AS date)                                 AS delivery_shift_date,
+      EXTRACT(EPOCH FROM (f.delivery_finished_at - a.courier_assigned_at)) AS delivery_seconds,
+      f.slot_end_date,
+      f.order_amount,
+      f.all_returned,
+      CASE
+          WHEN f.slot_end_date IS NOT NULL
+              THEN CASE WHEN f.delivery_finished_at > f.slot_end_date THEN 1 ELSE 0 END
+      END                                                                  AS is_late,
+      di.distance_m
+  FROM finished f
+  LEFT JOIN assigned a ON a.delivery_id = f.delivery_id
+  LEFT JOIN distance di ON di.delivery_id = f.delivery_id
+uuid: 30e76022-6d3e-4be3-9de0-54c266112398
+columns: []
+metrics: []
+version: 1.0.0

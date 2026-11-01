@@ -1,0 +1,9 @@
+query (
+  $first: Int!, $page: Int!, $title: String, $status: Int, $type: [String], $updated_at_start_date: DateTime, $updated_at_end_date: DateTime, $ordering: [DefaultOrdering], 
+) {
+  join_data(
+    first: $first, page: $page, title: $title, status: $status, type: $type, updated_at_start_date: $updated_at_start_date, updated_at_end_date: $updated_at_end_date, ordering: $ordering, 
+  ) {
+    data { id title updated_at status { id name code type route table_name } } paginatorInfo { total } 
+  }
+}

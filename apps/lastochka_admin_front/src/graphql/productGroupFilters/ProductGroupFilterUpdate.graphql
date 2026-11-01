@@ -1,0 +1,6 @@
+mutation ProductGroupFilterUpdate($id: Int!, $name: String, $position: Int, $is_active: Boolean) {
+  ProductGroupFilterUpdate(id: $id, name: $name, position: $position, is_active: $is_active) {
+    code
+    message
+  }
+}

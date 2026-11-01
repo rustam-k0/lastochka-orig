@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Без оценки
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(CASE WHEN rating IS NULL THEN 1 ELSE 0 END)
+    label: Без оценки
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: reviewed_at
+  subheader: Исключены из среднего
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',d'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 061549f5-8d56-5036-baed-944599899194
+uuid: f8c20d5b-3aa8-585b-917b-c6aece7cde13
+version: 1.0.0

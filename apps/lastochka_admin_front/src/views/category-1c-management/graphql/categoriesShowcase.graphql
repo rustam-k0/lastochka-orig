@@ -1,0 +1,13 @@
+query CategoriesShowcase($shop_id: Int!, $title: String) {
+  admin_categories_paginate(title: $title, first: 1000) {
+    data {
+      id
+      title
+      parent {
+        id
+      }
+      category_1c_mappings_count(shop_id: $shop_id)
+      has_orphan_1c_sources(shop_id: $shop_id)
+    }
+  }
+}

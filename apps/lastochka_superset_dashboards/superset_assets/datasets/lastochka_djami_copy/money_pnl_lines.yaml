@@ -1,0 +1,134 @@
+# Вкладка «Деньги» (по магазину). Отчёт о прибыли (P&L) - таблица с РЕАЛЬНЫМИ
+# строками (long-format: line_item + amount), единственный потребитель - чарт
+# «Отчёт о прибыли (P&L)». СНЯТО с blocked правилом 8 (products.cost_price,
+# store_operating_costs теперь существуют на dev).
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1 - выручка только по status_id = 5 (delivered_orders CTE), statuses
+#     НЕ джойнится.
+#   Правило 2 - WHERE o.parent_order_id IS NULL в delivered_orders.
+#   Правило 7 - MySQL: WITH (CTE, MySQL 8 поддерживает), без EXTRACT/date_trunc.
+#   Правило 8 - COGS через коррелированный подзапрос order_items+products
+#     (NULL-safe: cost_price пуст у ВСЕХ 13042 товаров на dev -> order_cogs = NULL
+#     для каждого заказа -> строки «Себестоимость (COGS)»/«Валовая прибыль»/
+#     «Чистая прибыль» = NULL, НЕ подменено нулём). Опекс из store_operating_costs:
+#     fixed_amount как есть, pct_of_revenue * revenue магазина / 100 - вычисляется
+#     В SQL (не в чарте).
+#   ВАЖНО, учтено ревью Task 2 (там MAX(shop_fixed_opex_current) на чарте было
+#     корректно только при выбранном одном магазине) - здесь опекс считается
+#     ШАГОМ ГРАНУЛЯЦИИ ПО МАГАЗИНУ ВНУТРИ SQL (shop_summary/shop_opex CTE,
+#     GROUP BY shop_id), а не MAX() по всей многомагазинной выборке в чарте:
+#     каждая строка «Операционные расходы»/«Чистая прибыль» уже содержит готовое
+#     значение опекса СВОЕГО магазина, метрика чарта - обычный SUM(amount).
+#   Допущение (как в djami_orders_core Task 2): store_operating_costs на dev имеет
+#     ЕДИНСТВЕННУЮ сетевую (shop_id IS NULL) строку rent/fixed_amount/50000 -
+#     присоединяется к КАЖДОМУ магазину (soc.shop_id = ss.shop_id OR shop_id IS
+#     NULL), что при нескольких активных магазинах задвоило бы сетевой опекс на
+#     каждый - приемлемо для вкладки "по магазину" (нативный фильтр - один
+#     магазин), задокументировано явно.
+#   Опекс "period" = период действия самого правила (soc.period_start/period_end
+#     проверяются на CURDATE()), НЕ окно нативного date-filter дашборда - точного
+#     календарного проратирования нет (нет calendar dimension). Строки
+#     «Операционные расходы»/«Чистая прибыль» датированы last_order_date магазина
+#     (последний доставленный заказ), чтобы попадать в разумные date-range фильтры.
+#   Правило 9 - store_operating_costs фильтруется deleted_at IS NULL AND is_active=1.
+#   Правило 12 - shop_id/order_date оставлены колонками.
+#
+# ИСПРАВЛЕНО (финальная fix-волна): order_cogs теперь фильтруется тем же
+# AND oi.status_id <> 3, что и каноническая формула выручки позиций (правило 3,
+# "Симметрия revenue/COGS обязательна" - см. conversion-rules.md и
+# network_orders_fact.yaml). Раньше COGS считался по ВСЕМ позициям заказа
+# (включая отменённые при сборке), было замаскировано NULL (cost_price ещё
+# пуст на dev).
+#
+# Наблюдение по схеме: shops.name НЕ существует, колонка - shops.title (BUILD_PLAN
+# ошибочно предполагал sh.name).
+#
+# Данные на dev: items_subtotal NULL у 25/28 доставленных заказов (амount всегда
+# заполнен) - для P&L используется o.amount (выручка), не items_subtotal.
+table_name: money_pnl_lines
+main_dttm_col: order_date
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  WITH delivered_orders AS (
+      SELECT
+          o.id                                       AS order_id,
+          o.shop_id                                  AS shop_id,
+          sh.title                                   AS shop_name,
+          DATE(COALESCE(o.paid_at, o.finished_at))   AS order_date,
+          o.amount                                    AS revenue_amount,
+          (
+              SELECT SUM(oi.quantity * p.cost_price)
+              FROM order_items oi
+              JOIN products p ON p.id = oi.product_id
+              WHERE oi.order_id = o.id AND oi.status_id <> 3
+          )                                            AS order_cogs
+      FROM orders o
+      LEFT JOIN shops sh ON sh.id = o.shop_id
+      WHERE o.parent_order_id IS NULL AND o.status_id = 5
+  ),
+  shop_summary AS (
+      SELECT
+          shop_id,
+          MAX(shop_name)      AS shop_name,
+          MAX(order_date)     AS last_order_date,
+          SUM(revenue_amount) AS shop_revenue,
+          SUM(order_cogs)     AS shop_cogs
+      FROM delivered_orders
+      GROUP BY shop_id
+  ),
+  shop_opex AS (
+      SELECT
+          ss.shop_id,
+          ss.shop_name,
+          ss.last_order_date,
+          (
+              SELECT COALESCE(SUM(soc.value), 0)
+              FROM store_operating_costs soc
+              WHERE soc.deleted_at IS NULL
+                AND soc.is_active = 1
+                AND soc.rule_type = 'fixed_amount'
+                AND (soc.shop_id = ss.shop_id OR soc.shop_id IS NULL)
+                AND soc.period_start <= CURDATE()
+                AND (soc.period_end IS NULL OR soc.period_end >= CURDATE())
+          )
+          +
+          ss.shop_revenue * (
+              SELECT COALESCE(SUM(soc.value), 0)
+              FROM store_operating_costs soc
+              WHERE soc.deleted_at IS NULL
+                AND soc.is_active = 1
+                AND soc.rule_type = 'pct_of_revenue'
+                AND (soc.shop_id = ss.shop_id OR soc.shop_id IS NULL)
+                AND soc.period_start <= CURDATE()
+                AND (soc.period_end IS NULL OR soc.period_end >= CURDATE())
+          ) / 100.0                                    AS opex_amount
+      FROM shop_summary ss
+  )
+  SELECT
+      do.shop_id AS shop_id, do.shop_name AS shop_name, do.order_date AS order_date,
+      1 AS line_order, 'Выручка' AS line_item, do.revenue_amount AS amount
+  FROM delivered_orders do
+  UNION ALL
+  SELECT
+      do.shop_id, do.shop_name, do.order_date, 2, 'Себестоимость (COGS)', do.order_cogs
+  FROM delivered_orders do
+  UNION ALL
+  SELECT
+      do.shop_id, do.shop_name, do.order_date, 3, 'Валовая прибыль', (do.revenue_amount - do.order_cogs)
+  FROM delivered_orders do
+  UNION ALL
+  SELECT
+      so.shop_id, so.shop_name, so.last_order_date, 4, 'Операционные расходы', so.opex_amount
+  FROM shop_opex so
+  UNION ALL
+  SELECT
+      so.shop_id, so.shop_name, so.last_order_date, 5, 'Чистая прибыль',
+      (ss.shop_revenue - ss.shop_cogs - so.opex_amount)
+  FROM shop_opex so
+  JOIN shop_summary ss ON ss.shop_id = so.shop_id
+uuid: 528d6736-07ba-45cf-89f3-bdbaa8bd31db
+columns: []
+metrics: []
+version: 1.0.0

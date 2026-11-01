@@ -1,0 +1,80 @@
+.container
+  container()
+
+.link {
+  font-size 1em
+  font-weight 400
+  color $main_color
+  display inline-flex
+  gap 4px
+  align-items center
+  text-decoration underline
+
+  .icon {
+    width 18px
+    height 18px
+
+    svg {
+      width 100%
+      height 100%
+
+      path {
+        fill $main_color
+      }
+    }
+  }
+}
+
+.list
+  display: grid;
+  grid-gap: 16px;
+
+.hidden
+  display none !important
+
+.no-overflow
+  overflow hidden
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $main_color;
+  transition .2s
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $blue;
+  cursor pointer
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: $gray;
+}
+
+.vue-notification {
+  margin 0 15px 15px 0 !important
+
+  &.error {
+    background: $red !important;
+    border-left-color: darken($red, 50%) !important;
+  }
+
+  &.warn {
+    background: $orange !important;
+    border-left-color: darken($orange, 50%) !important;
+  }
+
+  &.success {
+    background: $green !important;
+    border-left-color: darken($green, 50%) !important;
+  }
+}
+
+.codex-editor__redactor {
+  padding-bottom 100px !important
+}

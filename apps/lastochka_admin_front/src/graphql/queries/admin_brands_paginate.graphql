@@ -1,0 +1,36 @@
+query (
+  $first: Int
+  $page: Int
+  $is_active: Boolean
+  $search: String
+  $ordering: [DefaultOrdering]
+) {
+  admin_brands_paginate (
+    first: $first
+    page: $page
+    is_active: $is_active
+    search: $search
+    ordering: $ordering
+  ) {
+    data {
+      id
+      title
+      is_active
+      position
+      logoImage {
+        id
+        path
+        type
+        alt
+        size
+        origin_name
+      }
+    }
+    paginatorInfo {
+      currentPage
+      lastPage
+      total
+      perPage
+    }
+  }
+}

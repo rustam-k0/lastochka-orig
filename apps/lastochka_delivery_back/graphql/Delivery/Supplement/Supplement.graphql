@@ -1,0 +1,6 @@
+type Supplement {
+  id:Int
+  title:String
+  "one - выбор одного , many - можно выбрать неограниченно"
+  type:String
+}

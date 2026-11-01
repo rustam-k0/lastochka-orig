@@ -1,0 +1,26 @@
+type Faq {
+  "ID"
+  id: Int
+  "Вопрос"
+  question: String
+  "Ответ"
+  answer: String
+  "Активен"
+  is_active: Boolean
+  "Позиция сортировки"
+  position: Int
+}
+
+extend type Query {
+  "Список активных вопросов FAQ"
+  faqs: [Faq!]! @all(scopes: ["active"])
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Все вопросы FAQ (включая неактивные)"
+  allFaqs: [Faq!]! @all
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Вопрос FAQ по ID"
+  faq(id: Int! @eq): Faq @find
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+}

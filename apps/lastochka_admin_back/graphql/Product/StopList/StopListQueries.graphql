@@ -1,0 +1,13 @@
+extend type Query {
+
+  "Товары магазина в стоп-листе указанного типа (hidden | pickup_only)"
+  shop_stop_list_products(
+    "ID магазина"
+    shop_id: Int!
+    "Тип стоп-листа: hidden | pickup_only"
+    type: String!
+  ): [Product]
+    @paginate(defaultCount: 10, maxCount: 1000, builder: "App\\GraphQL\\Queries\\StopList\\ShopStopListProducts@builder")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "stores")
+
+}

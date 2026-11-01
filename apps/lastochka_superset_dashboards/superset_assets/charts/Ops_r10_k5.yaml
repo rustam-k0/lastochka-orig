@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Выручка на клиента
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(total) / NULLIF(COUNT(DISTINCT client_id), 0)
+    label: Выручка на клиента
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: ordered_at
+  subheader: Net за период / покупатели
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: $,.0f
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 989670f4-23de-57af-8bc4-4041a638c7a1
+uuid: 7fdba2d1-d45d-5660-928c-45cad4c53031
+version: 1.0.0

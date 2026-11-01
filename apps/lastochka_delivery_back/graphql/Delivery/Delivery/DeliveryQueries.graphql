@@ -1,0 +1,30 @@
+extend type Query {
+  "Заказы на доставку"
+  delivery_orders_paginate(
+    "Фильтр по status_id назначения: [1, 2, 3] — маршрут, [4] — доставленные за всю историю. Без фильтра — только текущий рейс"
+    status_id: [Int!] @in(key: "delivery_orders.status_id")
+  ):[DeliveryOrder] @paginate(defaultCount: 10,scopes: ["courierList","orderByPriority"])
+  @guard
+  @can(model: "Admin",ability: "driverOnShift")
+
+  "Заказы на доставку"
+  delivery_orders(
+    "Фильтр по status_id назначения: [1, 2, 3] — маршрут, [4] — доставленные за всю историю. Без фильтра — только текущий рейс"
+    status_id: [Int!] @in(key: "delivery_orders.status_id")
+  ):[DeliveryOrder] @all(scopes: ["courierList","orderByPriority"])
+  @guard
+  @can(model: "Admin",ability: "driverOnShift")
+
+  "Заказ доставку"
+  delivery_orders_item(
+    "DeliveryOrder -> id"
+    id:Int @eq
+  ):DeliveryOrder @find(scopes: ["courierItem"])
+  @guard
+  @can(model: "Admin",ability: "driverOnShift")
+
+  delivery:Delivery @first(scopes: ["auth"])
+  @guard
+  @can(model: "Admin",ability: "driverOnShift")
+
+}

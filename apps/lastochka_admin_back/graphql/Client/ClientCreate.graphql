@@ -1,0 +1,22 @@
+extend type Mutation {
+  ClientCreate(
+    "Имя"
+    name:String
+    "Фамилия"
+    surname:String
+    "Отчество"
+    patronymic:String
+    "Телефонный номер"
+    phone:String
+    "Согласие на новостную рассылку"
+    newsletter_subscribed:Boolean
+    "Почта"
+    email:String
+    "Дата рождения"
+    birthday:DateTime
+    "B2B-клиент"
+    is_b2b:Boolean
+  ):DefaultResponse   @field(resolver:"Client\\ClientCreate")
+  @validator(class:"Client\\ClientCreateValidator")
+  @guard @can(model: "Admin",ability: "onlyAdmin") @section(key: "clients")
+}

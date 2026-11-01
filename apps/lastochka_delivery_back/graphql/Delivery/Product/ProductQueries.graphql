@@ -1,0 +1,46 @@
+extend type Query {
+  "Найти товар по штрих коду или артикулу в соответствии с выбранным товаром по id"
+  product_search(
+    "ID товара"
+    id:Int! @eq
+    "ID заказа"
+    order_id:Int!
+    "Штрих код"
+    barcode:String @rules(apply: ["required_without:articul"])
+    "Артикул"
+    articul:String @rules(apply: ["required_without:barcode"])
+  ):Product @first(scopes: ["filter"])
+  @guard
+  @can(model: "Admin",ability: "onShift")
+
+  "Найти товар по штрих коду или артикулу"
+  product_global_search(
+    "Штрих код"
+    barcode:String @rules(apply: ["required_without:articul"])
+    "Артикул"
+    articul:String @rules(apply: ["required_without:barcode"])
+  ):Product @first(scopes: ["filter", "inStock"])
+  @guard
+  @can(model: "Admin",ability: "onShift")
+
+  "Поиск товара по штрих коду или артикулу среди товаров магазина заказа"
+  product_search_by_shop(
+    "ID заказа"
+    order_id:Int!
+    "Штрих код"
+    barcode:String @rules(apply: ["required_without:articul"])
+    "Артикул"
+    articul:String @rules(apply: ["required_without:barcode"])
+  ):Product @field(resolver: "Product\\ProductSearchByShop")
+  @guard
+  @can(model: "Admin",ability: "onShift")
+
+  "Найти товар по id"
+  product(
+    "ID товара"
+    id:Int! @eq
+  ):Product @first(scopes: ["filter"])
+  @guard
+  @can(model: "Admin",ability: "onShift")
+
+}

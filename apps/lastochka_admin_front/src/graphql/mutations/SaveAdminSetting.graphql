@@ -1,0 +1,18 @@
+mutation SaveAdminSetting(
+    $key: String!
+    $value: String
+    $file: Upload
+    $type: String!
+) {
+    saveAdminSetting(
+        key: $key
+        value: $value
+        file: $file
+        type: $type
+    ) {
+        id
+        key
+        value
+        type
+    }
+}

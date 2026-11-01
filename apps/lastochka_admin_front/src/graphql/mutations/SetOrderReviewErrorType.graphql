@@ -1,0 +1,7 @@
+mutation SetOrderReviewErrorType($id: Int!, $error_type: String) {
+  setOrderReviewErrorType(id: $id, error_type: $error_type) {
+    id
+    error_type
+    error_type_label
+  }
+}

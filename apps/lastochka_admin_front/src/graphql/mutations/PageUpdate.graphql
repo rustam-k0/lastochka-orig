@@ -1,0 +1,26 @@
+mutation (
+  $id: Int!
+  $slug: String
+  $title: String
+  $content: String
+  $meta_title: String
+  $meta_description: String
+  $position: Int
+  $is_published: Boolean
+) {
+  PageUpdate(
+    id: $id
+    slug: $slug
+    title: $title
+    content: $content
+    meta_title: $meta_title
+    meta_description: $meta_description
+    position: $position
+    is_published: $is_published
+  ) {
+    id
+    slug
+    title
+    is_published
+  }
+}

@@ -1,0 +1,37 @@
+# Вкладка «Операции». Сборка по товарам: доля "не найдено"/"замена" по
+# товару. avg_assembly_minutes из BUILD_PLAN исключён - item-level время
+# сборки физически невычислимо (см. примечание в assembly_product_stats.yaml
+# - assembly_items не хранит started_at на позицию). "Статус" (норма/риск) -
+# через Superset Conditional Formatting по порогам pct_not_found/pct_replaced
+# (настраивается в UI, пороги нужно согласовать с заказчиком - тот же приём,
+# что в BUILD_PLAN-примечании).
+slice_name: Сборка по товарам
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - product_name
+  metrics:
+  - expressionType: SQL
+    sqlExpression: AVG(is_not_found) * 100
+    label: Не найдено при сборке, %
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: AVG(is_replaced) * 100
+    label: Заменено, %
+    hasCustomLabel: true
+  - expressionType: SIMPLE
+    column:
+      column_name: order_item_id
+    aggregate: COUNT
+    label: Позиций
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: a39a8a84-d892-4d13-bd24-96190a61989a
+uuid: bb8d68be-035a-4b7c-a5a7-0959a14684cd
+version: 1.0.0

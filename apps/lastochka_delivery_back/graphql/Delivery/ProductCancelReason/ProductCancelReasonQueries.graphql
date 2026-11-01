@@ -1,0 +1,4 @@
+extend type Query {
+  "Справочник причин отмены товара (активные) — для выбора сборщиком"
+  product_cancel_reasons:[ProductCancelReason] @all(scopes: ["active", "ordered"]) @guard
+}

@@ -1,0 +1,50 @@
+# Сгенерировано scripts/ops_datasets.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками: описание правил расчёта - в генераторе.
+table_name: ops_dq_checks
+main_dttm_col: checked_at
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: "{% set period = get_time_filter('checked_at', remove_filter=True, target_type='DATETIME') %}\n{% set shops = filter_values('shop_name', remove_filter=True) %}\nSELECT\n    c.*,\n    NOW()                                            AS checked_at,\n    {% if shops %}'Выбранные магазины'{% else %}'Все магазины'{% endif %} AS shop_name,\n    fr.copy_refreshed_at,\n    TIMESTAMPDIFF(MINUTE, fr.copy_refreshed_at, NOW()) / 60 AS copy_age_hours\nFROM (\nSELECT 1 AS check_order, 'Уникальность заказов и событий' AS check_name, 'Дубли номера заказа (orders.uuid)' AS check_what,\n       v.value AS result_value, CAST(v.value AS CHAR) AS result_label, '0' AS expected,\n       CASE WHEN v.value = 0 THEN 'Без ошибок' ELSE 'Нужна проверка' END AS status\nFROM (SELECT COUNT(*) AS value FROM (SELECT o.uuid FROM orders o LEFT JOIN shops s ON s.id = o.shop_id\n    WHERE o.deleted_at IS NULL AND o.parent_order_id IS NULL\n      AND COALESCE(o.client_id, 0) <> 35\n      {% if period.from_expr %}AND o.created_at\
+  \ >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND o.created_at < {{ period.to_expr }}{% endif %}\n      {% if shops %}AND s.title IN {{ shops | where_in }}{% endif %} GROUP BY o.uuid HAVING COUNT(*) > 1) d) v\nUNION ALL\nSELECT 2 AS check_order, 'Временная последовательность' AS check_name, 'Сборка или доставка закончилась раньше начала' AS check_what,\n       v.value AS result_value, CAST(v.value AS CHAR) AS result_label, '0' AS expected,\n       CASE WHEN v.value = 0 THEN 'Без ошибок' ELSE 'Нужна проверка' END AS status\nFROM (SELECT\n                (SELECT COUNT(*) FROM assemblies a JOIN orders ao ON ao.id = a.order_id\n                   JOIN orders o ON o.id = COALESCE(ao.parent_order_id, ao.id) LEFT JOIN shops s ON s.id = o.shop_id\n                  WHERE a.deleted_at IS NULL AND a.finished_at < a.created_at\n                    {% if period.from_expr %}AND o.created_at >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND o.created_at\
+  \ < {{ period.to_expr }}{% endif %} {% if shops %}AND s.title IN {{ shops | where_in }}{% endif %})\n              + (SELECT COUNT(*) FROM delivery_orders d JOIN orders o ON o.id = d.order_id LEFT JOIN shops s ON s.id = o.shop_id\n                  WHERE d.deleted_at IS NULL\n                    AND (d.finished_at < d.created_at OR d.started_at < d.created_at OR d.finished_at < d.started_at)\n                    {% if period.from_expr %}AND o.created_at >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND o.created_at < {{ period.to_expr }}{% endif %} {% if shops %}AND s.title IN {{ shops | where_in }}{% endif %}) AS value) v\nUNION ALL\nSELECT 3 AS check_order, 'Суммы заказов' AS check_name, 'Итог ≠ позиции − скидка − бонусы + доставка + сборка' AS check_what,\n       v.value AS result_value, CAST(v.value AS CHAR) AS result_label, '0' AS expected,\n       CASE WHEN v.value = 0 THEN 'Без ошибок' ELSE 'Нужна проверка' END AS status\nFROM (SELECT COUNT(*) AS value FROM\
+  \ orders o LEFT JOIN shops s ON s.id = o.shop_id\n    WHERE o.deleted_at IS NULL AND o.parent_order_id IS NULL\n      AND COALESCE(o.client_id, 0) <> 35\n      {% if period.from_expr %}AND o.created_at >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND o.created_at < {{ period.to_expr }}{% endif %}\n      {% if shops %}AND s.title IN {{ shops | where_in }}{% endif %}\n                  AND o.status_id = 5 AND o.items_subtotal IS NOT NULL\n                  AND ABS(o.amount - (o.items_subtotal - COALESCE(o.discount, 0) - COALESCE(o.bonus_spent, 0)\n                          + COALESCE(o.delivery_price, 0) + COALESCE(o.assembly_cost, 0))) > 1) v\nUNION ALL\nSELECT 4 AS check_order, 'Жалобы без заказа' AS check_name, 'Отзыв ссылается на несуществующий заказ' AS check_what,\n       v.value AS result_value, CAST(v.value AS CHAR) AS result_label, '0' AS expected,\n       CASE WHEN v.value = 0 THEN 'Без ошибок' ELSE 'Нужна проверка' END AS status\nFROM (SELECT COUNT(*) AS\
+  \ value FROM order_reviews r LEFT JOIN orders o ON o.id = r.order_id\n                WHERE r.deleted_at IS NULL AND o.id IS NULL\n                  {% if period.from_expr %}AND r.created_at >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND r.created_at < {{ period.to_expr }}{% endif %}) v\nUNION ALL\nSELECT 5 AS check_order, 'Зона не определена' AS check_name, 'Курьерские заказы без подтверждённой зоны' AS check_what,\n       v.value AS result_value, CONCAT(v.value, ' заказ(ов)') AS result_label, 'Список' AS expected,\n       CASE WHEN v.value = 0 THEN 'Без ошибок' ELSE 'Нужна проверка' END AS status\nFROM (SELECT COUNT(*) AS value FROM orders o LEFT JOIN shops s ON s.id = o.shop_id\n    WHERE o.deleted_at IS NULL AND o.parent_order_id IS NULL\n      AND COALESCE(o.client_id, 0) <> 35\n      {% if period.from_expr %}AND o.created_at >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND o.created_at < {{ period.to_expr }}{% endif %}\n      {% if\
+  \ shops %}AND s.title IN {{ shops | where_in }}{% endif %} AND o.type_id = 2 AND o.zone_id IS NULL) v\nUNION ALL\nSELECT 6 AS check_order, 'Причина замены не указана' AS check_name, 'Доля замен без причины' AS check_what,\n       v.value AS result_value, CONCAT(REPLACE(FORMAT(COALESCE(v.value, 0), 1), '.', ','), '%') AS result_label, '< 5%' AS expected,\n       CASE WHEN COALESCE(v.value, 0) < 5 THEN 'Без ошибок' ELSE 'Нужна проверка' END AS status\nFROM (SELECT 100 * SUM(CASE WHEN oi.replace_reason_id IS NULL THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0) AS value\n                FROM order_items oi JOIN assemblies a ON a.order_id = oi.order_id AND a.deleted_at IS NULL\n                JOIN orders so ON so.id = oi.order_id\n                JOIN orders o ON o.id = COALESCE(so.parent_order_id, so.id)\n                LEFT JOIN shops s ON s.id = o.shop_id\n                WHERE oi.deleted_at IS NULL AND oi.origin_product_id IS NOT NULL\n                  AND oi.origin_product_id <> oi.product_id\n\
+  \                  {% if period.from_expr %}AND o.created_at >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND o.created_at < {{ period.to_expr }}{% endif %} {% if shops %}AND s.title IN {{ shops | where_in }}{% endif %}) v\nUNION ALL\nSELECT 7 AS check_order, 'Неполные факты инкассации' AS check_name, 'Доставлен за наличные, оплата не отмечена' AS check_what,\n       v.value AS result_value, CONCAT(v.value, ' заказ(ов)') AS result_label, 'Список' AS expected,\n       CASE WHEN v.value = 0 THEN 'Без ошибок' ELSE 'Нужна проверка' END AS status\nFROM (SELECT COUNT(*) AS value FROM orders o LEFT JOIN shops s ON s.id = o.shop_id\n    WHERE o.deleted_at IS NULL AND o.parent_order_id IS NULL\n      AND COALESCE(o.client_id, 0) <> 35\n      {% if period.from_expr %}AND o.created_at >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND o.created_at < {{ period.to_expr }}{% endif %}\n      {% if shops %}AND s.title IN {{ shops | where_in }}{% endif %}\n\
+  \                  AND o.status_id = 5 AND o.payment_type_id = 2 AND COALESCE(o.payment_status, '') <> 'paid') v\n) c\nCROSS JOIN (\n    SELECT MAX(create_time) AS copy_refreshed_at\n    FROM information_schema.tables\n    WHERE table_schema = DATABASE()\n) fr\n"
+uuid: 333a464b-edbf-54c5-bef2-c7555ba9b482
+columns:
+- column_name: checked_at
+  is_dttm: true
+- column_name: shop_name
+  is_dttm: false
+  verbose_name: Магазин
+  groupby: true
+  filterable: true
+- column_name: check_name
+  is_dttm: false
+  verbose_name: Проверка
+  groupby: true
+  filterable: true
+- column_name: check_what
+  is_dttm: false
+  verbose_name: Что проверяем
+  groupby: true
+  filterable: true
+- column_name: result_label
+  is_dttm: false
+  verbose_name: Результат
+  groupby: true
+  filterable: true
+- column_name: expected
+  is_dttm: false
+  verbose_name: Норма
+  groupby: true
+  filterable: true
+- column_name: status
+  is_dttm: false
+  verbose_name: Статус
+  groupby: true
+  filterable: true
+metrics: []
+version: 1.0.0

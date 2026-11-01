@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Лояльные клиенты
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(CASE WHEN segment = 'Лояльные' THEN 1 ELSE 0 END)
+    label: Лояльные клиенты
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: last_order_at
+  subheader: Регулярные активные
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',d'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+uuid: 033abbbb-7007-5dd4-8892-9e0df68980df
+version: 1.0.0

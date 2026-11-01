@@ -1,0 +1,33 @@
+query ($id: Int) {
+  user(id: $id) {
+    id
+    name
+    surname
+    patronymic
+    email
+    phone
+    two_factor_enabled
+    shops {
+      id
+      shop {
+        id
+        title
+      }
+    }
+    roles {
+      id
+      name_ru
+    }
+  }
+  shops {
+    id
+    title
+  }
+  roles {
+    id
+    name_ru
+  }
+  staffEmailRequired: adminSetting(key: "staff_email_required") {
+    value
+  }
+}

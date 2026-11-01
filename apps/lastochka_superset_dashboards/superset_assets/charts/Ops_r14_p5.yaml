@@ -1,0 +1,47 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Изменение численности сегментов
+description: Два среза одной выбранной аудитории
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: slice_segment
+  metrics:
+  - expressionType: SQL
+    sqlExpression: COUNT(*)
+    label: Клиентов
+    hasCustomLabel: true
+  groupby:
+  - slice_name
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: last_order_at
+  orientation: horizontal
+  row_limit: 1000
+  show_value: true
+  show_legend: true
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: ',d'
+  truncateYAxis: false
+  zoomable: false
+  rich_tooltip: true
+  stack: null
+  only_total: true
+  comparison_type: values
+  order_desc: true
+  x_axis_title: ''
+  x_axis_title_margin: 30
+  y_axis_title: Клиентов
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  x_axis_sort: slice_segment
+  x_axis_sort_asc: true
+cache_timeout: null
+dataset_uuid: 79fc24be-57e0-5e7d-bb54-a3850a956480
+uuid: 344da98a-7c56-58e2-ae49-0f9d53dceb2f
+version: 1.0.0

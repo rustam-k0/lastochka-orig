@@ -1,0 +1,484 @@
+dashboard_title: Аналитика - по сети
+description: null
+css: ''
+slug: analytics-by-network
+uuid: 816b4179-610d-4b8e-b598-dbf10845ea06
+position:
+  DASHBOARD_VERSION_KEY: v2
+  ROOT_ID:
+    type: ROOT
+    id: ROOT_ID
+    children:
+    - GRID_ID
+  GRID_ID:
+    type: GRID
+    id: GRID_ID
+    children:
+    - TABS-b10bc96030
+    parents:
+    - ROOT_ID
+  HEADER_ID:
+    type: HEADER
+    id: HEADER_ID
+    meta:
+      text: Аналитика - по сети
+  TABS-b10bc96030:
+    type: TABS
+    id: TABS-b10bc96030
+    meta: {}
+    children:
+    - TAB-1c88e05a0b
+    - TAB-8e89be616f
+    - TAB-04dafcff6b
+    parents:
+    - ROOT_ID
+    - GRID_ID
+  TAB-1c88e05a0b:
+    type: TAB
+    id: TAB-1c88e05a0b
+    meta:
+      text: Обзор сети
+      defaultText: Tab title
+      placeholder: Tab title
+    children:
+    - ROW-b36689f1c8
+    - ROW-bfd0186873
+    - ROW-d436f65c4e
+    - ROW-ffe1d5a4f6
+    - ROW-2245df3603
+    - ROW-bcf2036cfe
+    - ROW-6802c7a6a6
+    - ROW-f4a40d9a5a
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+  ROW-b36689f1c8:
+    type: ROW
+    id: ROW-b36689f1c8
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    children:
+    - CHART-3bf8b773e9
+    - CHART-bc8bb74dc1
+    - CHART-5fdbd4fbb8
+    - CHART-74e84aa0b2
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+  CHART-3bf8b773e9:
+    type: CHART
+    id: CHART-3bf8b773e9
+    meta:
+      uuid: 953a121f-1f25-445f-81aa-7282fbc3fbeb
+      chartId: 1
+      width: 3
+      height: 28
+      sliceName: 'Обзор сети: GMV сети'
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+    - ROW-b36689f1c8
+  CHART-bc8bb74dc1:
+    type: CHART
+    id: CHART-bc8bb74dc1
+    meta:
+      uuid: a1a75680-fc5b-47e7-a691-4f00d39b900f
+      chartId: 2
+      width: 3
+      height: 28
+      sliceName: 'Обзор сети: Чистая прибыль сети'
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+    - ROW-b36689f1c8
+  CHART-5fdbd4fbb8:
+    type: CHART
+    id: CHART-5fdbd4fbb8
+    meta:
+      uuid: a5f92e6f-ee93-454f-88d6-a7c125a35534
+      chartId: 3
+      width: 3
+      height: 28
+      sliceName: 'Обзор сети: Средняя маржа %, сеть'
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+    - ROW-b36689f1c8
+  CHART-74e84aa0b2:
+    type: CHART
+    id: CHART-74e84aa0b2
+    meta:
+      uuid: bc8e7aa3-c3ce-4c49-95d8-7d13bfd9597d
+      chartId: 4
+      width: 3
+      height: 28
+      sliceName: 'Обзор сети: Заказы (кол-во), сеть'
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+    - ROW-b36689f1c8
+  ROW-bfd0186873:
+    type: ROW
+    id: ROW-bfd0186873
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    children:
+    - CHART-7aec78c920
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+  CHART-7aec78c920:
+    type: CHART
+    id: CHART-7aec78c920
+    meta:
+      uuid: a2408825-9fe6-4c89-be4c-f81dfd8bab2d
+      chartId: 5
+      width: 3
+      height: 28
+      sliceName: 'Обзор сети: Активные сигналы, сеть'
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+    - ROW-bfd0186873
+  ROW-d436f65c4e:
+    type: ROW
+    id: ROW-d436f65c4e
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    children:
+    - CHART-585d7a6e5e
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+  CHART-585d7a6e5e:
+    type: CHART
+    id: CHART-585d7a6e5e
+    meta:
+      uuid: 5c018e4f-5184-4a1e-a72e-5bd2dca6f9da
+      chartId: 6
+      width: 12
+      height: 50
+      sliceName: 'Обзор сети: Лидеры сети — топ-3 по марже'
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+    - ROW-d436f65c4e
+  ROW-ffe1d5a4f6:
+    type: ROW
+    id: ROW-ffe1d5a4f6
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    children:
+    - CHART-665f3128f5
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+  CHART-665f3128f5:
+    type: CHART
+    id: CHART-665f3128f5
+    meta:
+      uuid: bb3b57b0-5fa2-4286-aa85-bfdded3bd50c
+      chartId: 7
+      width: 12
+      height: 50
+      sliceName: 'Обзор сети: Лидеры сети — топ-3 по SLA'
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+    - ROW-ffe1d5a4f6
+  ROW-2245df3603:
+    type: ROW
+    id: ROW-2245df3603
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    children:
+    - CHART-03083df5a6
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+  CHART-03083df5a6:
+    type: CHART
+    id: CHART-03083df5a6
+    meta:
+      uuid: 53b3b39b-22bd-454e-b217-d36ab068e659
+      chartId: 8
+      width: 12
+      height: 50
+      sliceName: 'Обзор сети: Требуют внимания — нижние 3 по марже'
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+    - ROW-2245df3603
+  ROW-bcf2036cfe:
+    type: ROW
+    id: ROW-bcf2036cfe
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    children:
+    - CHART-abcc97d888
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+  CHART-abcc97d888:
+    type: CHART
+    id: CHART-abcc97d888
+    meta:
+      uuid: a4239e1a-821e-4c4d-84c5-fc1a97afb00c
+      chartId: 9
+      width: 12
+      height: 50
+      sliceName: 'Обзор сети: Требуют внимания — нижние 3 по SLA'
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+    - ROW-bcf2036cfe
+  ROW-6802c7a6a6:
+    type: ROW
+    id: ROW-6802c7a6a6
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    children:
+    - CHART-6c87cc93c2
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+  CHART-6c87cc93c2:
+    type: CHART
+    id: CHART-6c87cc93c2
+    meta:
+      uuid: 851f161b-0a83-45a0-83c5-ea670e8f9fb5
+      chartId: 10
+      width: 12
+      height: 50
+      sliceName: 'Обзор сети: Лента сигналов по сети — события аналитики'
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+    - ROW-6802c7a6a6
+  ROW-f4a40d9a5a:
+    type: ROW
+    id: ROW-f4a40d9a5a
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    children:
+    - CHART-d7d072697b
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+  CHART-d7d072697b:
+    type: CHART
+    id: CHART-d7d072697b
+    meta:
+      uuid: 27b0ed77-0762-41b2-a89a-ebf3ff872807
+      chartId: 11
+      width: 12
+      height: 50
+      sliceName: 'Обзор сети: Лента сигналов по сети — операционные алерты курьерки'
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-1c88e05a0b
+    - ROW-f4a40d9a5a
+  TAB-8e89be616f:
+    type: TAB
+    id: TAB-8e89be616f
+    meta:
+      text: Светофор магазинов
+      defaultText: Tab title
+      placeholder: Tab title
+    children:
+    - ROW-71b927f4cb
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+  ROW-71b927f4cb:
+    type: ROW
+    id: ROW-71b927f4cb
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    children:
+    - CHART-e31756f68f
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-8e89be616f
+  CHART-e31756f68f:
+    type: CHART
+    id: CHART-e31756f68f
+    meta:
+      uuid: ab149a5a-9d70-48bb-83b1-5fabeb30342b
+      chartId: 12
+      width: 12
+      height: 60
+      sliceName: 'Светофор магазинов: Таблица-светофор по магазинам сети (факт vs план)'
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-8e89be616f
+    - ROW-71b927f4cb
+  TAB-04dafcff6b:
+    type: TAB
+    id: TAB-04dafcff6b
+    meta:
+      text: Лента сигналов
+      defaultText: Tab title
+      placeholder: Tab title
+    children:
+    - ROW-4a4e7f68a1
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+  ROW-4a4e7f68a1:
+    type: ROW
+    id: ROW-4a4e7f68a1
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    children:
+    - CHART-cbd7f87aa3
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-04dafcff6b
+  CHART-cbd7f87aa3:
+    type: CHART
+    id: CHART-cbd7f87aa3
+    meta:
+      uuid: 23c4c572-2a1f-46fa-880e-db5dd6ba49dd
+      chartId: 13
+      width: 12
+      height: 60
+      sliceName: 'Лента сигналов: Полная лента сигналов по всей сети (факт vs порог)'
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-b10bc96030
+    - TAB-04dafcff6b
+    - ROW-4a4e7f68a1
+metadata:
+  color_scheme: supersetColors
+  refresh_frequency: 0
+  expanded_slices: {}
+  label_colors: {}
+  shared_label_colors: []
+  color_scheme_domain: []
+  cross_filters_enabled: true
+  default_filters: '{}'
+  filter_scopes: {}
+  chart_configuration: {}
+  global_chart_configuration:
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded: []
+    chartsInScope: []
+  native_filter_configuration:
+  - id: NATIVE_FILTER-ef8c5555b
+    name: Период
+    filterType: filter_time
+    type: NATIVE_FILTER
+    targets:
+    - {}
+    controlValues: {}
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    description: Диапазон дат по временной колонке каждого датасета (main_dttm_col).
+  - id: NATIVE_FILTER-e1acafc60
+    name: Магазин
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: 920e6c66-08db-49d0-9518-3e0ffd86598c
+      column:
+        name: shop_id
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: false
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-dbe34599d
+    name: Магазин (события)
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: 831fbfd2-a456-4e78-8d28-c4360a731ee5
+      column:
+        name: store_id
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: false
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+version: 1.0.0
+is_managed_externally: false
+published: true

@@ -1,0 +1,6 @@
+mutation($order_id: Int, $reason_id: Int, $custom_reason: String) {
+  OrderCancel(order_id: $order_id, reason_id: $reason_id, custom_reason: $custom_reason) {
+    code
+    message
+  }
+}

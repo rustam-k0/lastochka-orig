@@ -1,0 +1,30 @@
+extend type Mutation {
+
+  UserUpdate(
+    "ID"
+    id:Int
+    "Имя"
+    name:String
+    "Фамилия"
+    surname:String
+    "Отчество"
+    patronymic:String
+    "Номер телефона"
+    phone:String
+    "Почта"
+    email:String
+    "Роль (ID), опционально — меняет роль пользователя"
+    role_id:Int
+    "Магазины, в которых работает пользователь"
+    shops:[Int]
+    "Новый пароль (опционально)"
+    password:String
+    "Подтверждение пароля (обязательно, если password задан)"
+    password_confirmation:String
+    "Отправить учётные данные по SMS"
+    send_credentials:Boolean
+  ):DefaultResponse @field(resolver:"User\\UserUpdate")
+  @validator(class:"User\\UserUpdateValidator")
+  @guard @can(model: "Admin",ability: "onlyShop") @section(key: "staffs")
+
+}

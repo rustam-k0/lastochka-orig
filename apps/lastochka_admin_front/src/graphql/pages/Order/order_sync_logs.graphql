@@ -1,0 +1,9 @@
+query ($order_number: String!) {
+  orderSyncLogs(order_number: $order_number) {
+    id
+    status
+    attempt_number
+    message
+    created_at
+  }
+}

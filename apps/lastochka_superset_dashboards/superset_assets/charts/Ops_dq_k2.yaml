@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Без ошибок
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status = 'Без ошибок' THEN 1 ELSE 0 END)
+    label: Без ошибок
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: checked_at
+  subheader: Проверки в норме
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',d'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 333a464b-edbf-54c5-bef2-c7555ba9b482
+uuid: 1b126801-3d3b-5fb8-9fe1-cc39856620b2
+version: 1.0.0

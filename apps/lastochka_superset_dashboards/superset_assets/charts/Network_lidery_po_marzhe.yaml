@@ -1,0 +1,44 @@
+# Вкладка «Обзор сети». Ранжирование по РЕАЛЬНОЙ марже (правило 8, gross_margin_pct
+# из metric-keys.md #4) - больше не "прокси", как было в BUILD_PLAN. Сортировка
+# по первому метрику (margin_pct) - паттерн проекта (см. money_marzha_po_kategoriyam,
+# Operations_reyting_sborschikov: order_desc сортирует по первому metrics[]).
+#
+# ИСПРАВЛЕНО (ревью Task 8, round 1): маржа считалась от amount (orders.amount,
+# включает delivery/assembly, уменьшен скидками/бонусами) - нарушение
+# контракта #4. Переведено на order_line_revenue (см. network_orders_fact.yaml)
+# = SUM(price_during_order*quantity) (status_id<>3): у oi.price СМЕШАННАЯ
+# семантика, верный итог позиции = price_during_order x quantity (ни SUM(price),
+# ни SUM(price*quantity)), см. датасет.
+slice_name: 'Обзор сети: Лидеры сети — топ-3 по марже'
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - shop_id
+  - shop_name
+  metrics:
+  - expressionType: SQL
+    sqlExpression: (SUM(CASE WHEN status_id = 5 THEN order_line_revenue ELSE 0 END) - SUM(CASE WHEN status_id = 5 THEN order_cogs END)) * 100.0 / NULLIF(SUM(CASE WHEN status_id = 5 THEN order_line_revenue ELSE 0 END), 0)
+    label: Маржа, %
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END)
+    label: GMV, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: AVG(is_on_time) * 100.0
+    label: SLA, %
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN status_id = 5 THEN order_id END)
+    label: Заказы, шт
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 3
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 920e6c66-08db-49d0-9518-3e0ffd86598c
+uuid: 5c018e4f-5184-4a1e-a72e-5bd2dca6f9da
+version: 1.0.0

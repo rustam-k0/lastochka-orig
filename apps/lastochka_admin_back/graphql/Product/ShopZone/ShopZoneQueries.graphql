@@ -1,0 +1,6 @@
+extend type Query {
+  shop_zone(
+    id:Int @eq
+    shop_id:Int @eq
+  ):ShopZone @first
+}

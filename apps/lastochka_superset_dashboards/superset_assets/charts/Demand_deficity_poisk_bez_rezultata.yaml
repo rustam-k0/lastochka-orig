@@ -1,0 +1,33 @@
+# Вкладка «Спрос». Поисковые запросы без результата (results_count = 0) -
+# фильтр results_count = 0 через adhoc_filters (SIMPLE), т.к. это условие
+# отбора СТРОК таблицы, а не просто значения метрики (в отличие от
+# Demand_uputsch_vyruchka, где CASE внутри метрики достаточен).
+slice_name: 'Дефициты: поисковые запросы без результата (упущенный спрос)'
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - search_query
+  - store_id
+  - event_date
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      column_name: search_query
+    aggregate: COUNT
+    label: Запросов без результата
+    hasCustomLabel: true
+  adhoc_filters:
+  - expressionType: SIMPLE
+    subject: results_count
+    operator: '=='
+    comparator: 0
+    clause: WHERE
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 3e83a052-bf44-4b9e-b942-5754694370e5
+uuid: 41490f8d-c944-402b-80a9-717e64e6455b
+version: 1.0.0

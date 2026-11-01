@@ -1,0 +1,11 @@
+mutation ReorderMenuItems($items: [MenuItemOrderInput!]!) {
+    reorderMenuItems(items: $items) {
+        id
+        name
+        title
+        icon
+        position
+        is_visible
+        accesses
+    }
+}

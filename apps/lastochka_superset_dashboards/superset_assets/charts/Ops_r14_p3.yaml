@@ -1,0 +1,48 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Матрица переходов
+description: Исходный сегмент × конечный сегмент
+viz_type: pivot_table_v2
+params:
+  viz_type: pivot_table_v2
+  groupbyRows:
+  - expressionType: SQL
+    sqlExpression: a_segment
+    label: Сегмент на первом срезе
+  groupbyColumns:
+  - expressionType: SQL
+    sqlExpression: segment
+    label: Сегмент
+  metrics:
+  - expressionType: SQL
+    sqlExpression: COUNT(*)
+    label: Клиентов
+    hasCustomLabel: true
+  metricsLayout: COLUMNS
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: last_order_at
+  row_limit: 10000
+  aggregateFunction: Sum
+  rowTotals: true
+  colTotals: true
+  rowSubTotals: false
+  colSubTotals: false
+  transposePivot: false
+  combineMetric: false
+  valueFormat: ',d'
+  rowOrder: key_a_to_z
+  colOrder: key_a_to_z
+  date_format: smart_date
+  conditional_formatting:
+  - colorScheme: '#1FA8C9'
+    column: Клиентов
+    operator: ≥
+    targetValue: 0
+cache_timeout: null
+dataset_uuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+uuid: 11ce33e5-0f51-5a9a-a6e6-341fb14059c6
+version: 1.0.0

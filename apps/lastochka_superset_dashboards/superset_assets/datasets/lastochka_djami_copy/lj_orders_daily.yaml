@@ -1,0 +1,55 @@
+# Вкладка «Спрос» (по магазину). Order-level по дням, источник графика
+# «Прогноз выручки (факт + прогноз)» (линия факта; сам forecast - встроенная
+# Superset-функция поверх time-series, доступность python-пакета statsmodels/
+# pmdarima на этом инстансе не проверялась - без него показываем только факт).
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1 - LEFT JOIN statuses УБРАН (таблица пустая на dev), status_name
+#     через CASE по status_id вместо st.name. Метрики выручки в чарте условятся
+#     по status_id = 5, а не по paid (paid=true почти никогда для оплаты при
+#     получении - на dev 12 из 221 заказов).
+#   Правило 2 - WHERE o.parent_order_id IS NULL: без фильтра выручка по дням
+#     задвоилась бы 106 дочерними заказами сплита (out of 221 на dev).
+#   Правило 9 - orders.deleted_at на dev пуст у всех 221 строк, отдельный
+#     фильтр deleted_at IS NULL не добавлен (нечего фильтровать, но колонки
+#     в схеме нет смысла добавлять несуществующим соглашением).
+table_name: lj_orders_daily
+main_dttm_col: order_date
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      o.id                                       AS order_id,
+      o.shop_id                                  AS shop_id,
+      o.client_id                                AS client_id,
+      o.parent_order_id                          AS parent_order_id,
+      o.sub_number                               AS sub_number,
+      CAST(o.created_at AS DATE)                 AS order_date,
+      o.created_at                               AS created_at,
+      o.amount                                   AS amount,
+      o.items_subtotal                           AS items_subtotal,
+      o.discount                                 AS discount,
+      o.bonus_spent                              AS bonus_spent,
+      o.bonus_earned                             AS bonus_earned,
+      o.delivery_price                           AS delivery_price,
+      o.assembly_cost                            AS assembly_cost,
+      o.total_weight                             AS total_weight,
+      o.payment_type_id                          AS payment_type_id,
+      o.payment_status                           AS payment_status,
+      o.paid                                     AS paid,
+      o.paid_at                                  AS paid_at,
+      o.finished_at                              AS finished_at,
+      o.status_id                                AS status_id,
+      CASE o.status_id
+          WHEN 1 THEN 'Создан'      WHEN 2 THEN 'На сборке' WHEN 3 THEN 'Собран'
+          WHEN 4 THEN 'В доставке'  WHEN 5 THEN 'Доставлен' WHEN 6 THEN 'Отменён'
+          WHEN 7 THEN 'Готовится'   ELSE 'Неизвестно'
+      END                                         AS status_name,
+      o.type_id                                  AS type_id,
+      o.shipping_method                          AS shipping_method
+  FROM orders o
+  WHERE o.parent_order_id IS NULL
+uuid: 471d90c0-8c7a-4ed0-b944-397e02e50fe2
+columns: []
+metrics: []
+version: 1.0.0

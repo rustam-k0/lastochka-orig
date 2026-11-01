@@ -1,0 +1,6 @@
+mutation ($id: Int!, $title: String, $is_active: Boolean, $position: Int) {
+  OrderCancelReasonUpdate(id: $id, title: $title, is_active: $is_active, position: $position) {
+    code
+    message
+  }
+}

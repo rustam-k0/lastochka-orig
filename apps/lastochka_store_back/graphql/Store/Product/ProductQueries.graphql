@@ -1,0 +1,37 @@
+extend type Query {
+  products_paginate(
+    "Поиск по слагу категории"
+    category_link:String
+    "Поиск по названию"
+    title:String
+    "Фильтр по бренду"
+    brands:[Int]
+    "Фильтр по стране"
+    countries:[Int]
+    "Фильтр по цене от"
+    price_min:Int
+    "Фильтр по цене до"
+    price_max:Int
+    "Фильтр по товарной группе"
+    product_group_id:Int
+    "Искать похожие товары по id"
+    similar_id:Int
+    "Отобразить товары кулинарии"
+    is_cooking:Boolean
+    "Отобразить товары со скидкой"
+    discount:Boolean
+    "Фильтр по ID категории"
+    category_id:Int
+    "Фильтр по ID магазина"
+    shop_id:Int
+  ):[Product] @paginate(scopes: ["filter","sorter"])
+
+  products_item(
+    id:Int! @eq
+  ):Product @find
+
+  product_by_barcode(
+    barcode:String
+  ):Product @first(scopes: ["filter"])
+
+}

@@ -1,0 +1,225 @@
+type Order {
+  "ID"
+  id:Int
+  "UUID заказ"
+  uuid:String
+  "Магазин"
+  shop:Shop @hasOne
+  "Статус"
+  status_id:Int
+  "Общая сумма"
+  amount:Float
+  "Стоимость доставки"
+  delivery_price:Float
+  "Стоимость сборки (плоская сумма магазина, модуль assembly_cost; у подзаказов 0 — живёт на родителе)"
+  assembly_cost:Int
+  "Суммарный вес заказа в граммах, зафиксирован при завершении сборки (null — не собран/старый заказ)"
+  total_weight:Int
+  "Вес неполный: есть штучные позиции без веса в карточке товара"
+  is_weight_partial:Boolean
+  "Признак «Тяжёлый заказ»: вес превышает порог магазина heavy_order_threshold (модуль heavy_orders)"
+  is_heavy:Boolean
+  "Скидка по промокоду"
+  discount:Float
+  "Код применённого промокода (null — промокод не использовался)"
+  promocode_code:String
+  "Стоимость товаров до скидки"
+  items_subtotal:Float
+  "Признак оплаты: true — заказ оплачен (paid=true) и не оформлен возврат (payment_status не 'refunded'). failed не сбрасывает is_paid в false: неудачная повторная попытка оплаты уже оплаченного заказа не отменяет ранее полученную оплату"
+  is_paid:Boolean
+  "Момент фиксации оплаты (событие order_paid от витрины, списание сборщиком или ручная отметка наличных OrderMarkPaid)"
+  paid_at:DateTime
+  "Списано бонусов клиента при оформлении"
+  bonus_spent:Int
+  "Начислено бонусов клиенту за заказ"
+  bonus_earned:Int
+  """
+  Статус оплаты (для фильтра в АП)
+  pending - ожидает оплаты (в т.ч. hold, в т.ч. null — платёж не начинался)
+  paid - оплачено
+  failed - ошибка оплаты
+  refunded - возврат
+  awaiting_surcharge - ожидает доплату (итог сборки превысил холд, доплата не прошла; модуль collector_payment)
+  """
+  payment_status:String
+  "Товары в заказе"
+  items:[OrderItem] @hasMany(relation: "orderItems")
+  "Покупатель"
+  client:Client @hasOne
+  "Дата создания"
+  created_at:DateTime
+  """
+  Тип оплаты
+  PAYMENT_ONLINE = 1
+  PAYMENT_OFFLINE = 2 - Временно недоступен
+  """
+  payment_type_id:Int
+  "Информация о клиенте"
+  client_info:ClientOrderInfo @hasOne(relation: "clientInfo")
+  """Тип получения
+  1 - Самовывоз
+  2 - Доставка
+  """
+  type_id:Int
+  "Начало слота"
+  slot_start_date:DateTime
+  "Окончание слота"
+  slot_end_date:DateTime
+  "Комментарий клиента"
+  client_comment:String
+  "Количество персон"
+  persons_count:Int
+  review:OrderReview @hasOne(relation: "review")
+  "ID родительского заказа (null для обычных заказов)"
+  parent_order_id:Int
+  "Порядковый номер подзаказа (null для обычных и подзаказов без зоны)"
+  sub_number:Int
+  "Зона сборки подзаказа"
+  assembly_zone_id:Int
+  "Зона сборки (название/цвет для просмотра распределения)"
+  assemblyZone:AssemblyZone @belongsTo
+  "Сквозной номер заказа (= номер заказа в сторфронте; у подзаказов с суффиксом '-N')"
+  number:String
+  "Метка заказа — сквозной номер (например '5' или '5-1')"
+  label:String
+  "Дочерние подзаказы"
+  childOrders:[Order] @hasMany
+  "Яндекс Доставка: ID заявки"
+  yandex_claim_id:String
+  "Яндекс Доставка: статус заявки"
+  yandex_delivery_status:String
+  "Яндекс Доставка: имя курьера"
+  yandex_courier_name:String
+  "Яндекс Доставка: телефон курьера"
+  yandex_courier_phone:String
+  "Яндекс Доставка: цена"
+  yandex_delivery_price:Int
+  "Ответственный сборщик (актуальная сборка заказа)"
+  collector:User @field(resolver: "App\\GraphQL\\Queries\\OrderCollectorResolver")
+  "Назначенные курьеры (обычно один; может быть несколько на тяжёлых/объёмных заказах)"
+  couriers:[User] @field(resolver: "App\\GraphQL\\Queries\\OrderCouriersResolver")
+  "Готовность к выдаче (момент перехода в статус «Собрано»). Значимо для самовывоза"
+  pickup_ready_at:DateTime
+  "Дата и время фактической выдачи самовывоза (OrderPickupConfirm)"
+  picked_up_at:DateTime
+  "Сотрудник, подтвердивший выдачу самовывоза"
+  picked_up_by:User @belongsTo(relation: "pickedUpBy")
+  "Зона доставки, вычислена по координатам адреса заказа (point-in-polygon по shop_zones). null — нет координат (самовывоз/адрес не геокодирован) или нет совпадения с полигоном"
+  delivery_zone:DeliveryZone @field(resolver: "App\\GraphQL\\Queries\\OrderDeliveryZoneResolver")
+  pickup_only_required:Boolean @field(resolver: "App\\GraphQL\\Queries\\OrderPickupOnlyRequiredResolver")
+}
+
+type OrderItem {
+  "ID позиции"
+  id:Int!
+  "Товар"
+  product:Product @hasOne
+  "Количество в порциях; после сборки весовой — по фактическому весу"
+  quantity:Int
+  "Заказанные клиентом порции до пересчёта по факту сборки; null — совпадает с quantity"
+  ordered_quantity:Int
+  "Возвращено курьером при доставке (порции/штуки)"
+  returned_quantity:Int
+  "Фактический вес после сборки (граммы)"
+  actual_weight:Int
+  "Цена на момент покупки"
+  price:Float
+  "Цена за единицу на момент покупки"
+  price_during_order:Float
+  "Оригинальная цена за единицу ДО скидки (зачёркнутая). null если скидки не было"
+  price_old:Float
+  "Снапшот лесенки цен позиции (цены от количества, MID-308); null у позиций без лесенки"
+  price_tiers:OrderItemPriceTiers @method(name: "resolvePriceTiers")
+  """
+  Статус позиции
+  1 - WAITING (ожидает сборки)
+  2 - ASSEMBLED (собрана / заменена)
+  3 - CANCELED (отменена)
+  """
+  status_id:Int!
+  "ID заменённого товара (для позиций, собранных заменой)"
+  origin_product_id:Int
+  "Исходный товар до замены"
+  origin_product:Product @belongsTo(relation: "originProduct")
+  "Snapshot названия заменённого товара"
+  origin_title:String
+  "Snapshot цены заменённого товара"
+  origin_price:Float
+  "Snapshot количества заменённого товара"
+  origin_quantity:Int
+  "Признак: позиция добавлена сборщиком в процессе сборки"
+  is_supplemented:Boolean!
+  "Добавки в заказе"
+  supplements:[OrderItemSupplement] @hasMany
+  "Причина отмены товара (для отменённых позиций, status_id = 3)"
+  cancel_reason:ProductCancelReason @belongsTo(relation: "cancelReason")
+  "Причина замены товара (для заменённых позиций, origin_product_id != null)"
+  replace_reason:ProductReplaceReason @belongsTo(relation: "replaceReason")
+  "Коды маркировки (Честный знак), отсканированные сборщиком для позиции (модуль honest_sign)"
+  marking_codes:[String] @method(name: "getMarkingCodesList")
+}
+
+"Снапшот лесенки цен позиции (цены от количества, MID-308); null у позиций без лесенки"
+type OrderItemPriceTiers {
+  base_price: Float!
+  base_price_old: Float
+  base_is_eligible: Boolean!
+  tiers: [OrderItemPriceTier!]!
+}
+
+type OrderItemPriceTier {
+  min_quantity: Float!
+  price: Float!
+}
+
+type ProductCancelReason {
+  "ID"
+  id:Int
+  "Причина отмены"
+  title:String
+}
+
+type ProductReplaceReason {
+  "ID"
+  id:Int
+  "Причина замены"
+  title:String
+}
+
+"Зона доставки магазина"
+type DeliveryZone {
+  "ID"
+  id:Int
+  "Название зоны"
+  title:String @rename(attribute: "name")
+}
+
+"Зона сборки"
+type AssemblyZone {
+  id:Int
+  "Название зоны"
+  title:String
+  "Цветовое обозначение (HEX)"
+  color:String
+  "Порядок отображения"
+  position:Int
+}
+
+type OrderItemSupplement {
+  supplement:Supplement @belongsTo
+  values:[SupplementValue] @belongsToMany
+}
+
+"Сотрудник (сборщик или курьер)"
+type User {
+  "ID"
+  id:Int
+  "Имя"
+  name:String
+  "Фамилия"
+  surname:String
+  "Отчество"
+  patronymic:String
+  "Телефон"
+  phone:String
+}

@@ -1,0 +1,117 @@
+# Вкладка «Операции» (по магазину). Событийный журнал смены стадий заказа для
+# воронки «Путь заказа» (funnel + bottleneck table). db3 Postgres.
+#
+# ПЕРЕСМОТРЕНО относительно BUILD_PLAN (проверено SELECT на dev, см.
+# docs/analyticv2/OPEN_QUESTIONS_ANSWERS.md §3.8): ключа payload->>'to_stage'
+# НЕ существует. Реальные поля event_type='order.stage_changed':
+# old_value/new_value (ГОТОВЫЕ русские названия стадий), action, actor_*,
+# order_local_id, order_id (строка вида "120-1" для дочерних сплит-заказов),
+# shop_code, comment. КРИТИЧНО: order_history (источник этого события) пишет
+# ЛЮБОЕ действие сборщика/курьера в ту же таблицу (action IN
+# 'collector_assigned'/'item_confirmed'/'item_replaced'/'courier_assigned' и
+# т.п.) - для этих action new_value содержит имя сотрудника или название
+# товара ("Сборщик Александр", "Пицца Пепперони Ласточка ×1"), а НЕ стадию
+# заказа. Проверено: SELECT payload->>'new_value' на dev дал 18 строк, из них
+# 12 - реальные стадии, 6 - фамилии/товары. Фильтр
+# WHERE new_value IN (<4 известных лейбла линейной воронки>) отсекает этот шум
+# ТОЧНО (не по полю action, оно менее предсказуемо: created/canceled/
+# delivery_completed/status_changed вперемешку дают то же множество лейблов).
+# "Отменён" в этот whitelist НЕ входит - см. FIX ROUND 2 п.2 ниже.
+#
+# Стадия 1 "Создан" НИКОГДА не появляется как new_value события
+# order.stage_changed (проверено: order_history.action='created' пишет
+# old_value/new_value=NULL) - источник для стадии 1 отдельный event_type
+# 'order.created' (order-level событие storefront). UNION ALL двух
+# event_type, как в an_cjm_funnel_events (Task 4).
+#
+# Стадия 4 "В доставке" технически возможна (есть в CASE), но на dev НИ РАЗУ
+# не встретилась как new_value (наблюдалась только как old_value перед
+# delivery_completed) - 0 строк для этой стадии это НЕ баг датасета, а
+# текущее отсутствие сырых данных.
+#
+# order_id (аналитическая колонка, НЕ payload) хранит локальный номер заказа
+# как строку; СЫРОЕ значение включает суффикс сплит-заказа ("115-1"), но
+# итоговая колонка датасета нормализована к родителю через split_part - см.
+# FIX ROUND 2 п.1 ниже - используется как entity воронки (COUNT DISTINCT
+# order_id).
+#
+# FIX ROUND 1 (паттерн из an_cjm_funnel_events) - stage_label содержит
+# числовой префикс ('1. Создан' ... '5. Доставлен'), т.к. funnel-чарт Superset
+# сортирует строки по метрике, а не по dimension; алфавитная сортировка
+# префиксованной строки гарантированно совпадает с порядком стадий.
+#
+# FIX ROUND 2 (ревью, Important x2):
+#   1) Рассинхрон гранулярности родитель/дети: order.created публикует ТОЛЬКО
+#      родительский order_id ("120"), order.stage_changed - и родителя, и
+#      дочерние сплит-заказы ("120-1", "115-2", проверено на dev: 26 строк
+#      order.stage_changed на 8 родителей). Без нормализации COUNT DISTINCT
+#      order_id в нижних стадиях считал родителя и каждого ребёнка как
+#      отдельные сущности - воронка расширялась к низу (dev: Создан=8,
+#      Отменён=12 - больше, чем Создан). Фикс: split_part(order_id, '-', 1)
+#      приводит order_id к родителю ДО COUNT DISTINCT, применено в обеих
+#      ветках (created_stage и changed_stage) - для order.created это no-op
+#      (там и так только родители), для order.stage_changed схлопывает детей
+#      в родителя. Проверено на dev: Создан=8 (без изменений), Собрано 7->5,
+#      Доставлен 5->2 (дедуп детей).
+#   2) "Отменён" - терминальная ветка (может произойти на любой стадии
+#      жизненного цикла), а не шаг линейной воронки; будучи заведён как
+#      stage_order=6 (глубже "Доставлен"=5), он ломал монотонность воронки
+#      "сверху вниз" (см. dev-симптом выше). Убран из changed_stage (CASE и
+#      WHERE IN) - датасет теперь отдаёт ровно 5 прогрессивных стадий
+#      (Создан/Заказ на сборке/Собрано/В доставке/Доставлен). Отдельная
+#      метрика по отменам (bottleneck-таблице она не нужна per ревью) не
+#      заведена в этом раунде - для контекста: 6 уникальных родительских
+#      заказов на dev имеют событие "Отменён" (проверено отдельным SELECT,
+#      COUNT(DISTINCT split_part(order_id,'-',1)) WHERE new_value='Отменён').
+table_name: order_stage_funnel
+main_dttm_col: occurred_at
+database_uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+schema: null
+sql: |
+  WITH created_stage AS (
+      SELECT
+          split_part(ae.order_id, '-', 1)             AS order_id,
+          ae.occurred_at                              AS occurred_at,
+          ae.store_id                                 AS store_id,
+          1                                            AS stage_order,
+          'Создан'                                     AS stage_label
+      FROM analytics_events ae
+      WHERE ae.event_type = 'order.created'
+  ),
+  changed_stage AS (
+      SELECT
+          split_part(ae.order_id, '-', 1)             AS order_id,
+          ae.occurred_at                              AS occurred_at,
+          ae.store_id                                 AS store_id,
+          CASE ae.payload ->> 'new_value'
+              WHEN 'Заказ на сборке' THEN 2
+              WHEN 'Собрано'         THEN 3
+              WHEN 'В доставке'      THEN 4
+              WHEN 'Доставлен'       THEN 5
+          END                                          AS stage_order,
+          ae.payload ->> 'new_value'                   AS stage_label
+      FROM analytics_events ae
+      WHERE ae.event_type = 'order.stage_changed'
+        AND ae.payload ->> 'new_value' IN (
+            'Заказ на сборке', 'Собрано', 'В доставке', 'Доставлен'
+        )
+  )
+  SELECT
+      order_id,
+      occurred_at,
+      store_id,
+      stage_order,
+      stage_order::text || '. ' || stage_label AS stage_label
+  FROM created_stage
+  UNION ALL
+  SELECT
+      order_id,
+      occurred_at,
+      store_id,
+      stage_order,
+      stage_order::text || '. ' || stage_label AS stage_label
+  FROM changed_stage
+uuid: 05e57b34-1a7b-4dfc-840d-a6ca2ccb3139
+columns: []
+metrics: []
+version: 1.0.0

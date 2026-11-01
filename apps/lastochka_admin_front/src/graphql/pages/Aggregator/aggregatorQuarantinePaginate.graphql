@@ -1,0 +1,18 @@
+query ($first: Int, $page: Int, $reason: AggregatorQuarantineReason, $resolved: Boolean, $shop_id: Int) {
+  aggregatorQuarantine(first: $first, page: $page, reason: $reason, resolved: $resolved, shop_id: $shop_id) {
+    data {
+      id
+      shop_id
+      shop_title
+      local_product_id
+      incoming_title
+      reason
+      matched_platform_product_ids
+      resolved_at
+      created_at
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}

@@ -1,0 +1,29 @@
+extend type Query {
+
+  admin_products_paginate(
+    title:String
+    categories:[Int]
+    ordering:[DefaultOrdering]
+    shop_id:Int @eq
+    available_in_shop_id:Int @scope(name: "availableInShop")
+    status_id:Int @eq
+    is_culinary:Boolean
+    "Новинка"
+    is_new:Boolean
+    "Успей купить"
+    is_hurry_up:Boolean
+    is_configurable:Boolean @eq
+    exclude_children:Boolean @scope(name: "excludeChildren")
+    only_children:Boolean @scope(name: "onlyChildren")
+    has_img:Boolean @scope(name: "hasImg")
+    has_reviews:Boolean @scope(name: "hasReviews")
+    fill_percent_lt:Int @scope(name: "fillPercentLt")
+    fill_percent_gte:Int @scope(name: "fillPercentGte")
+  ):[Product] @paginate(defaultCount: 10,scopes: ["sorter","filter","shop"]) @guard @can(model: "Admin",ability: "onlyShop") @section(key: "products")
+
+  admin_products_item(
+    id: Int @eq
+    ordering:[DefaultOrdering]
+  ):Product @find(scopes: ["sorter","filter","shop"]) @guard @can(model: "Admin",ability: "onlyShop") @section(key: "products")
+
+}

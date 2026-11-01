@@ -1,0 +1,21 @@
+type SupplementValue {
+  id:Int
+  title:String
+  price:Int
+  "Товар-добавка из каталога (null у ручной добавки)"
+  product_id:Int
+  product:Product @belongsTo
+  max_quantity:Int
+  track_stock:Boolean
+  position:Int
+}
+
+input SupplementValueInput {
+  id:Int
+  title:String
+  price:Int
+  product_id:Int
+  max_quantity:Int
+  track_stock:Boolean
+  position:Int
+}

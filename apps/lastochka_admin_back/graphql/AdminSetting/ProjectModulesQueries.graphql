@@ -1,0 +1,6 @@
+extend type Query {
+    "Конфигурация модулей проекта (JSON)"
+    projectModules: String!
+        @field(resolver: "AdminSetting\\AdminSettingQueries@projectModules")
+        @guard
+}

@@ -1,0 +1,104 @@
+"Формат работы по вакансии"
+enum VacancyWorkFormat {
+  "Офис"
+  OFFICE @enum(value: "office")
+  "Удалённая работа"
+  REMOTE @enum(value: "remote")
+  "Гибридный формат"
+  HYBRID @enum(value: "hybrid")
+  "Разъездной формат"
+  FIELD @enum(value: "field")
+}
+
+"Тип занятости по вакансии"
+enum VacancyEmploymentType {
+  "Полная занятость"
+  FULL @enum(value: "full")
+  "Частичная занятость"
+  PART @enum(value: "part")
+  "Временная занятость"
+  TEMPORARY @enum(value: "temporary")
+  "Иная занятость"
+  OTHER @enum(value: "other")
+}
+
+"Вакансия раздела «Работа в компании»"
+type Vacancy {
+  "ID"
+  id: Int!
+  "Наименование вакансии"
+  title: String!
+  "Город, в котором открыта вакансия"
+  city: String
+  "Формат работы"
+  work_format: VacancyWorkFormat
+  "Тип занятости"
+  employment_type: VacancyEmploymentType
+  "График работы"
+  work_schedule: String
+  "Уровень дохода"
+  salary: String
+  "Краткое описание для списка вакансий"
+  short_description: String!
+  "Полное описание вакансии"
+  description: String!
+  "Обязанности"
+  responsibilities: String
+  "Требования"
+  requirements: String
+  "Условия"
+  conditions: String
+  "Название ссылки на вакансию на внешнем ресурсе"
+  link_title: String
+  "Ссылка на вакансию на внешнем ресурсе (например, hh.ru)"
+  link_url: String
+  "Порядок отображения"
+  position: Int
+  "Статус публикации"
+  is_published: Boolean!
+  "Дата последней публикации"
+  published_at: DateTime
+  "Дата создания"
+  created_at: DateTime
+  "Дата обновления"
+  updated_at: DateTime
+}
+
+extend type Query {
+  "Список вакансий с пагинацией"
+  admin_vacancies_paginate(
+    "Поиск по названию вакансии и городу"
+    search: String
+    "Фильтр по статусу публикации"
+    is_published: Boolean
+    "Фильтр по городу"
+    city: String
+    "Фильтр по формату работы"
+    work_format: VacancyWorkFormat
+    "Фильтр по типу занятости"
+    employment_type: VacancyEmploymentType
+    ordering: [DefaultOrdering]
+  ): [Vacancy] @paginate(defaultCount: 25, scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "vacancies")
+
+  "Полный список вакансий без пагинации"
+  admin_vacancies(
+    search: String
+    is_published: Boolean
+    city: String
+    work_format: VacancyWorkFormat
+    employment_type: VacancyEmploymentType
+    ordering: [DefaultOrdering]
+  ): [Vacancy!]! @all(scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "vacancies")
+
+  "Вакансия по ID"
+  admin_vacancies_item(
+    id: Int! @eq
+  ): Vacancy @find
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "vacancies")
+
+  "Города, по которым заведены вакансии (для фильтра списка)"
+  admin_vacancy_cities: [String!]! @field(resolver: "Vacancy\\VacancyCities")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "vacancies")
+}

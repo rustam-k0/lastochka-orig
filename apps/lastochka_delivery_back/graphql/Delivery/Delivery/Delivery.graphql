@@ -1,0 +1,4 @@
+type Delivery {
+  id:Int
+  started_at:DateTime
+}

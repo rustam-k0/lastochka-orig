@@ -1,0 +1,72 @@
+# Сгенерировано scripts/ops_datasets.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками: описание правил расчёта - в генераторе.
+table_name: ops_client_periods
+main_dttm_col: period_start
+database_uuid: 22c13af4-950d-4550-9f16-1617f4df8d2f
+schema: null
+sql: "{% set period = get_time_filter('period_start', remove_filter=True, target_type='DATETIME') %}\nWITH RECURSIVE\nco AS (\n    SELECT\n        c.*,\n        LAG(c.ordered_at) OVER (PARTITION BY c.client_id ORDER BY c.ordered_at, c.order_id)  AS prev_order_at,\n        LEAD(c.ordered_at) OVER (PARTITION BY c.client_id ORDER BY c.ordered_at, c.order_id) AS next_order_at,\n        MIN(c.ordered_at) OVER (PARTITION BY c.client_id)                                    AS first_order_at\n    FROM (SELECT\n        o.id                                         AS order_id,\n        o.user_id                                    AS client_id,\n        o.created_at                                 AS ordered_at,\n        o.total                                      AS total,\n        st.name                                      AS shop_name\n    FROM orders o\n    LEFT JOIN stores st ON st.id = o.store_id\n    WHERE o.deleted_at IS NULL\n      AND o.status = 'delivered'\n      AND o.user_id IS NOT NULL\n\
+  \      AND o.user_id NOT IN (21, 26, 27)) c\n),\nmonths AS (\n    SELECT CAST(DATE_FORMAT((SELECT MIN(ordered_at) FROM co), '%Y-%m-01') AS DATETIME) AS ps\n    UNION ALL\n    SELECT ps + INTERVAL 1 MONTH FROM months WHERE ps + INTERVAL 1 MONTH <= NOW()\n),\nweeks AS (\n    SELECT CAST(DATE_SUB(DATE((SELECT MIN(ordered_at) FROM co)),\n                         INTERVAL WEEKDAY((SELECT MIN(ordered_at) FROM co)) DAY) AS DATETIME) AS ps\n    UNION ALL\n    SELECT ps + INTERVAL 1 WEEK FROM weeks WHERE ps + INTERVAL 1 WEEK <= NOW()\n),\nperiods AS (\n    SELECT 'Месяц' AS grain, ps, ps + INTERVAL 1 MONTH AS pe FROM months\n    UNION ALL\n    SELECT 'Неделя', ps, ps + INTERVAL 1 WEEK FROM weeks\n),\nshops AS (\n    SELECT DISTINCT shop_name FROM co\n)\nSELECT\n    p.grain,\n    p.ps                                              AS period_start,\n    CASE WHEN p.grain = 'Месяц' THEN DATE_FORMAT(p.ps, '%Y-%m')\n         ELSE DATE_FORMAT(p.ps, '%Y-%m-%d') END        AS period_label,\n    s.shop_name,\n\
+  \    (SELECT COUNT(DISTINCT x.client_id) FROM co x\n      WHERE x.shop_name = s.shop_name AND x.ordered_at >= p.ps AND x.ordered_at < p.pe) AS buyers,\n    (SELECT COUNT(DISTINCT x.client_id) FROM co x\n      WHERE x.shop_name = s.shop_name AND x.ordered_at >= p.ps AND x.ordered_at < p.pe\n        AND x.first_order_at >= p.ps)                 AS new_clients,\n    (SELECT COUNT(DISTINCT x.client_id) FROM co x\n      WHERE x.shop_name = s.shop_name AND x.ordered_at >= p.ps AND x.ordered_at < p.pe\n        AND x.first_order_at < p.ps)                  AS repeat_clients,\n    (SELECT COUNT(DISTINCT x.client_id) FROM co x\n      WHERE x.shop_name = s.shop_name AND x.ordered_at >= p.ps AND x.ordered_at < p.pe\n        AND DATEDIFF(x.ordered_at, x.prev_order_at) >= 90) AS returned_clients,\n    (SELECT COUNT(DISTINCT x.client_id) FROM co x\n      WHERE x.shop_name = s.shop_name\n        AND (x.next_order_at IS NULL OR x.next_order_at >= x.ordered_at + INTERVAL 90 DAY)\n        AND x.ordered_at\
+  \ + INTERVAL 90 DAY >= p.ps\n        AND x.ordered_at + INTERVAL 90 DAY < LEAST(p.pe, NOW())) AS lost_clients,\n    (SELECT COUNT(DISTINCT x.client_id) FROM co x\n      WHERE x.shop_name = s.shop_name\n        AND x.ordered_at < LEAST(p.pe, NOW())\n        AND x.ordered_at >= LEAST(p.pe, NOW()) - INTERVAL 30 DAY) AS active_end,\n    (SELECT COUNT(*) FROM co x\n      WHERE x.shop_name = s.shop_name AND x.ordered_at >= p.ps AND x.ordered_at < p.pe) AS orders,\n    (SELECT SUM(x.total) FROM co x\n      WHERE x.shop_name = s.shop_name AND x.ordered_at >= p.ps AND x.ordered_at < p.pe) AS revenue,\n    CASE WHEN p.pe > NOW() THEN 1 ELSE 0 END          AS is_incomplete\nFROM periods p\nCROSS JOIN shops s\nWHERE 1 = 1\n  {% if period.from_expr %}AND p.pe > {{ period.from_expr }}{% endif %}\n  {% if period.to_expr %}AND p.ps < {{ period.to_expr }}{% endif %}\n"
+uuid: 6267cc2a-b9c5-5319-934e-a0123cf13731
+columns:
+- column_name: period_start
+  is_dttm: true
+  verbose_name: Период
+- column_name: grain
+  is_dttm: false
+  verbose_name: Группировка
+  groupby: true
+  filterable: true
+- column_name: period_label
+  is_dttm: false
+  verbose_name: Период
+  groupby: true
+  filterable: true
+- column_name: shop_name
+  is_dttm: false
+  verbose_name: Магазин
+  groupby: true
+  filterable: true
+- column_name: buyers
+  is_dttm: false
+  verbose_name: Покупатели
+  groupby: true
+  filterable: true
+- column_name: new_clients
+  is_dttm: false
+  verbose_name: Новые
+  groupby: true
+  filterable: true
+- column_name: repeat_clients
+  is_dttm: false
+  verbose_name: Повторные
+  groupby: true
+  filterable: true
+- column_name: returned_clients
+  is_dttm: false
+  verbose_name: Вернувшиеся
+  groupby: true
+  filterable: true
+- column_name: lost_clients
+  is_dttm: false
+  verbose_name: Перешли в потерянные
+  groupby: true
+  filterable: true
+- column_name: active_end
+  is_dttm: false
+  verbose_name: Активны на конец
+  groupby: true
+  filterable: true
+- column_name: orders
+  is_dttm: false
+  verbose_name: Заказы
+  groupby: true
+  filterable: true
+- column_name: revenue
+  is_dttm: false
+  verbose_name: Выручка net, ₽
+  groupby: true
+  filterable: true
+metrics: []
+version: 1.0.0

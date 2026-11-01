@@ -1,0 +1,7 @@
+extend type Mutation {
+  FaqDelete(
+    "ID вопроса"
+    id: Int!
+  ): DefaultResponse @field(resolver: "Faq\\FaqDelete")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

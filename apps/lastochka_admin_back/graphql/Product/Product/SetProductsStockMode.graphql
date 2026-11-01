@@ -1,0 +1,11 @@
+extend type Mutation {
+  "Массово установить режим остатков для списка товаров. Возвращает число обработанных. (LASTOCHKI-JAMI-11207)"
+  SetProductsStockMode(
+    ids: [Int!]!
+    stock_mode: String
+    fixed_stock_quantity: Int
+    fixed_stock_unit_type_id: Int
+  ): Int
+    @field(resolver: "Product\\SetProductsStockMode")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "products")
+}

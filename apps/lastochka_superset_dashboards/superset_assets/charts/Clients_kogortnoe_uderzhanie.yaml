@@ -1,0 +1,20 @@
+slice_name: 'Когортное удержание: месяц когорты x M0..M5'
+viz_type: heatmap_v2
+params:
+  viz_type: heatmap_v2
+  metric:
+    expressionType: SQL
+    sqlExpression: AVG(retention_pct)
+    label: Удержание, %
+    hasCustomLabel: true
+  x_axis: month_label
+  groupby: cohort_month
+  adhoc_filters: []
+  row_limit: 10000
+  normalize_across: heatmap
+  linear_color_scheme: blue_white_yellow
+  sort_x_axis: alpha_asc
+  sort_y_axis: alpha_asc
+dataset_uuid: 35ffceed-dc71-4283-87df-8524b937e750
+uuid: 4d53d2ec-67c7-4a24-930b-0c88f44bfe37
+version: 1.0.0

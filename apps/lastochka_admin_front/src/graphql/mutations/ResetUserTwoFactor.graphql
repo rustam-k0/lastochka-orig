@@ -1,0 +1,6 @@
+mutation ($id: Int!) {
+  ResetUserTwoFactor(id: $id) {
+    code
+    message
+  }
+}

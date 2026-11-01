@@ -1,0 +1,16 @@
+extend type Mutation {
+  AttributeFamilyUpdate(
+    "ID"
+    id: Int!
+    "Название"
+    title: String
+    "Код"
+    code: String
+    "Позиция"
+    position: Int
+    "Атрибуты"
+    attributes: [FamilyAttributeInput]
+  ): DefaultResponse @field(resolver: "AttributeFamily\\AttributeFamilyUpdate")
+  @validator(class: "AttributeFamily\\AttributeFamilyUpdateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

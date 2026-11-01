@@ -1,0 +1,33 @@
+query (
+  $page: Int
+  $first: Int
+  $search: String
+  $active: Boolean
+  $delivery_enabled: Boolean
+  $pickup_enabled: Boolean
+) {
+  shops_paginate(
+    page: $page
+    first: $first
+    search: $search
+    active: $active
+    delivery_enabled: $delivery_enabled
+    pickup_enabled: $pickup_enabled
+  ) {
+    data {
+      id
+      title
+      code
+      address
+      status_id
+      logo_img {
+        id
+        path
+      }
+      schedule
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}

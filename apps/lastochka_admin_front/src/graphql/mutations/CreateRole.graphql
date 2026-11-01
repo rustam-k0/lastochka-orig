@@ -1,0 +1,5 @@
+mutation CreateRole($name_ru: String!, $scope_type: String!, $section_keys: [String!]!) {
+  createRole(name_ru: $name_ru, scope_type: $scope_type, section_keys: $section_keys) {
+    id name name_ru scope_type is_system section_keys
+  }
+}

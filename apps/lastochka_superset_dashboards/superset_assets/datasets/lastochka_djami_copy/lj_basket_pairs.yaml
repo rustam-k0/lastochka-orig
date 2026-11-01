@@ -1,0 +1,40 @@
+# Вкладка «Спрос» (по магазину). Пары товаров, встречающиеся в одном заказе
+# (basket affinity), через самоджойн order_items. Единственный потребитель -
+# таблица «Часто покупают вместе».
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 2 - WHERE o.parent_order_id IS NULL: считаем связки по реально
+#     оформленным (не дочерним) заказам, иначе сплит задвоил бы пары.
+#   Правило 1 - WHERE o.status_id = 5: только реализованные заказы (та же
+#     логика, что и в lj_order_items_enriched).
+#   products.title (НЕ name).
+#
+# ВНИМАНИЕ (перенесено из BUILD_PLAN): самоджойн order_items на больших
+# объёмах дорогой - на проде рассмотреть материализацию/ETL вместо live-SQL
+# virtual-датасета. На dev (564 order_items) не проблема.
+table_name: lj_basket_pairs
+main_dttm_col: order_date
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      o.shop_id                                   AS shop_id,
+      CAST(o.created_at AS DATE)                  AS order_date,
+      a.product_id                                AS product_id_a,
+      pa.title                                     AS product_name_a,
+      b.product_id                                AS product_id_b,
+      pb.title                                     AS product_name_b,
+      COUNT(DISTINCT a.order_id)                   AS orders_together
+  FROM order_items a
+  JOIN order_items b
+    ON a.order_id = b.order_id
+   AND a.product_id < b.product_id
+  JOIN orders o ON o.id = a.order_id
+  LEFT JOIN products pa ON pa.id = a.product_id
+  LEFT JOIN products pb ON pb.id = b.product_id
+  WHERE o.parent_order_id IS NULL AND o.status_id = 5
+  GROUP BY o.shop_id, CAST(o.created_at AS DATE), a.product_id, pa.title, b.product_id, pb.title
+uuid: f3b4d972-dad9-499c-b91d-3a4a5eca5031
+columns: []
+metrics: []
+version: 1.0.0

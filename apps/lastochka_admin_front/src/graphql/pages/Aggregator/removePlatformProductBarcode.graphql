@@ -1,0 +1,6 @@
+mutation ($barcodeId: Int!) {
+  removePlatformProductBarcode(barcodeId: $barcodeId) {
+    code
+    message
+  }
+}

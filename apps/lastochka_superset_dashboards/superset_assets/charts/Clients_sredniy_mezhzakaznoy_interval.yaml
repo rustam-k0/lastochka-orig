@@ -1,0 +1,17 @@
+slice_name: Средний межзаказный интервал, дни
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: AVG(avg_inter_order_days)
+    label: Межзаказный интервал, дни
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: ''
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: fd10cf03-92d6-4378-b53d-89f878a9beff
+uuid: 9c03f638-6bfe-4830-9b03-d7aad90b1509
+version: 1.0.0

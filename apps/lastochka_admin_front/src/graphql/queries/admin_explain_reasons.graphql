@@ -1,0 +1,8 @@
+query {
+  allExplainReasons {
+    id
+    title
+    is_active
+    position
+  }
+}

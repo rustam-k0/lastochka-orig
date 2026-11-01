@@ -1,0 +1,12 @@
+extend type Mutation {
+  FaqCreate(
+    "Вопрос"
+    question: String!
+    "Ответ"
+    answer: String!
+    "Активен"
+    is_active: Boolean
+  ): DefaultResponse @field(resolver: "Faq\\FaqCreate")
+  @validator(class: "Faq\\FaqCreateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

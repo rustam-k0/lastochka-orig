@@ -1,0 +1,3 @@
+mutation SetProductsCategory($ids: [Int!]!, $category_id: Int!) {
+  SetProductsCategory(ids: $ids, category_id: $category_id)
+}

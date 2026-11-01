@@ -1,0 +1,50 @@
+extend type Query {
+  admin_orders_paginate(
+    "Фильтрация по статусам. 1-6 — реальные статусы; 3 — «Собрано» (при включённом модуле courier_assignment — только без назначенного курьера); 5 — «Доставлен» (завершённая доставка, без самовывозов); 7 — виртуальный «Выдан» (завершённый самовывоз); 8 — виртуальный «Назначен курьер» (собран + курьер назначен); 5 и 7 вместе — все завершённые; 3 и 8 вместе — все собранные"
+    statuses:[Int]
+    ordering:[DefaultOrdering]
+    "Поиск по сквозному номеру или внутреннему ID"
+    title:String
+    "Фильтрация по дате. От"
+    created_at_start_date:DateTime
+    "Фильтрация по дате. До"
+    created_at_end_date:DateTime
+    "Фильтрация по магазинам"
+    shops:[Int]
+    "Фильтрация по клиенту"
+    client_id:Int
+    "Поиск по покупателю (имя/фамилия/телефон/email)"
+    client_search:String
+    "Фильтрация по типу оплаты (1 — карта, 2 — наличные)"
+    payment_types:[Int!]
+    "Фильтрация по статусу оплаты (pending — ожидает, paid — оплачено, failed — ошибка, refunded — возврат, awaiting_surcharge — ожидает доплату)"
+    payment_statuses:[String!]
+    "Фильтрация по типу заказа (1 — самовывоз, 2 — доставка)"
+    types:[Int!]
+    "Фильтрация по назначенным курьерам. 0 — виртуальный код «Без курьера» (курьер не назначен)"
+    couriers:[Int!]
+    "Фильтрация по сборщикам. 0 — виртуальный код «Без сборщика» (сборка не назначена)"
+    collectors:[Int!]
+    "Фильтрация по минимальной сумме заказа"
+    amount_from:Float
+    "Фильтрация по максимальной сумме заказа"
+    amount_to:Float
+  ):[Order]
+  @paginate(scopes: ["filter","sorter","admin"])
+  @guard(with: ["api"])
+
+  admin_orders_item(
+    id:Int @eq
+    client_id:Int
+    status:Int
+    ordering:[DefaultOrdering]
+  ):Order @first(scopes: ["filter"])
+  @guard(with: ["api"])
+
+  "Товары в заказе"
+  admin_order_items_paginate(
+    ordering:[DefaultOrdering]
+    order_id:Int! @eq
+  ):[OrderItem] @paginate(scopes: ["sorter"])
+  @guard(with: ["api"])
+}

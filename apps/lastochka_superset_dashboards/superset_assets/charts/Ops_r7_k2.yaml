@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Базовый заработок
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(courier_earning)
+    label: Базовый заработок
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: accepted_at
+  subheader: Тариф на дату доставки, ₽
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: $,.0f
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 36a9cf7e-b5c0-4c80-a5be-79eaa4d1810a
+uuid: 7c68e92c-354a-5eb4-8993-4f9830e91141
+version: 1.0.0

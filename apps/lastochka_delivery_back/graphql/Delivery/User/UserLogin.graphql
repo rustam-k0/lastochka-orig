@@ -1,0 +1,7 @@
+type Mutation {
+  "Войти в аккаунт"
+  UserLogin (
+    phone:String
+    password:String
+  ):LoginResponse @field(resolver: "User\\UserLogin") @validator(class: "User\\UserLoginValidator")
+}

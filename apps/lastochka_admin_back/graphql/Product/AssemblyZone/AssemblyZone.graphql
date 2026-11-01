@@ -1,0 +1,16 @@
+type AssemblyZone {
+    "ID"
+    id: Int
+    "Название зоны"
+    title: String
+    "Цветовое обозначение (HEX, для индикации в приложении сборщика)"
+    color: String
+    "Активность зоны (вкл/выкл)"
+    is_active: Boolean
+    "Описание / комментарий"
+    description: String
+    "Позиция"
+    position: Int
+    created_at: DateTime
+    updated_at: DateTime
+}

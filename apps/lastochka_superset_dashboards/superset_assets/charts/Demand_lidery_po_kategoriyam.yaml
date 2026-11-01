@@ -1,0 +1,19 @@
+# Вкладка «Спрос». Лидеры по выручке по категориям (dist_bar).
+slice_name: Лидеры по выручке по категориям
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(item_total_price)
+    label: Выручка по категории, ₽
+    hasCustomLabel: true
+  groupby:
+  - product_category
+  adhoc_filters: []
+  row_limit: 10000
+  y_axis_format: SMART_NUMBER
+  x_axis: product_category
+dataset_uuid: f08db08d-b059-48be-b710-1e40caeca495
+uuid: 1b52a491-13e3-4288-899f-fb7ac34e5063
+version: 1.0.0

@@ -1,0 +1,28 @@
+variables:
+  DEPLOY_DIR: "/home/admin/apps/lastochka_admin_front"
+
+deploy_dev:
+  stage: deploy
+  tags:
+    - lastochka
+  script:
+    - git config --global --add safe.directory $DEPLOY_DIR
+    - cd $DEPLOY_DIR
+    - git pull
+    - npm install --legacy-peer-deps
+    - npm run build
+  only:
+    - master
+
+deploy_prod:
+  stage: deploy
+  tags:
+    - lastochka-prod
+  script:
+    - git config --global --add safe.directory $DEPLOY_DIR
+    - cd $DEPLOY_DIR
+    - git pull
+    - npm install --legacy-peer-deps
+    - npm run build
+  only:
+    - master

@@ -1,0 +1,55 @@
+# Сгенерировано scripts/ops_datasets.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками: описание правил расчёта - в генераторе.
+table_name: ops_product_losses
+main_dttm_col: event_at
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: "SELECT\n    'Товар не найден · оценка'                      AS loss_kind,\n    l.searched_at                                   AS event_at,\n    COALESCE(sh.title, st.name)                     AS shop_name,\n    COALESCE(cat4.title, cat3.title, cat2.title, cat1.title, 'Без категории')                               AS category_name,\n    COALESCE(cp.title, sp.title, CONCAT('Товар витрины #', j.sf_product_id)) AS product_name,\n    NULL                                            AS picker_name,\n    NULL                                            AS replace_reason_name,\n    l.query_normalized                              AS search_query,\n    l.id                                            AS search_id,\n    l.actor_key                                     AS client_key,\n    NULL                                            AS order_id,\n    0                                               AS is_position,\n    0                                               AS is_replaced,\n    0     \
+  \                                          AS is_refused,\n    1                                               AS is_search_unavailable,\n    COALESCE(sp.price, 0) / LEAST(JSON_LENGTH(l.unavailable_product_ids), 5) AS search_amount,\n    0                                               AS price_delta_amount,\n    0                                               AS refused_amount,\n    COALESCE(sp.price, 0) / LEAST(JSON_LENGTH(l.unavailable_product_ids), 5) AS loss_amount,\n    CAST(NULL AS DECIMAL(12, 2))                    AS margin_lost\nFROM djami_store_copy.search_query_logs l\nCROSS JOIN JSON_TABLE(\n    l.unavailable_product_ids, '$[*]' COLUMNS (\n        relevance_rank FOR ORDINALITY,\n        sf_product_id BIGINT PATH '$'\n    )\n) AS j\nLEFT JOIN djami_store_copy.stores st ON st.id = l.store_id\nLEFT JOIN shops sh ON sh.code = st.code\nLEFT JOIN djami_store_copy.products sp ON sp.id = j.sf_product_id\nLEFT JOIN djami_store_copy.event_sync_metadata sm\n       ON sm.entity_type =\
+  \ 'products' AND sm.entity_id = j.sf_product_id\nLEFT JOIN event_sync_metadata cm\n       ON cm.entity_type = 'products' AND cm.source = sm.source AND cm.external_id = sm.external_id\nLEFT JOIN products cp ON cp.id = cm.entity_id\nLEFT JOIN category_product catp ON catp.product_id = cp.id\n  LEFT JOIN categories cat1 ON cat1.id = catp.category_id\n  LEFT JOIN categories cat2 ON cat2.id = cat1.parent_id\n  LEFT JOIN categories cat3 ON cat3.id = cat2.parent_id\n  LEFT JOIN categories cat4 ON cat4.id = cat3.parent_id\nWHERE l.is_final = 1\n  AND j.relevance_rank <= 5\n\nUNION ALL\n\nSELECT\n    'Запрос без привязки'                           AS loss_kind,\n    l.searched_at                                   AS event_at,\n    COALESCE(sh.title, st.name)                     AS shop_name,\n    NULL                                            AS category_name,\n    NULL                                            AS product_name,\n    NULL                                            AS picker_name,\n\
+  \    NULL                                            AS replace_reason_name,\n    l.query_normalized                              AS search_query,\n    l.id                                            AS search_id,\n    l.actor_key                                     AS client_key,\n    NULL                                            AS order_id,\n    0, 0, 0, 0, 0, 0, 0, 0,\n    CAST(NULL AS DECIMAL(12, 2))                    AS margin_lost\nFROM djami_store_copy.search_query_logs l\nLEFT JOIN djami_store_copy.stores st ON st.id = l.store_id\nLEFT JOIN shops sh ON sh.code = st.code\nWHERE l.is_final = 1\n  AND l.results_count = 0\n\nUNION ALL\n\nSELECT\n    CASE\n        WHEN ai.is_refused = 1 THEN 'Отказ от замены'\n        WHEN ai.cheaper_loss_amount > 0 THEN 'Замена дешевле'\n        WHEN ai.is_replaced = 1 THEN 'Замена'\n        ELSE 'Собрано'\n    END                                             AS loss_kind,\n    ai.order_created_at                             AS event_at,\n    ai.shop_name,\n\
+  \    ai.category_name,\n    ai.product_name,\n    ai.picker_name,\n    ai.replace_reason_name,\n    NULL                                            AS search_query,\n    NULL                                            AS search_id,\n    NULL                                            AS client_key,\n    ai.order_id,\n    1                                               AS is_position,\n    ai.is_replaced,\n    ai.is_refused,\n    0                                               AS is_search_unavailable,\n    0                                               AS search_amount,\n    ai.cheaper_loss_amount                          AS price_delta_amount,\n    ai.refused_amount,\n    ai.cheaper_loss_amount + ai.refused_amount      AS loss_amount,\n    CAST(NULL AS DECIMAL(12, 2))                    AS margin_lost\nFROM (\n    SELECT\n        COALESCE(o.parent_order_id, o.id)           AS order_id,\n        o.created_at                                AS order_created_at,\n        s.title        \
+  \                             AS shop_name,\n        COALESCE(cat4.title, cat3.title, cat2.title, cat1.title, 'Без категории')                           AS category_name,\n        COALESCE(p.title, oi.origin_title, CONCAT('Товар #', COALESCE(oi.origin_product_id, oi.product_id))) AS product_name,\n        COALESCE(NULLIF(TRIM(CONCAT_WS(' ', u.surname, u.name)), ''), CONCAT('Сборщик #', a.user_id))       AS picker_name,\n        CASE WHEN oi.origin_product_id IS NOT NULL AND oi.origin_product_id <> oi.product_id\n             THEN COALESCE(rr.title, 'Причина не указана') END AS replace_reason_name,\n        CASE WHEN oi.origin_product_id IS NOT NULL AND oi.origin_product_id <> oi.product_id\n             THEN 1 ELSE 0 END                      AS is_replaced,\n        CASE WHEN oi.status_id = 3 THEN 1 ELSE 0 END AS is_refused,\n        CASE WHEN oi.status_id = 3 THEN oi.price_during_order * oi.quantity ELSE 0 END AS refused_amount,\n        CASE WHEN oi.status_id <> 3 AND oi.origin_product_id\
+  \ IS NOT NULL AND oi.origin_product_id <> oi.product_id\n             THEN GREATEST(oi.origin_price * COALESCE(oi.origin_quantity, oi.quantity)\n                           - oi.price_during_order * oi.quantity, 0)\n             ELSE 0 END                             AS cheaper_loss_amount\n    FROM order_items oi\n    JOIN assemblies a ON a.order_id = oi.order_id AND a.deleted_at IS NULL\n    JOIN orders o     ON o.id = oi.order_id\n    JOIN orders po    ON po.id = COALESCE(o.parent_order_id, o.id)\n    LEFT JOIN shops s ON s.id = o.shop_id\n    LEFT JOIN users u ON u.id = a.user_id\n    LEFT JOIN products p ON p.id = COALESCE(oi.origin_product_id, oi.product_id)\n    LEFT JOIN product_replace_reasons rr ON rr.id = oi.replace_reason_id\n    LEFT JOIN category_product catp ON catp.product_id = COALESCE(oi.origin_product_id, oi.product_id)\n  LEFT JOIN categories cat1 ON cat1.id = catp.category_id\n  LEFT JOIN categories cat2 ON cat2.id = cat1.parent_id\n  LEFT JOIN categories cat3 ON cat3.id\
+  \ = cat2.parent_id\n  LEFT JOIN categories cat4 ON cat4.id = cat3.parent_id\n    WHERE oi.deleted_at IS NULL\n      AND o.deleted_at IS NULL\n      AND COALESCE(po.client_id, 0) <> 35\n      AND COALESCE(CONCAT_WS(' ', u.surname, u.name), '') NOT LIKE '%тест%'\n) ai\n"
+uuid: 1ee44de1-76c8-439c-bbe1-720914f5e3fc
+columns:
+- column_name: event_at
+  is_dttm: true
+- column_name: loss_kind
+  is_dttm: false
+  verbose_name: Вид потери
+  groupby: true
+  filterable: true
+- column_name: shop_name
+  is_dttm: false
+  verbose_name: Магазин
+  groupby: true
+  filterable: true
+- column_name: category_name
+  is_dttm: false
+  verbose_name: Категория
+  groupby: true
+  filterable: true
+- column_name: product_name
+  is_dttm: false
+  verbose_name: Товар
+  groupby: true
+  filterable: true
+- column_name: picker_name
+  is_dttm: false
+  verbose_name: Сборщик
+  groupby: true
+  filterable: true
+- column_name: replace_reason_name
+  is_dttm: false
+  verbose_name: Причина замены
+  groupby: true
+  filterable: true
+- column_name: search_query
+  is_dttm: false
+  verbose_name: Запрос
+  groupby: true
+  filterable: true
+metrics: []
+version: 1.0.0

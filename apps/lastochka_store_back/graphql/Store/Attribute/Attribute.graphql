@@ -1,0 +1,13 @@
+type Attribute {
+  id:Int
+  title:String
+  type_id:Int
+  category_type_id:Int
+  position:Int
+}
+
+type AttributeValue {
+  id:Int
+  title:String
+}
+

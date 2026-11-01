@@ -1,0 +1,11 @@
+extend type Mutation {
+
+  "Удалить пользователя"
+  UserDelete(
+    "ID"
+    id:Int
+  ):DefaultResponse @field(resolver:"User\\UserDelete")
+  @validator(class:"User\\UserDeleteValidator")
+  @guard @can(model: "Admin",ability: "onlyShop") @section(key: "staffs")
+
+}

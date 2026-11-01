@@ -1,0 +1,28 @@
+# Вкладка «Спрос». «Аутсайдеры» - товары с наименьшей выручкой за период
+# среди РЕАЛЬНО проданных (order_desc: false, топ-20 снизу). Настоящий
+# «неликвид» (товар на остатке, но не продаётся) требует данных об остатках -
+# BLOCKED (см. секцию "Заблокированные виджеты" - "количество неликвидных
+# SKU"), поэтому виджет остаётся partial с этой оговоркой (перенесено из
+# BUILD_PLAN).
+slice_name: Аутсайдеры и неликвид
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - product_name
+  - product_id
+  - product_category
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(item_total_price)
+    label: Выручка, ₽
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 20
+  order_desc: false
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: f08db08d-b059-48be-b710-1e40caeca495
+uuid: 06a2249a-e9b2-446d-9c52-121bcbfba0d9
+version: 1.0.0

@@ -1,0 +1,20 @@
+type Query {
+  "Все заказы"
+  orders_paginate(
+    status:Int
+  ):[Order] @paginate(scopes: ["filter","daily","currentShop","excludePickup","byRole","byAssemblyZone","byCourierAssignment","orderBySlot"]) @guard
+  @can(model: "Admin",ability: "onShift")
+
+  "Один заказ по ID"
+  order(
+    id:Int @eq
+  ):Order @find(scopes: ["filter" ,"currentShop","byCourierAssignment"]) @guard
+  @can(model: "Admin",ability: "onShift")
+
+  "Заказы авторизованного сборщика"
+  collector_orders_paginate(
+    status:Int
+  ):[Order] @paginate(scopes: ["auth","collectorFilter","daily","currentShop","onlyAssemblable","byAssemblyZone","orderBySlot"]) @guard
+  @can(model: "Admin",ability: "onShift")
+
+}

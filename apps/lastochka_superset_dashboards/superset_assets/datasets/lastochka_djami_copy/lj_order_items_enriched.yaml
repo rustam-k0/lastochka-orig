@@ -1,0 +1,85 @@
+# Вкладка «Спрос» (по магазину). Item-level, обогащённый карточкой товара и
+# категорией. Потребители: «Топ товаров по выручке», «Аутсайдеры и неликвид»,
+# «Лидеры по оплате (доля в выручке)», «Лидеры по выручке по категориям».
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 3 - item_total_price = oi.price_during_order * oi.quantity. У oi.price
+#     СМЕШАННАЯ семантика (unit при создании, итог позиции после сборки) - нельзя
+#     ни SUM(price), ни SUM(price*quantity); price_during_order стабильно за единицу.
+#     Виджеты «выручка»/«доля в выручке» реализованные -> WHERE ... AND
+#     oi.status_id <> 3 (отменённые при сборке позиции не входят в выручку).
+#     ИСПРАВЛЕНО (ревью Task 8, round 2): было oi.cancel_reason_id IS NULL -
+#     унифицировано на канонический фильтр status_id<>3 (cancel_reason_id
+#     заполнен лишь у 1 из 15 отменённых позиций на dev). Колонка
+#     cancel_reason_id в SELECT ниже - оставлена как есть, это отдельный
+#     справочный сигнал (причина отмены/замены), не фильтр.
+#   Правило 5 - категория через pivot category_product (первая категория =
+#     минимальный position, tie-break по category_id при равном position -
+#     см. финальную fix-волну ниже), products.category_id НЕ существует.
+#   Правило 8 - product_cogs = p.cost_price, NULL-safe (пока пуст у ВСЕХ 13038
+#     товаров на dev - COGS-зависимые метрики тут не строим, поле оставлено
+#     для будущего использования).
+#   Правило 2 - WHERE o.parent_order_id IS NULL: датасет питает виджеты
+#     "выручка"/"доля в выручке" (агрегаты по деньгам) - без фильтра
+#     задвоение от 106 дочерних заказов сплита.
+#   Правило 1 - WHERE o.status_id = 5: те же виджеты озаглавлены "выручка",
+#     оплата при получении не отражена в paid - берём реализованные
+#     (доставленные) заказы, как в money_category_margin.
+#   Правило 9 - categories.deleted_at IS NULL (та же связка, что в
+#     money_category_margin).
+#
+# Наблюдение по схеме: products.title (НЕ name), categories.title (НЕ name) -
+# как и в money_category_margin. Причины отмены/замены позиций - НЕ
+# используются здесь (см. отдельный датасет lj_assembly_stockout_signals,
+# который сознательно НЕ фильтрует по parent_order_id/status_id - сигнал
+# сборки живёт преимущественно на дочерних заказах).
+#
+# ИСПРАВЛЕНО (финальная fix-волна, правило 5 - pivot tie-break): старый JOIN
+# cp.position = (SELECT MIN(position)...) недетерминирован при НЕСКОЛЬКИХ
+# category_product строках товара с ОДИНАКОВЫМ минимальным position (LEFT
+# JOIN расфанивается на несколько строк -> задвоение item_total_price при
+# агрегации по категории/товару). Заменено на коррелированный подзапрос
+# cp.category_id = (SELECT cp2.category_id FROM category_product cp2 WHERE
+# cp2.product_id = p.id ORDER BY cp2.position, cp2.category_id LIMIT 1) -
+# гарантированно возвращает ОДНУ строку.
+table_name: lj_order_items_enriched
+main_dttm_col: order_date
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      oi.id                                      AS order_item_id,
+      oi.order_id                                AS order_id,
+      oi.product_id                              AS product_id,
+      (oi.price_during_order * oi.quantity)       AS item_total_price,
+      oi.parent_id                                AS parent_item_id,
+      oi.replace_reason_id                        AS replace_reason_id,
+      oi.cancel_reason_id                         AS cancel_reason_id,
+      oi.return_reason_id                         AS return_reason_id,
+      o.shop_id                                   AS shop_id,
+      CAST(o.created_at AS DATE)                  AS order_date,
+      o.created_at                                AS order_created_at,
+      o.status_id                                 AS status_id,
+      o.payment_status                            AS payment_status,
+      o.paid                                      AS paid,
+      p.title                                     AS product_name,
+      c.title                                     AS product_category,
+      p.cost_price                                AS product_cogs
+  FROM order_items oi
+  JOIN orders o ON o.id = oi.order_id
+  LEFT JOIN products p ON p.id = oi.product_id
+  LEFT JOIN category_product cp
+         ON cp.product_id = p.id
+        AND cp.category_id = (
+              SELECT cp2.category_id
+              FROM category_product cp2
+              WHERE cp2.product_id = p.id
+              ORDER BY cp2.position, cp2.category_id
+              LIMIT 1
+            )
+  LEFT JOIN categories c ON c.id = cp.category_id AND c.deleted_at IS NULL
+  WHERE o.parent_order_id IS NULL AND o.status_id = 5 AND oi.status_id <> 3
+uuid: f08db08d-b059-48be-b710-1e40caeca495
+columns: []
+metrics: []
+version: 1.0.0

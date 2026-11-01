@@ -1,0 +1,9 @@
+extend type Mutation {
+  "Удалить партнера"
+  ShopDelete(
+    "ID"
+    id:Int
+  ):DefaultResponse  @field(resolver:"Shop\\ShopDelete")
+  @validator(class:"Shop\\ShopDeleteValidator")
+  @guard @can(model: "Admin",ability: "onlyAdmin") @section(key: "stores")
+}

@@ -1,0 +1,133 @@
+.p-card {
+  background: var(--white);
+  border-radius: 10px;
+  padding 20px
+  display grid
+  grid-gap 20px
+  align-items start
+  align-content start
+
+  &__title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 28px;
+    color: var(--dark-light);
+  }
+
+  &__label {
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 20px;
+    color: var(--dark-light);
+  }
+
+  &__contact {
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 26px;
+    color: var(--dark);
+    display inline-flex
+    gap 10px
+    align-items center
+
+    .icon {
+      width 16px
+      height 16px
+
+      svg path {
+        fill var(--dark)
+      }
+    }
+  }
+
+  &__header {
+    display flex
+    align-items center
+    justify-content space-between
+    background none
+    padding 0
+    border none
+
+    &--active .icon {
+      transform rotate(180deg)
+    }
+
+    .icon {
+      width 16px
+      height 16px
+
+      svg path {
+        fill var(--dark-light)
+      }
+    }
+  }
+
+  &__name {
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 24px;
+    color: var(--dark);
+
+    &--small {
+      font-size: 1rem;
+      line-height: 26px;
+    }
+  }
+
+  &__body {
+    display grid
+    grid-gap 10px
+  }
+
+  &__body-item {
+    display flex
+    justify-content space-between
+    align-items center
+  }
+
+  &__tags {
+    display flex
+    flex-wrap wrap
+    align-items start
+    justify-content start
+    gap 10px
+  }
+
+  &__tags-item {
+    background var(--white)
+    border: 1px solid var(--gray-dark);
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 20px;
+    color: var(--dark);
+    padding 0 10px
+    height 26px
+    display inline-flex
+    align-items center
+    gap 10px
+
+    .icon {
+      width 14px
+      height 14px
+
+      svg path {
+        fill var(--dark)
+      }
+    }
+
+    &--gray {
+      background: var(--gray);
+    }
+
+    &--dark {
+      background: var(--dark);
+      border: 1px solid var(--dark);
+      color var(--white)
+
+      .icon svg path {
+        fill var(--white)
+      }
+    }
+  }
+}

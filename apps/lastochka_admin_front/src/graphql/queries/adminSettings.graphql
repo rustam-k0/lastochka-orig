@@ -1,0 +1,8 @@
+query AdminSettings {
+    adminSettings {
+        id
+        key
+        value
+        type
+    }
+}

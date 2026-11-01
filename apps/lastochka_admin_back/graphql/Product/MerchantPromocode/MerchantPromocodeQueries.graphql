@@ -1,0 +1,37 @@
+extend type Query {
+  "Список промокодов с пагинацией"
+  merchantPromocodes(
+    "ID магазина"
+    shop_id: Int
+    "Статус активности"
+    is_active: Boolean
+    "Статус промокода: active | scheduled | expired | inactive"
+    status: String
+    "Поиск по title и code"
+    search: String
+    "Сортировка"
+    ordering: [DefaultOrdering]
+  ): [MerchantPromocode] @paginate(defaultCount: 10, scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-promocodes")
+
+  "Все промокоды без пагинации"
+  merchantPromocodesAll(
+    "ID магазина"
+    shop_id: Int
+    "Статус активности"
+    is_active: Boolean
+    "Статус промокода: active | scheduled | expired | inactive"
+    status: String
+    "Поиск по title и code"
+    search: String
+    "Сортировка"
+    ordering: [DefaultOrdering]
+  ): [MerchantPromocode] @all(scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-promocodes")
+
+  "Получение промокода по ID"
+  merchantPromocode(
+    id: Int @eq
+  ): MerchantPromocode @find
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-promocodes")
+}

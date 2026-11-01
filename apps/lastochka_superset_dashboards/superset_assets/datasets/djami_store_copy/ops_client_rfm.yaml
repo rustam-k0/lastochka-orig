@@ -1,0 +1,133 @@
+# Сгенерировано scripts/ops_datasets.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками: описание правил расчёта - в генераторе.
+table_name: ops_client_rfm
+main_dttm_col: last_order_at
+database_uuid: 22c13af4-950d-4550-9f16-1617f4df8d2f
+schema: null
+sql: "{% set period = get_time_filter('last_order_at', remove_filter=True, target_type='DATETIME') %}\nSELECT\n    b.client_id,\n    b.first_order_at,\n    b.last_order_at,\n    DATE_FORMAT(b.first_order_at, '%Y-%m')           AS cohort_month,\n    b.recency_days,\n    b.frequency_365,\n    b.monetary_365,\n    b.monetary_365 / NULLIF(b.frequency_365, 0)      AS avg_check_365,\n    CONCAT('R', b.r_score)                           AS r_score,\n    CONCAT('F', b.f_score)                           AS f_score,\n    CONCAT('M', b.m_score)                           AS m_score,\n    CONCAT(b.r_score, '/', b.f_score, '/', b.m_score) AS rfm_scores,\n    CONCAT(b.r_score, b.f_score, b.m_score)          AS rfm_code,\n    b.segment,\n    CASE b.segment WHEN 'Потерянные' THEN 'Нет покупок 90 дней и больше' WHEN 'Риск' THEN '31–89 дней без покупки' WHEN 'Новые' THEN 'Одна покупка за 365 дней' WHEN 'Лучшие' THEN 'R≥4 · F≥4 · M≥4' WHEN 'Лояльные' THEN '3 и больше заказов за 365 дней' WHEN 'Развивающиеся'\
+  \ THEN '2 заказа за 365 дней, покупает недавно' END         AS segment_reason,\n    CASE b.segment WHEN 'Потерянные' THEN 'Реактивация: персональное предложение' WHEN 'Риск' THEN 'Напомнить: промокод на следующий заказ' WHEN 'Новые' THEN 'Довести до второго заказа' WHEN 'Лучшие' THEN 'Удерживать: бонусы и ранний доступ' WHEN 'Лояльные' THEN 'Растить чек: наборы и рекомендации' WHEN 'Развивающиеся' THEN 'Повышать частоту: напоминания' END         AS segment_action,\n    b.last_shop_name                                 AS shop_name,\n    CASE\n        WHEN b.recency_days <= 7 THEN '  0–7 дней'\n        WHEN b.recency_days <= 14 THEN '  8–14 дней'\n        WHEN b.recency_days <= 30 THEN ' 15–30 дней'\n        WHEN b.recency_days <= 60 THEN ' 31–60 дней'\n        WHEN b.recency_days <= 89 THEN ' 61–89 дней'\n        WHEN b.recency_days <= 179 THEN ' 90–179 дней'\n        ELSE '180+ дней'\n    END                                AS recency_bucket,\n    CASE\n        WHEN b.recency_days <= 7\
+  \ THEN 1 WHEN b.recency_days <= 14 THEN 2\n        WHEN b.recency_days <= 30 THEN 3 WHEN b.recency_days <= 60 THEN 4\n        WHEN b.recency_days <= 89 THEN 5 WHEN b.recency_days <= 179 THEN 6 ELSE 7\n    END                                 AS recency_order,\n    CASE WHEN b.recency_days BETWEEN 31 AND 89 THEN 1 ELSE 0 END AS is_risk,\n    CASE WHEN b.recency_days >= 90 THEN 1 ELSE 0 END AS is_lost,\n    COALESCE(a.segment, 'Не было в базе')            AS a_segment,\n    CONCAT(a.r_score, '/', a.f_score, '/', a.m_score) AS a_rfm_scores,\n    a.monetary_365                                   AS a_monetary_365,\n    CONCAT(COALESCE(a.segment, 'Не было в базе'), ' → ', b.segment) AS transition_pair,\n    CASE\n        WHEN a.client_id IS NULL THEN 'Впервые купили'\n        WHEN a.segment = b.segment THEN 'Сохранили сегмент'\n        WHEN b.segment = 'Риск' THEN 'Перешли в риск'\n        WHEN b.segment = 'Потерянные' THEN 'Стали потерянными'\n        WHEN a.segment IN ('Риск', 'Потерянные')\
+  \ THEN 'Вернулись в активные'\n        ELSE 'Сменили сегмент'\n    END                                              AS transition_kind\nFROM (SELECT\n        x.*,\n        CASE\n            WHEN x.recency_days >= 90 THEN 'Потерянные'\n            WHEN x.recency_days >= 31 THEN 'Риск'\n            WHEN x.frequency_365 <= 1 THEN 'Новые'\n            WHEN x.r_score >= 4 AND x.f_score >= 4 AND x.m_score >= 4 THEN 'Лучшие'\n            WHEN x.f_score >= 3 THEN 'Лояльные'\n            ELSE 'Развивающиеся'\n        END                                          AS segment\n    FROM (\n        SELECT\n            co.client_id,\n            MIN(co.ordered_at)                       AS first_order_at,\n            MAX(co.ordered_at)                       AS last_order_at,\n            DATEDIFF({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, MAX(co.ordered_at))     AS recency_days,\n            SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{%\
+  \ else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) AS frequency_365,\n            SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) AS monetary_365,\n            SUBSTRING_INDEX(GROUP_CONCAT(co.shop_name ORDER BY co.ordered_at DESC SEPARATOR '|'), '|', 1) AS last_shop_name,\n            CASE\n                WHEN DATEDIFF({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, MAX(co.ordered_at)) <= 7 THEN 5\n                WHEN DATEDIFF({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, MAX(co.ordered_at)) <= 14 THEN 4\n                WHEN DATEDIFF({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, MAX(co.ordered_at)) <= 30 THEN 3\n                WHEN DATEDIFF({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, MAX(co.ordered_at)) <= 60 THEN 2\n                ELSE 1\n            END         \
+  \                             AS r_score,\n            CASE\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) >= 10 THEN 5\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) >= 5 THEN 4\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) >= 3 THEN 3\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) = 2 THEN 2\n                ELSE 1\n            END                                      AS f_score,\n            CASE\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{%\
+  \ else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) >= 15000 THEN 5\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) >= 7000 THEN 4\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) >= 3000 THEN 3\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) >= 1000 THEN 2\n                ELSE 1\n            END                                      AS m_score\n        FROM (SELECT\n        o.id                                         AS order_id,\n        o.user_id                                    AS client_id,\n        o.created_at                                 AS ordered_at,\n        o.total     \
+  \                                 AS total,\n        st.name                                      AS shop_name\n    FROM orders o\n    LEFT JOIN stores st ON st.id = o.store_id\n    WHERE o.deleted_at IS NULL\n      AND o.status = 'delivered'\n      AND o.user_id IS NOT NULL\n      AND o.user_id NOT IN (21, 26, 27)) co\n        WHERE co.ordered_at < {% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}\n        GROUP BY co.client_id\n    ) x) b\nLEFT JOIN (SELECT\n        x.*,\n        CASE\n            WHEN x.recency_days >= 90 THEN 'Потерянные'\n            WHEN x.recency_days >= 31 THEN 'Риск'\n            WHEN x.frequency_365 <= 1 THEN 'Новые'\n            WHEN x.r_score >= 4 AND x.f_score >= 4 AND x.m_score >= 4 THEN 'Лучшие'\n            WHEN x.f_score >= 3 THEN 'Лояльные'\n            ELSE 'Развивающиеся'\n        END                                          AS segment\n    FROM (\n        SELECT\n            co.client_id,\n            MIN(co.ordered_at)        \
+  \               AS first_order_at,\n            MAX(co.ordered_at)                       AS last_order_at,\n            DATEDIFF({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}, MAX(co.ordered_at))     AS recency_days,\n            SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) AS frequency_365,\n            SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) AS monetary_365,\n            SUBSTRING_INDEX(GROUP_CONCAT(co.shop_name ORDER BY co.ordered_at DESC SEPARATOR '|'), '|', 1) AS last_shop_name,\n            CASE\n                WHEN DATEDIFF({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}, MAX(co.ordered_at)) <= 7 THEN 5\n                WHEN DATEDIFF({% if period.from_expr %}{{ period.from_expr\
+  \ }}{% else %}'2000-01-01'{% endif %}, MAX(co.ordered_at)) <= 14 THEN 4\n                WHEN DATEDIFF({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}, MAX(co.ordered_at)) <= 30 THEN 3\n                WHEN DATEDIFF({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}, MAX(co.ordered_at)) <= 60 THEN 2\n                ELSE 1\n            END                                      AS r_score,\n            CASE\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) >= 10 THEN 5\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) >= 5 THEN 4\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %},\
+  \ INTERVAL 365 DAY) THEN 1 ELSE 0 END) >= 3 THEN 3\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) = 2 THEN 2\n                ELSE 1\n            END                                      AS f_score,\n            CASE\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) >= 15000 THEN 5\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) >= 7000 THEN 4\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) >= 3000 THEN 3\n                WHEN SUM(CASE WHEN co.ordered_at\
+  \ >= DATE_SUB({% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) >= 1000 THEN 2\n                ELSE 1\n            END                                      AS m_score\n        FROM (SELECT\n        o.id                                         AS order_id,\n        o.user_id                                    AS client_id,\n        o.created_at                                 AS ordered_at,\n        o.total                                      AS total,\n        st.name                                      AS shop_name\n    FROM orders o\n    LEFT JOIN stores st ON st.id = o.store_id\n    WHERE o.deleted_at IS NULL\n      AND o.status = 'delivered'\n      AND o.user_id IS NOT NULL\n      AND o.user_id NOT IN (21, 26, 27)) co\n        WHERE co.ordered_at < {% if period.from_expr %}{{ period.from_expr }}{% else %}'2000-01-01'{% endif %}\n        GROUP BY co.client_id\n    ) x) a ON a.client_id = b.client_id\n"
+uuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+columns:
+- column_name: last_order_at
+  is_dttm: true
+  verbose_name: Последняя покупка
+- column_name: first_order_at
+  is_dttm: true
+  verbose_name: Первая покупка
+- column_name: client_id
+  is_dttm: false
+  verbose_name: ID клиента
+  groupby: true
+  filterable: true
+- column_name: shop_name
+  is_dttm: false
+  verbose_name: Магазин
+  groupby: true
+  filterable: true
+- column_name: segment
+  is_dttm: false
+  verbose_name: Сегмент
+  groupby: true
+  filterable: true
+- column_name: a_segment
+  is_dttm: false
+  verbose_name: Сегмент на первом срезе
+  groupby: true
+  filterable: true
+- column_name: cohort_month
+  is_dttm: false
+  verbose_name: Когорта
+  groupby: true
+  filterable: true
+- column_name: r_score
+  is_dttm: false
+  verbose_name: R
+  groupby: true
+  filterable: true
+- column_name: f_score
+  is_dttm: false
+  verbose_name: F
+  groupby: true
+  filterable: true
+- column_name: m_score
+  is_dttm: false
+  verbose_name: M
+  groupby: true
+  filterable: true
+- column_name: rfm_scores
+  is_dttm: false
+  verbose_name: R/F/M
+  groupby: true
+  filterable: true
+- column_name: rfm_code
+  is_dttm: false
+  verbose_name: RFM
+  groupby: true
+  filterable: true
+- column_name: recency_days
+  is_dttm: false
+  verbose_name: Дней без заказа
+  groupby: true
+  filterable: true
+- column_name: frequency_365
+  is_dttm: false
+  verbose_name: Заказов за 365 дней
+  groupby: true
+  filterable: true
+- column_name: monetary_365
+  is_dttm: false
+  verbose_name: Выручка за 365 дней, ₽
+  groupby: true
+  filterable: true
+- column_name: avg_check_365
+  is_dttm: false
+  verbose_name: Средний чек, ₽
+  groupby: true
+  filterable: true
+- column_name: segment_reason
+  is_dttm: false
+  verbose_name: Причина сегмента
+  groupby: true
+  filterable: true
+- column_name: segment_action
+  is_dttm: false
+  verbose_name: Действие
+  groupby: true
+  filterable: true
+- column_name: recency_bucket
+  is_dttm: false
+  verbose_name: Давность
+  groupby: true
+  filterable: true
+- column_name: transition_pair
+  is_dttm: false
+  verbose_name: Переход
+  groupby: true
+  filterable: true
+- column_name: transition_kind
+  is_dttm: false
+  verbose_name: Тип перехода
+  groupby: true
+  filterable: true
+- column_name: a_rfm_scores
+  is_dttm: false
+  verbose_name: R/F/M на первом срезе
+  groupby: true
+  filterable: true
+- column_name: a_monetary_365
+  is_dttm: false
+  verbose_name: Выручка на первом срезе, ₽
+  groupby: true
+  filterable: true
+metrics: []
+version: 1.0.0

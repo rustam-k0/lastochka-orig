@@ -1,0 +1,21 @@
+query {
+  integrationRegistry {
+    type
+    label
+    drivers {
+      name
+      label
+      credentials_schema {
+        field
+        label
+        type
+        required
+        placeholder
+        options {
+          value
+          label
+        }
+      }
+    }
+  }
+}

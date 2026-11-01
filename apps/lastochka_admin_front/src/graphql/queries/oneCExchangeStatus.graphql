@@ -1,0 +1,17 @@
+query OneCExchangeStatus($shop_id: Int!) {
+  oneCExchangeStatus(shop_id: $shop_id) {
+    exchange_url
+    data_types {
+      data_type
+      last_exchange_at
+      success
+      error
+      records_count
+      duration_seconds
+      counters
+      warnings
+      status_label
+      stale_threshold_hours
+    }
+  }
+}

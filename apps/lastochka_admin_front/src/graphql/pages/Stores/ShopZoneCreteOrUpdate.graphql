@@ -1,0 +1,34 @@
+mutation (
+  $id: Int
+  $name: String,
+  $shop_id: Int,
+  $geojson: Upload,
+  $delivery_price: Int,
+  $min_order_price: Int,
+  $free_delivery_from: Int
+  $delivery_price_ranges: [ShopZoneDeliveryPriceRangeInput!]
+  $delivery_type: String
+  $delivery_days: [Int!]
+  $delivery_lead_minutes: Int
+  $assembly_price: Int
+  $is_active: Boolean
+) {
+  ShopZoneCreteOrUpdate(
+    id: $id,
+    name: $name,
+    shop_id: $shop_id,
+    geojson: $geojson,
+    delivery_price: $delivery_price,
+    min_order_price: $min_order_price,
+    free_delivery_from: $free_delivery_from,
+    delivery_price_ranges: $delivery_price_ranges,
+    delivery_type: $delivery_type,
+    delivery_days: $delivery_days,
+    delivery_lead_minutes: $delivery_lead_minutes,
+    assembly_price: $assembly_price,
+    is_active: $is_active
+  ) {
+    code
+    message
+  }
+}

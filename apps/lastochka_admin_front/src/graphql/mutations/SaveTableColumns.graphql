@@ -1,0 +1,8 @@
+mutation SaveTableColumns($config: String!) {
+    saveTableColumns(config: $config) {
+        id
+        key
+        value
+        type
+    }
+}

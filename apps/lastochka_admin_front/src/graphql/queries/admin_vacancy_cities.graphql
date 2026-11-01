@@ -1,0 +1,3 @@
+query {
+  admin_vacancy_cities
+}

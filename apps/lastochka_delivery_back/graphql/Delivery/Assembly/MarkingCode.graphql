@@ -1,0 +1,45 @@
+"Код маркировки (Честный знак), отсканированный сборщиком для позиции сборки"
+type MarkingCode {
+  id:Int
+  "Код маркировки как отсканирован (DataMatrix/КИЗ)"
+  code:String
+  "Товар, которому принадлежит код: товар позиции либо товар-замена"
+  product_id:Int
+  "Момент успешной проверки кода в 1С"
+  verified_at:DateTime
+}
+
+"Ответ мутаций кодов маркировки: результат + актуальное состояние позиции"
+type MarkingCodeScanResponse {
+  "200 — код принят (или уже был); 422 — отклонён, текст для сборщика в message; 503 — сервис проверки недоступен, повторить"
+  code:Int
+  message:String
+  "Актуальный список кодов позиции (все товары позиции)"
+  marking_codes:[MarkingCode]
+  "Сколько кодов требуется для подтверждения позиции; 0 — товар не маркируемый или модуль выключен"
+  marking_codes_required:Int
+}
+
+extend type Mutation {
+  "Отсканировать код маркировки единицы товара (модуль honest_sign). Код проверяется в 1С и сохраняется за позицией; один вызов — одна единица. Для позиции на замену передать product_id товара-замены"
+  MarkingCodeScan(
+    "AssemblyItem -> id"
+    assembly_item_id:Int!
+    "Код маркировки с упаковки (DataMatrix/КИЗ), как отсканирован"
+    code:String!
+    "Товар, которому принадлежит код: по умолчанию товар позиции; для замены — id товара из replacements"
+    product_id:Int
+  ):MarkingCodeScanResponse @guard @field(resolver: "Assembly\\MarkingCodeScan")
+  @validator(class: "Assembly\\MarkingCodeScanValidator")
+  @can(model: "Admin",ability: "onShift")
+
+  "Снять ошибочно отсканированный код маркировки с позиции (только пока позиция не собрана)"
+  MarkingCodeRemove(
+    "AssemblyItem -> id"
+    assembly_item_id:Int!
+    "Код маркировки, который нужно снять"
+    code:String!
+  ):MarkingCodeScanResponse @guard @field(resolver: "Assembly\\MarkingCodeRemove")
+  @validator(class: "Assembly\\MarkingCodeRemoveValidator")
+  @can(model: "Admin",ability: "onShift")
+}

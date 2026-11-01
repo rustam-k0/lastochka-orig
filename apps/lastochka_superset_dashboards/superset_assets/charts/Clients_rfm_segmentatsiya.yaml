@@ -1,0 +1,33 @@
+# RFM-сегментация клиентов (3x3: Recency x Frequency/Monetary). BUILD_PLAN
+# просил "9 карточек" - в Superset нет "card grid" viz_type, реализовано как
+# table на 9 строк (альтернатива из notes BUILD_PLAN - 9 отдельных
+# big_number с adhoc_filter по сегменту - отклонена как избыточная).
+slice_name: 'RFM-сегментация клиентов (Recency x Frequency/Monetary)'
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - rfm_segment_name
+  - r_score
+  - fm_score
+  - recommended_action
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      column_name: client_id
+    aggregate: COUNT_DISTINCT
+    label: Размер сегмента
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT client_id) * 100.0 / NULLIF(SUM(COUNT(DISTINCT client_id)) OVER (), 0)
+    label: Доля сегмента, %
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: fd10cf03-92d6-4378-b53d-89f878a9beff
+uuid: 3cb61a15-93ee-4519-a924-8d024c0a63f3
+version: 1.0.0

@@ -1,0 +1,33 @@
+extend type Mutation {
+  "Создание документа товара"
+  ProductDocumentCreate(
+    product_id: Int!
+    title: String!
+    file_path: String!
+    original_name: String
+    mime_type: String
+    size: String
+    group: String
+    position: Int
+  ): ProductDocument @create
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+
+  "Обновление документа товара"
+  ProductDocumentUpdate(
+    id: Int!
+    title: String
+    file_path: String
+    original_name: String
+    mime_type: String
+    size: String
+    group: String
+    position: Int
+  ): ProductDocument @update
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+
+  "Удаление документа товара"
+  ProductDocumentDelete(
+    id: Int!
+  ): ProductDocument @delete
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

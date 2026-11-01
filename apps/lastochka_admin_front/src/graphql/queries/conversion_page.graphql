@@ -1,0 +1,15 @@
+query($title: String, $first: Int, $page: Int) {
+  products_with_grams_paginate(title: $title, first: $first, page: $page){
+    data {
+      id
+      title
+    }
+  }
+
+  categories_1c_paginate(title: $title, first: $first, page: $page) {
+    data {
+      id
+      title
+    }
+  }
+}

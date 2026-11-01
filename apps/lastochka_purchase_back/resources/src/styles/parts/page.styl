@@ -1,0 +1,123 @@
+@import "~@/styles/laravel-mix-fix.styl"
+$header_height = 60px
+#app {
+  display grid
+  min-height 100vh
+  grid-template-rows 60px 1fr
+}
+
+.page {
+  padding 30px 0
+  height 100%
+  background $white
+  flex 1
+}
+
+.form {
+  display grid
+  align-items start
+  justify-content start
+  width 100%
+  grid-template-columns 9fr 3fr
+  grid-gap 32px
+
+  &__inputs {
+    display grid
+    grid-gap 16px
+    width 100%
+  }
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+  }
+
+  &__row {
+    display flex
+    align-items flex-start
+    gap 16px
+    width 100%
+
+    > * {
+      width 100%
+    }
+
+    > .radio
+    > .check {
+      width: auto;
+      flex-shrink: 0;
+    }
+  }
+}
+
+.aside {
+  position: sticky;
+  top 20px
+  z-index 2
+  background $gray
+  border 1px solid $darkgray
+  border-radius 10px
+  padding 24px
+  width 100%
+  display grid
+  grid-gap 16px
+  +below(480px) {
+    padding 20px
+  }
+
+  &__footer {
+    display flex
+    flex-direction column
+    align-items stretch
+    justify-content stretch
+    flex-wrap wrap
+    gap 10px
+    width 100%
+  }
+}
+
+.ms {
+  border-radius 10px
+  border 1px solid $gray1
+  background rgba($main_color, .1)
+  padding 20px
+  display grid
+  grid-gap 20px
+
+  &__title {
+    display block
+    font-family $font_bold
+    font-size 1.3em
+    color $dark
+  }
+
+  &__list {
+    list-style none
+    padding 0
+    display grid
+    grid-gap 10px
+  }
+
+  &__item {
+    cursor move
+    position relative
+    display flex
+    gap 10px
+    align-items flex-end
+
+    &:not(:first-child) {
+      padding-top: 10px;
+      border-top: 1px solid rgba($main_color, .3);
+    }
+  }
+
+  &__footer {
+    display flex
+    gap 10px
+    flex-wrap wrap
+    width 100%
+  }
+}

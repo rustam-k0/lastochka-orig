@@ -1,0 +1,30 @@
+mutation (
+  $email: String
+  $password: String
+) {
+  AdminLogin(
+    email: $email
+    password: $password
+  ) {
+    token
+    two_factor
+    challenge
+    two_factor_secret
+    otpauth_url
+    qr
+    user {
+      id
+      name
+      surname
+      patronymic
+      email
+      phone
+      roles {
+        id
+        name_ru
+      }
+    }
+    code
+    message
+  }
+}

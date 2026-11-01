@@ -1,0 +1,21 @@
+query AttributeFamily($id: Int!) {
+  attribute_family(id: $id) {
+    id
+    title
+    code
+    is_system
+    position
+    attributes {
+      id
+      position
+      is_required
+      is_configurable
+      attribute {
+        id
+        title
+        type_id
+        category_type_id
+      }
+    }
+  }
+}

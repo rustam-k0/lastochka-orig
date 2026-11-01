@@ -1,0 +1,27 @@
+# Вкладка «Стратегия». Удельные метрики: заказов на курьера за смену (смена
+# приближена календарным днём - см. notes датасета analytics_courier_shift_
+# fact.yaml). ПУСТО/СКУДНО-ОЖИДАЕМО: на dev 2 события delivery.finished, 2
+# строки в результате.
+slice_name: 'Удельные метрики: заказов на курьера за смену'
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - store_id
+  - shift_day
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      column_name: orders_delivered
+    aggregate: AVG
+    label: Заказов на курьера за смену
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 8e081226-aee2-4e8c-af0e-c73d67b5b9ef
+uuid: 2e459a30-454c-4615-822e-edb37c280863
+version: 1.0.0

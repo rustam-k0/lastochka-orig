@@ -1,0 +1,30 @@
+extend type Mutation {
+  "Обновление акции мерчанта"
+  updateMerchantSale(id: Int!, input: UpdateMerchantSaleInput! @spread): MerchantSale!
+    @field(resolver: "MerchantSale\\UpdateMerchantSale")
+    @validator(class: "MerchantSale\\UpdateMerchantSaleValidator")
+    @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-sales")
+}
+
+input UpdateMerchantSaleInput {
+  "Название акции"
+  title: String
+  "Описание акции"
+  description: String
+  "ID магазина"
+  shop_id: Int
+  "Процент скидки (1-100)"
+  discount_percent: Int
+  "Дата и время начала акции"
+  starts_at: DateTime
+  "Дата и время окончания акции"
+  ends_at: DateTime
+  "Активность"
+  is_active: Boolean
+  "ID товаров в акции"
+  product_ids: [Int!]
+  "Изображение акции"
+  image: ImgInput
+  "Динамические чекбоксы (JSON-строка map field => bool)"
+  custom_checkboxes: String
+}

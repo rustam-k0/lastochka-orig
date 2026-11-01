@@ -1,0 +1,90 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Детализация показателей
+description: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - courier_name
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(is_cash_delivered)
+    label: Нал, заказов
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX('Нет данных')
+    label: Карта, заказов
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(is_online_delivered)
+    label: Онлайн, заказов
+    hasCustomLabel: true
+  - &id001
+    expressionType: SQL
+    sqlExpression: SUM(cash_amount)
+    label: К инкассации, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX('Нет данных')
+    label: Сдано, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX('Нет данных')
+    label: Расхождение, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(cash_amount) / NULLIF(SUM(is_cash_delivered), 0)
+    label: Средний чек нал, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(online_amount) / NULLIF(SUM(is_online_delivered), 0)
+    label: Средний чек онлайн, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(cash_amount) / NULLIF(SUM(delivered_amount), 0)
+    label: Доля наличных
+    hasCustomLabel: true
+  percent_metrics: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: accepted_at
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: false
+  show_totals: false
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  order_desc: true
+  column_config:
+    Нал, заказов:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    Онлайн, заказов:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    К инкассации, ₽:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    Средний чек нал, ₽:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    Средний чек онлайн, ₽:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    Доля наличных:
+      d3NumberFormat: .1%
+      horizontalAlign: right
+  timeseries_limit_metric: *id001
+cache_timeout: null
+dataset_uuid: 36a9cf7e-b5c0-4c80-a5be-79eaa4d1810a
+uuid: ec51df6f-2150-5841-9a54-dc702f66d743
+version: 1.0.0

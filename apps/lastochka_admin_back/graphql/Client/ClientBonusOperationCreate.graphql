@@ -1,0 +1,15 @@
+extend type Mutation {
+  "Ручное начисление или списание баллов клиенту"
+  clientBonusOperationCreate(
+    "ID клиента"
+    clientId: ID!
+    "Тип операции: earn (начислить) или spend (списать)"
+    type: String!
+    "Сумма в баллах"
+    amount: Int!
+    "Комментарий администратора, обязателен"
+    comment: String!
+  ):DefaultResponse @field(resolver:"Client\\ClientBonusOperationCreate")
+  @validator(class:"Client\\ClientBonusOperationValidator")
+  @guard @can(model: "Admin",ability: "onlyAdmin") @section(key: "clients")
+}

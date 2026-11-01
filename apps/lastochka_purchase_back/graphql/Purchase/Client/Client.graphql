@@ -1,0 +1,40 @@
+type Client {
+  "ID"
+  id:Int
+  "Номер телефона"
+  phone:String
+  "Имя"
+  name:String
+  "Фамилия"
+  surname:String
+  "Отчество"
+  patronymic:String
+  "Почта"
+  email:String
+  "Количество заказов"
+  orders_count:Int @count(relation: "orders")
+}
+
+type ClientOrderInfo {
+  "Имя"
+  name:String
+  "Фамилия"
+  surname:String
+  "Номер телефона"
+  phone:String
+  "Почта"
+  email:String
+  "Адрес"
+  address:String
+  "Подъезд"
+  entrance: String
+  "Домофон"
+  intercom: String
+  "Этаж"
+  floor:String
+  "Квартира"
+  flat: String
+  "Первый ли заказ"
+  first_order:Boolean
+  object_data: ObjectAddressDataType
+}

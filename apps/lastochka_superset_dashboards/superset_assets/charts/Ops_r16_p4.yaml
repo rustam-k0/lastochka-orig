@@ -1,0 +1,54 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Откуда и куда
+description: Потоки магазин → район · толщина — заказы
+viz_type: deck_arc
+params:
+  viz_type: deck_arc
+  start_spatial:
+    type: latlong
+    latCol: source_lat
+    lonCol: source_lon
+  end_spatial:
+    type: latlong
+    latCol: target_lat
+    lonCol: target_lon
+  stroke_width: 4
+  mapbox_style: https://tile.openstreetmap.org/{z}/{x}/{y}.png
+  autozoom: false
+  tooltip_contents:
+  - district
+  - orders
+  - avg_delivery_minutes
+  viewport:
+    latitude: 43.49
+    longitude: 43.62
+    zoom: 12.3
+    bearing: 0
+    pitch: 0
+  color_scheme_type: categorical_palette
+  dimension: shop_name
+  color_scheme: lastochkaOps
+  color_picker:
+    r: 31
+    g: 168
+    b: 201
+    a: 0.6
+  target_color_picker:
+    r: 69
+    g: 78
+    b: 124
+    a: 0.6
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: ordered_at
+  row_limit: 200
+  filter_nulls: true
+  legend_position: tr
+cache_timeout: null
+dataset_uuid: 68b40391-0a6e-5245-986b-8b32c2ff4487
+uuid: a8c149ef-0271-5bb3-bb4e-1315fd1f0a3c
+version: 1.0.0

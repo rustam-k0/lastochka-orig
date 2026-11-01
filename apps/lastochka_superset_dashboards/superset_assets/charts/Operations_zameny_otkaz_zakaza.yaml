@@ -1,0 +1,26 @@
+# Вкладка «Операции». Экономика замен — доля отказов заказа из-за замены.
+# ГРУБОЕ ПРИБЛИЖЕНИЕ (как и в BUILD_PLAN): "отказ из-за замены" = заказ в
+# статусе status_id=6 ('Отменён'), в котором была хотя бы одна заменённая
+# позиция - НЕ доказывает причинно-следственную связь (в схеме нет явной
+# причины отмены заказа целиком, только order_status_name из CASE по
+# status_id, см. assembly_product_stats.yaml). Заменено ILIKE (Postgres) на
+# точное сравнение = 'Отменён' (MySQL не имеет ILIKE, а order_status_name -
+# наш собственный CASE-словарь с фиксированными значениями, паттерн-матч не
+# нужен). ПУСТО-ОЖИДАЕМО: 0 замен на dev.
+slice_name: Экономика замен — доля отказов заказа из-за замены, %
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: 100.0 * COUNT(DISTINCT CASE WHEN order_status_name = 'Отменён' AND is_replaced = 1 THEN order_id END) / NULLIF(COUNT(DISTINCT order_id), 0)
+    label: Доля отказов из-за замены, %
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: приближение (нет явной причины отмены заказа целиком в схеме)
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: a39a8a84-d892-4d13-bd24-96190a61989a
+uuid: 7e8bc654-7b93-40c5-aca4-087b33efd77f
+version: 1.0.0

@@ -1,0 +1,6 @@
+mutation ($id: Int) {
+  CategoryPublish(id: $id) {
+    code
+    message
+  }
+}

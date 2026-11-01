@@ -1,0 +1,12 @@
+extend type Mutation {
+  "Зафиксировать пробег за доставку заказа в метрах (телеметрия, #11602)"
+  DeliveryLogDistance(
+    "DeliveryOrder -> id"
+    delivery_order_id:Int!
+
+    "Пробег в метрах (агрегат GPS-трека по заказу)"
+    distance_m:Int!
+  ):DefaultResponse @guard @field(resolver: "Delivery\\DeliveryLogDistance")
+  @validator(class: "Delivery\\DeliveryLogDistanceValidator")
+  @can(model: "Admin",ability: "driverOnShift")
+}

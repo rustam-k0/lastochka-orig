@@ -1,0 +1,17 @@
+type ShopCategory {
+  "Категория"
+  category:Category @hasOne
+  "Время на сборку"
+  time_to_take:Int
+  "Приоритет сборки"
+  position:Int
+}
+
+input ShopCategoryInput {
+  "ID категории"
+  category_id:Int
+  "Время на сборку"
+  time_to_take:Int
+  "Приоритет категории"
+  position:Int
+}

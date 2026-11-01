@@ -1,0 +1,16 @@
+variables:
+  BACKEND_DIR: "/home/admin/apps/cron/cron_store_back"
+  BACKEND_CONTAINER_NAME: "cron_store_back"
+
+deploy_dev:
+  stage: deploy
+  tags:
+    - comrades-dev
+  script:
+    - git config --global --add safe.directory $BACKEND_DIR
+    - cd $BACKEND_DIR
+    - git pull
+    - docker exec $BACKEND_CONTAINER_NAME composer install
+    - docker exec $BACKEND_CONTAINER_NAME php artisan migrate --force
+  only:
+    - master

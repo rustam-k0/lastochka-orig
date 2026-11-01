@@ -1,0 +1,7 @@
+extend type Mutation {
+  AttributeFamilyDelete(
+    "ID"
+    id: Int!
+  ): DefaultResponse @field(resolver: "AttributeFamily\\AttributeFamilyDelete")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

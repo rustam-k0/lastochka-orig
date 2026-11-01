@@ -1,0 +1,70 @@
+query($first: Int, $page: Int, $order_id: Int!) {
+  admin_order_items_paginate(first: $first, page: $page, order_id: $order_id) {
+    data {
+      id
+      product {
+        id
+        articul
+        title
+        info_weight
+        info_weight_type_id
+        pickup_only
+        categories {
+          id
+          title
+        }
+      }
+      origin_product {
+        id
+        articul
+        title
+      }
+      supplements {
+        supplement {
+          id
+          title
+          type
+        }
+        values {
+          id
+          title
+          price
+        }
+      }
+      quantity
+      ordered_quantity
+      returned_quantity
+      actual_weight
+      price
+      price_during_order
+      price_old
+      price_tiers {
+        base_price
+        base_price_old
+        base_is_eligible
+        tiers {
+          min_quantity
+          price
+        }
+      }
+      status_id
+      origin_product_id
+      origin_title
+      origin_price
+      origin_quantity
+      is_supplemented
+      marking_codes
+      cancel_reason {
+        id
+        title
+      }
+      replace_reason {
+        id
+        title
+      }
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}

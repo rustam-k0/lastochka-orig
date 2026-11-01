@@ -1,0 +1,11 @@
+extend type Mutation {
+  ProductGroupFilterValueUpdate(
+    id: Int!
+    value: String
+    image_path: String
+    position: Int
+    is_active: Boolean
+  ): DefaultResponse @field(resolver: "ProductGroupFilter\\ProductGroupFilterValueUpdate")
+  @validator(class: "ProductGroupFilter\\ProductGroupFilterValueUpdateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

@@ -1,0 +1,67 @@
+query (
+  $page: Int
+  $first: Int
+  $title: String
+  $ordering: [DefaultOrdering]
+  $shop_id: Int
+  $available_in_shop_id: Int
+  $status_id: Int
+  $categories: [Int]
+  $is_configurable: Boolean
+  $exclude_children: Boolean
+  $only_children: Boolean
+  $has_img: Boolean
+  $has_reviews: Boolean
+  $fill_percent_lt: Int
+  $fill_percent_gte: Int
+  $is_new: Boolean
+  $is_hurry_up: Boolean
+  $selected_shop_id: Int
+) {
+  admin_products_paginate(
+    page: $page
+    first: $first
+    title: $title
+    ordering: $ordering
+    shop_id: $shop_id
+    available_in_shop_id: $available_in_shop_id
+    status_id: $status_id
+    categories: $categories
+    is_configurable: $is_configurable
+    exclude_children: $exclude_children
+    only_children: $only_children
+    has_img: $has_img
+    has_reviews: $has_reviews
+    fill_percent_lt: $fill_percent_lt
+    fill_percent_gte: $fill_percent_gte
+    is_new: $is_new
+    is_hurry_up: $is_hurry_up
+  ) {
+    data {
+      id
+      articul
+      title
+      description
+      fill_percent
+      img {
+        path
+      }
+      default_price_value(shop_id: $selected_shop_id)
+      remains_sum(shop_id: $selected_shop_id)
+      effective_stock_mode
+      effective_fixed_stock
+      base_unit_type_id
+      info_weight_type_id
+      categories {
+        id
+        title
+      }
+      status_id
+      is_configurable
+      parent_id
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}

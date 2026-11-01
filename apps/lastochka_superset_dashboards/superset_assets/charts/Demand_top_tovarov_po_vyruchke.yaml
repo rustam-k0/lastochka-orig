@@ -1,0 +1,20 @@
+# Вкладка «Спрос». Топ-20 товаров по выручке (dist_bar -> echarts_timeseries_bar
+# с категориальной осью product_name, без времени).
+slice_name: Топ товаров по выручке
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(item_total_price)
+    label: Выручка, ₽
+    hasCustomLabel: true
+  groupby:
+  - product_name
+  adhoc_filters: []
+  row_limit: 20
+  y_axis_format: SMART_NUMBER
+  x_axis: product_name
+dataset_uuid: f08db08d-b059-48be-b710-1e40caeca495
+uuid: f2295365-02d8-49cb-8b22-484eb1220aaf
+version: 1.0.0

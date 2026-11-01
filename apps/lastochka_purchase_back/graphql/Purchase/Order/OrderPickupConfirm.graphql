@@ -1,0 +1,8 @@
+extend type Mutation {
+  OrderPickupConfirm(
+    "ID заказа"
+    id: ID!
+  ): DefaultResponse! @field(resolver: "Order\\OrderPickupConfirm")
+  @guard(with: ["api"])
+  @orderAction(key: "change_status")
+}

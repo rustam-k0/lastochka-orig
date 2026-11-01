@@ -1,0 +1,49 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Причины замен
+description: Количество позиций
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: replace_reason_name
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(is_replaced)
+    label: Позиций
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: order_created_at
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: is_replaced = 1
+  orientation: horizontal
+  row_limit: 5
+  show_value: true
+  show_legend: false
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: ',d'
+  truncateYAxis: false
+  zoomable: false
+  rich_tooltip: true
+  stack: null
+  only_total: true
+  comparison_type: values
+  order_desc: true
+  x_axis_title: ''
+  x_axis_title_margin: 30
+  y_axis_title: Позиций, шт.
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  x_axis_sort: Позиций
+  x_axis_sort_asc: false
+cache_timeout: null
+dataset_uuid: 47fddec7-0198-47af-bebf-6193d5235a0d
+uuid: c5e18c9d-6a72-5110-bf99-6b08003f0a94
+version: 1.0.0

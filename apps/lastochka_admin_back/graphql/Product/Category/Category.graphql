@@ -1,0 +1,67 @@
+type Category {
+  "ID"
+  id:Int
+  "Название"
+  title:String
+  "название на английском(slug)"
+  link:String
+  "Дочерние категории"
+  child_categories:[Category] @hasMany(relation: "childCategories")
+  "Родительская категория"
+  parent: Category @hasOne(relation:"parent")
+  "Важные категории"
+  important: Boolean
+  "Изображение для каталога(Сайт)"
+  site_catalog_img: Img @hasOne(relation:"siteCatalogImg")
+  "Изображение квадрат (Сайт)"
+  site_square_img: Img @hasOne(relation:"siteSquareImg")
+  "Изображение прямоугольник(Сайт)"
+  site_rect_img: Img @hasOne(relation:"siteRectImg")
+  "Изображение колонка(Мобильная версия)"
+  mobile_column_img: Img @hasOne(relation:"mobileColumnImg")
+  "Изображение квадрат(Мобильная версия)"
+  mobile_square_img: Img @hasOne(relation:"mobileSquareImg")
+  "Изображение прямоугольник(Мобильная версия)"
+  mobile_rect_img: Img @hasOne(relation:"mobileRectImg")
+  "Фоновое изображение"
+  background_img: Img @hasOne(relation:"backgroundImg")
+  "Минимальные остатки для публикации"
+  min_quantity: Int
+  "Шаг кванта продажи категории, в наименьшей единице семейства (LASTOCHKI-JAMI-11200)"
+  quantum_step: Int
+  "Единица кванта категории (2=грамм, 5=мл, 1=шт)"
+  quantum_unit_type_id: Int
+  "Режим остатков категории: normal/ignore/fixed (LASTOCHKI-JAMI-11207)"
+  stock_mode: String
+  "Лимит для fixed-режима (в единице fixed_stock_unit_type_id)"
+  fixed_stock_quantity: Int
+  "Единица лимита fixed-режима (2=грамм, 1=шт)"
+  fixed_stock_unit_type_id: Int
+  created_at:DateTime
+  updated_at:DateTime
+  shop_category(shop_id:Int):ShopCategory @hasOne(relation: "shopCategory",scopes: ["currentShop"])
+  "Позиция"
+  position:Int
+  "Является ли категория кулинарной"
+  is_cooking: Boolean
+  "Скоропортящийся / заморозка"
+  is_perishable: Boolean
+  "Показывать на главной странице"
+  show_on_main: Boolean
+  "Текст информационного тега категории (LASTOCHKI-JAMI-11874)"
+  tag_text: String
+  "Цвет информационного тега, hex #RRGGBB"
+  tag_color: String
+  "Активна (выводится на витрине storefront)"
+  is_active: Boolean
+  "Атрибуты"
+  attributes:[Attribute] @hasMany
+  "Без скрытия товара при отсутствии товаров"
+  without_blocking_price:Boolean
+  "Семейство атрибутов"
+  attribute_family: AttributeFamily @belongsTo(relation: "attributeFamily")
+  "Зона сборки"
+  assembly_zone: AssemblyZone @belongsTo(relation: "assemblyZone")
+  "Динамические чекбоксы (JSON-строка map field => bool)"
+  custom_checkboxes: String
+}

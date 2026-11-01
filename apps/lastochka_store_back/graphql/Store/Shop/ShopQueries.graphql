@@ -1,0 +1,11 @@
+extend type Query {
+  shops(
+    sphere_id:Int @eq
+    "Популярный партнер"
+    is_popular:Boolean @eq
+  ):[Shop] @all(scopes: ["onlyActive","auth"])
+
+  shops_item(
+    id:Int @eq
+  ):Shop @find(scopes: ["onlyActive","auth"])
+}

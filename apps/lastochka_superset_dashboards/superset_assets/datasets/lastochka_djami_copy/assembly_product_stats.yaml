@@ -1,0 +1,80 @@
+# Вкладка «Операции» (по магазину). Item-level срез результатов сборки с
+# названием товара - потребители: «Сборка по товарам» (table) и 4 карточки
+# «Экономика замен товара при сборке» (big_number).
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1 - statuses НЕ джойнится (пустая); order_status_name - CASE по
+#     o.status_id (тот же словарь, что в djami_orders_core/Task 2).
+#   Правило 2, ИСКЛЮЧЕНИЕ (как djami_order_items_assembly, Task 2) - НЕ
+#     добавлен WHERE o.parent_order_id IS NULL. Сборка физически происходит
+#     на уровне дочернего заказа сплита ДО синхронизации на родителя
+#     (AssemblyFinish::syncItemsToParent) - фильтр по родителю вырезал бы
+#     основной сигнал качества сборки (см. комментарий в
+#     djami_order_items_assembly.yaml, тот же вывод подтверждён повторно на
+#     этом item-срезе).
+#   Правило 3 - item_total_price = oi.price_during_order * oi.quantity (у oi.price
+#     смешанная семантика; price_during_order стабильно за единицу). Cancel-фильтр
+#     НЕ применён (item-level срез результатов сборки, в строках есть cancel_reason).
+#     replacement_price_delta - разница цен ЗА ЕДИНИЦУ, считается через
+#     price_during_order БЕЗ ×quantity (исключение правила 3): parent_item_price =
+#     op.price_during_order, delta = oi.price_during_order - op.price_during_order.
+#   Правило 9 - product_cancel_reasons джойнится с deleted_at IS NULL.
+#
+# УТОЧНЕНИЕ к допущению BUILD_PLAN ("любой cancel_reason_id = не найдено"):
+#   Проверено содержимое product_cancel_reasons на dev: 1=Нет в наличии,
+#   2=Брак товара, 3=Истёк срок годности, 4=Повреждена упаковка, 5=Клиент
+#   отказался. Из 4 order_items с cancel_reason_id IS NOT NULL на dev - 2 это
+#   id=1 (Нет в наличии), 2 это id=5 (Клиент отказался, семантически НЕ
+#   "не найдено при сборке", а отказ клиента). is_not_found сужен до
+#   cancel_reason_id = 1 - точное соответствие смыслу виджета, устраняет
+#   завышение метрики, о котором предупреждал сам BUILD_PLAN.
+#
+# ПРОВЕРЕНО на dev (SELECT до записи YAML): replace_reason_id и parent_id
+# ВСЕГДА NULL по всем 573 order_items (0 реальных замен товара при сборке за
+# всю историю dev) - is_replaced датасета корректен по формуле, но на
+# текущих данных даст 0% по всем 4 карточкам «Экономика замен» - это честный
+# результат (скудно-ожидаемо), не ошибка SQL.
+#
+# assembly_items (id/actual_weight/assembled_at и т.п.) НЕ используется для
+# этого датасета: assembly_items не имеет started_at на позицию (только
+# assembled_at - момент скана), поэтому item-level assembly_seconds из
+# BUILD_PLAN физически невычислим ни из одной реальной таблицы - в BUILD_PLAN
+# этот метрик был помечен как "требует подтверждения структуры" и не вошёл в
+# финальный список чартов вкладки (см. секцию "Чарты" BUILD_PLAN - у "Сборка
+# по товарам" в макете нет отдельной метрики времени сборки на позицию).
+table_name: assembly_product_stats
+main_dttm_col: order_created_at
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      oi.id                                        AS order_item_id,
+      oi.order_id                                  AS order_id,
+      o.shop_id                                    AS shop_id,
+      o.created_at                                 AS order_created_at,
+      o.status_id                                  AS order_status_id,
+      CASE o.status_id
+          WHEN 1 THEN 'Создан'  WHEN 2 THEN 'На сборке' WHEN 3 THEN 'Собран'
+          WHEN 4 THEN 'В доставке' WHEN 5 THEN 'Доставлен' WHEN 6 THEN 'Отменён'
+          WHEN 7 THEN 'Готовится' ELSE 'Неизвестно'
+      END                                          AS order_status_name,
+      oi.product_id                                AS product_id,
+      p.title                                       AS product_name,
+      oi.price_during_order * oi.quantity           AS item_total_price,
+      oi.parent_id                                  AS parent_item_id,
+      oi.replace_reason_id                          AS replace_reason_id,
+      oi.cancel_reason_id                           AS cancel_reason_id,
+      cr.title                                       AS cancel_reason_name,
+      CASE WHEN oi.cancel_reason_id = 1 THEN 1 ELSE 0 END AS is_not_found,
+      CASE WHEN oi.replace_reason_id IS NOT NULL OR oi.parent_id IS NOT NULL THEN 1 ELSE 0 END AS is_replaced,
+      op.price_during_order                          AS parent_item_price,
+      (oi.price_during_order - op.price_during_order) AS replacement_price_delta
+  FROM order_items oi
+  JOIN orders o ON o.id = oi.order_id
+  LEFT JOIN products p ON p.id = oi.product_id
+  LEFT JOIN product_cancel_reasons cr ON cr.id = oi.cancel_reason_id AND cr.deleted_at IS NULL
+  LEFT JOIN order_items op ON op.id = oi.parent_id
+uuid: a39a8a84-d892-4d13-bd24-96190a61989a
+columns: []
+metrics: []
+version: 1.0.0

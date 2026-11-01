@@ -1,0 +1,7 @@
+extend type Mutation {
+  "Сделать селфи для авторизации"
+  UserConfirmSelfie(
+    img:ImgInput
+  ):DefaultResponse @field(resolver: "User\\UserConfirmSelfie") @validator(class: "User\\UserConfirmSelfieValidator") @guard
+}
+

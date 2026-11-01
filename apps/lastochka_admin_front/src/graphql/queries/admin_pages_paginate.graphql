@@ -1,0 +1,26 @@
+query ($first: Int, $page: Int, $search: String, $is_published: Boolean, $ordering: [DefaultOrdering]) {
+  admin_pages_paginate(
+    first: $first
+    page: $page
+    search: $search
+    is_published: $is_published
+    ordering: $ordering
+  ) {
+    data {
+      id
+      slug
+      title
+      position
+      is_published
+      is_system
+      published_at
+      updated_at
+    }
+    paginatorInfo {
+      count
+      currentPage
+      lastPage
+      total
+    }
+  }
+}

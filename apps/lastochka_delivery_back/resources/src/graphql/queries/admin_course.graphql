@@ -1,0 +1,14 @@
+query  (
+$first: Int!
+$page: Int
+$ordering: [DefaultOrdering]
+) {
+admin_course(
+first: $first
+page: $page
+ordering: $ordering
+) {
+data { id title updated_at status { id name code table_name } } paginatorInfo { total }
+ }
+
+ }

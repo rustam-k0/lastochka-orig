@@ -1,0 +1,4 @@
+extend type Mutation {
+  "Завершить свою смену"
+  ShiftFinish:DefaultResponse @field(resolver: "User\\ShiftFinish") @guard
+}

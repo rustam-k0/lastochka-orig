@@ -1,0 +1,7 @@
+query variantOrdersCount($variant_id: Int!) {
+  variantOrdersCount(variant_id: $variant_id) {
+    variant_id
+    active_orders
+    total_orders
+  }
+}

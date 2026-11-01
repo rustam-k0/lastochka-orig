@@ -1,0 +1,8 @@
+query ($shop_id: Int!, $search: String) {
+  shopProductsForSale(shop_id: $shop_id, search: $search, first: 100) {
+    data {
+      id
+      title
+    }
+  }
+}

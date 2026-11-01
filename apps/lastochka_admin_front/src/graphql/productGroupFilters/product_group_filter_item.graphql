@@ -1,0 +1,15 @@
+query productGroupFilter($id: Int!) {
+  productGroupFilter(id: $id) {
+    id
+    name
+    position
+    is_active
+    values {
+      id
+      value
+      image_path
+      position
+      is_active
+    }
+  }
+}

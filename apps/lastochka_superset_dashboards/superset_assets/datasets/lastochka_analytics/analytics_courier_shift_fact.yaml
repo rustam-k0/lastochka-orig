@@ -1,0 +1,50 @@
+# Вкладка «Стратегия» (по магазину). Грануляр 'курьер x смена(день) x день':
+# число доставленных заказов за смену - для метрики 'заказов на курьера за
+# смену'. Имя датасета verbatim из BUILD_PLAN. Потребитель - «Удельные
+# метрики: заказов на курьера за смену». Источник: lastochka_analytics (db3,
+# PostgreSQL).
+#
+# ИСПРАВЛЕНО против допущений BUILD_PLAN (docs/conversion-rules.md, правило
+# 6, проверено на dev полным SELECT payload):
+#   - event_type = 'delivery.completed' (BUILD_PLAN) НЕ СУЩЕСТВУЕТ -> реальное
+#     имя 'delivery.finished' (см. правило 6).
+#   - ДОПУЩЕНИЕ BUILD_PLAN "payload содержит ключ shift_id" НЕ ПОДТВЕРДИЛОСЬ:
+#     реальный payload delivery.finished НЕ содержит 'shift_id' вообще
+#     (проверено полным SELECT payload на 2 живых событиях dev). Идентификатор
+#     смены живёт в ВЕРХНЕУРОВНЕВОЙ колонке ae.session_id в формате
+#     'shift-<id>' (см. memory analytics-collection-layer.md - тот же
+#     паттерн session_id='shift-<id>', что уже использован в Task 5
+#     courier_performance.yaml), но проставлен НЕ у всех событий (на dev 1 из
+#     2 delivery.finished события - событие ДО того, как поле начали
+#     передавать, session_id пустой).
+#   - Т.к. session_id не всегда заполнен, 'смена' взята как КАЛЕНДАРНЫЙ ДЕНЬ
+#     (CAST(occurred_at AS date)) - тот же приём "delivery_shift_date", что и
+#     в Task 5 Operations_metriki_kurierov (courier_performance.yaml), вместо
+#     BUILD_PLAN'овского запасного варианта "окно shift.started/shift.ended"
+#     (усложнение не оправдано при 2 событиях на весь dev). session_id
+#     оставлен колонкой для дальнейшего уточнения, когда данных станет
+#     больше.
+#
+# ПУСТО/СКУДНО-ОЖИДАЕМО (тот же источник, что Task 5 courier_performance): на
+# dev 2 события delivery.finished (B2E-инструментация включена 2026-07-15) -
+# результат датасета 2 строки. Это текущее состояние данных, не баг.
+table_name: analytics_courier_shift_fact
+main_dttm_col: shift_day
+database_uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+schema: null
+sql: |
+  SELECT
+      ae.employee_id                          AS courier_id,
+      ae.store_id                             AS store_id,
+      ae.session_id                           AS session_id,
+      CAST(ae.occurred_at AS date)            AS shift_day,
+      MIN(ae.occurred_at)                     AS first_delivery_at,
+      MAX(ae.occurred_at)                     AS last_delivery_at,
+      COUNT(DISTINCT ae.order_id)             AS orders_delivered
+  FROM analytics_events ae
+  WHERE ae.event_type = 'delivery.finished'
+  GROUP BY ae.employee_id, ae.store_id, ae.session_id, CAST(ae.occurred_at AS date)
+uuid: 8e081226-aee2-4e8c-af0e-c73d67b5b9ef
+columns: []
+metrics: []
+version: 1.0.0

@@ -1,0 +1,6 @@
+mutation ConfigurableProductDetach($id: Int!) {
+  ConfigurableProductDetach(id: $id) {
+    code
+    message
+  }
+}

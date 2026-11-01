@@ -1,0 +1,146 @@
+# Вкладка «Светофор магазинов» (по сети). Order-level (row = 1 заказ),
+# единственный потребитель - «Таблица-светофор по магазинам сети». Имя
+# датасета verbatim из BUILD_PLAN, SQL полностью переписан.
+#
+# ИСПРАВЛЕНО (ревью Task 8, round 1):
+#   (1) items_cancelled_cnt считал OR oi.return_reason_id IS NOT NULL -
+#     нарушение контракта #8 (возвраты происходят ПОСЛЕ сборки, в знаменатель
+#     ошибок сборки не входят). Убрано, сверено с эталонной реализацией того
+#     же ключа в network_signal_feed.yaml (shop_metric_assembly_accuracy -
+#     replace_reason_id OR cancel_reason_id, без return_reason_id).
+#   (2) Добавлена колонка order_line_revenue (коррелированный подзапрос по
+#     order_id, сиблинг order_cogs) - контракт #4 требует считать маржу от
+#     суммы позиций, а не от orders.amount (amount включает delivery_price/
+#     assembly_cost и уменьшен на скидки/бонусы).
+#
+#     ФОРМУЛА ИТОГА ПОЗИЦИИ (правило 3, обновлённый контракт): order_items.price
+#     имеет СМЕШАННУЮ семантику - при создании заказа (admin_back) это цена ЗА
+#     ЕДИНИЦУ, после сборки/замен (delivery_back OrderController: 'price' =>
+#     $orderItem->price_during_order * $quantity) это ИТОГ позиции. Поэтому в
+#     суммах НЕЛЬЗЯ ни SUM(oi.price) (занижает собранные), ни SUM(oi.price*
+#     oi.quantity) (задваивает собранные: эмпирика dev - по 28 доставленным
+#     заказам SUM(price*quantity)=87211.70 vs SUM(o.amount)=24540.84, в 3.55
+#     раза больше). ЕДИНСТВЕННО ВЕРНО - price_during_order (стабильно за
+#     единицу, заполнен 578/578 позиций dev) x quantity:
+#         SUM(oi3.price_during_order * oi3.quantity) WHERE oi3.status_id <> 3.
+#     Фильтр oi.status_id <> 3 (3 = Status::ORDER_ITEM_CANCELED, см.
+#     lastochka_admin_back/app/Models/Status.php) исключает собранно-отменённые
+#     позиции из реализованной выручки. На dev даёт 23354.20 против amount
+#     24540.84 по доставленным (~2%, без 2-3x раздувания).
+#
+#     ФИЛЬТР ОТМЕНЫ: oi.status_id <> 3 - канонический фильтр реализованных
+#     позиций (round 2, conversion-rules.md правило 3 унифицировано, «оба
+#     фильтра допустимы» снято). На dev 15 из 28 доставленных заказов несут
+#     позиции status_id=3, но cancel_reason_id проставлен лишь у 1 из них ->
+#     status_id<>3 исключает все 15 (реконсиляция ~2%), cancel_reason_id IS
+#     NULL исключил бы только 1 (реконсиляция ~7-15%) - status_id<>3 строже и
+#     теперь единственный допустимый фильтр во всём проекте.
+#
+# ИСПРАВЛЕНО (ревью Task 8, round 2): order_cogs добавлен фильтр
+# oi2.status_id <> 3 (был асимметричен с order_line_revenue - COGS считался
+# по ВСЕМ позициям, выручка уже исключала отменённые -> занижение маржи,
+# замаскировано NULL пока cost_price пуст). Симметрично network_orders_fact.
+#
+# ПЕРЕОСМЫСЛЕНО относительно BUILD_PLAN: вместо ad-hoc "fill_rate_pct"/
+# "signals_cnt" из макета, факт-колонки построены строго по 9 каноническим
+# metric_key из docs/metric-keys.md (правило 11 - контракт), а «план» для
+# КАЖДОГО из 9 ключей подтягивается из kpi_targets (правило 8, снято с
+# blocked). BUILD_PLAN'овские "Маржа%"/"Точность остатка%" как отдельные
+# blocked-колонки заменены: маржа теперь РЕАЛЬНАЯ (gross_margin_pct, NULL-safe
+# по cost_price), «точность остатка/инвентаря» (WMS) остаётся BLOCKED и не
+# входит в датасет (нет источника - ни orders/order_items, ни kpi_targets не
+# дают инвентаризацию).
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1 - status_id = 5 для выручки/заказов (в чарте), statuses НЕ
+#     джойнится.
+#   Правило 2 - WHERE o.parent_order_id IS NULL.
+#   Правило 4 - SLA через type_id IN (2,5) (is_delivery_completed_flag/
+#     is_on_time_flag), а не shipping_method.
+#   Правило 8 - target_* колонки (9 шт., по одной на metric_key) -
+#     коррелированные подзапросы к kpi_targets, матчатся metric_key + (shop_id
+#     магазина заказа ИЛИ NULL = сеть) + период (period_start/period_end -
+#     ОБА NOT NULL в kpi_targets, в отличие от store_operating_costs) кроет
+#     DATE(o.created_at). При нескольких kpi_targets на один metric_key
+#     (shop-specific и сетевой) - ORDER BY (shop_id IS NULL) ASC LIMIT 1
+#     предпочитает shop-specific строку. order_cogs - NULL-safe COGS заказа.
+#     На dev kpi_targets ПУСТА (0 строк) -> все target_* = NULL, это ОЖИДАЕМО
+#     (колонка «план» появится, когда Task 10 засеет kpi_targets), метрики
+#     факта считаются корректно независимо от plan-колонок.
+#   Правило 9 - shops.deleted_at IS NULL; kpi_targets - deleted_at IS NULL AND
+#     is_active = 1.
+#   Правило 12 - shop_id/order_date оставлены колонками для нативных
+#     фильтров.
+#
+# ДОПУЩЕНИЕ (сохранено из BUILD_PLAN, не опровергнуто схемой): «сигнал»
+# (signals_cnt в чарте) - самодельный операционный прокси = SUM(is_late_flag)
+# + SUM(has_fulfillment_issue_flag), а НЕ количество СЕЙЧАС нарушенных
+# shop_alert_rules (это отдельный, полноценный расчёт - см. вкладку «Лента
+# сигналов», network_signal_feed, с которой у этого чарта общий native-фильтр
+# shop_id для перехода/сверки). Дублировать 9-ветвевую формулу
+# network_signal_feed как коррелированный подзапрос ЗДЕСЬ (per-order строка)
+# было бы избыточно тяжёлым и не даёт новой информации сверх выделенной
+# вкладки - решение задокументировано, не skip обязательного поля.
+#
+# Наблюдение по схеме: shops.name НЕ существует - shops.title. Данные на dev:
+# только 1 активный магазин (id=4, «Ласточка Джами», area_sqm=120.5) -
+# таблица-светофор вернёт 1 строку, это текущее состояние сети.
+table_name: shop_traffic_light
+main_dttm_col: order_date
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  WITH item_stats AS (
+      SELECT
+          oi.order_id,
+          COUNT(*) AS items_ordered_cnt,
+          SUM(CASE WHEN oi.cancel_reason_id IS NOT NULL THEN 1 ELSE 0 END) AS items_cancelled_cnt,
+          SUM(CASE WHEN oi.replace_reason_id IS NOT NULL THEN 1 ELSE 0 END) AS items_replaced_cnt
+      FROM order_items oi
+      GROUP BY oi.order_id
+  )
+  SELECT
+      o.id                                   AS order_id,
+      o.shop_id                              AS shop_id,
+      sh.title                               AS shop_name,
+      DATE(o.created_at)                     AS order_date,
+      o.amount                               AS amount,
+      o.status_id                            AS status_id,
+      o.client_id                            AS client_id,
+      o.type_id                              AS type_id,
+      ROW_NUMBER() OVER (PARTITION BY o.client_id ORDER BY o.created_at) AS client_order_seq,
+      CASE WHEN o.type_id IN (2,5) AND o.finished_at IS NOT NULL AND o.slot_end_date IS NOT NULL THEN 1 ELSE 0 END AS is_delivery_completed_flag,
+      CASE WHEN o.type_id IN (2,5) AND o.finished_at IS NOT NULL AND o.slot_end_date IS NOT NULL AND o.finished_at <= o.slot_end_date THEN 1 ELSE 0 END AS is_on_time_flag,
+      CASE WHEN o.finished_at IS NOT NULL AND o.slot_end_date IS NOT NULL AND o.finished_at > o.slot_end_date THEN 1 ELSE 0 END AS is_late_flag,
+      COALESCE(ist.items_ordered_cnt, 0)    AS items_ordered_cnt,
+      COALESCE(ist.items_cancelled_cnt, 0)  AS items_cancelled_cnt,
+      COALESCE(ist.items_replaced_cnt, 0)   AS items_replaced_cnt,
+      CASE WHEN COALESCE(ist.items_cancelled_cnt,0)+COALESCE(ist.items_replaced_cnt,0) > 0 THEN 1 ELSE 0 END AS has_fulfillment_issue_flag,
+      (
+          SELECT SUM(oi2.quantity * p.cost_price)
+          FROM order_items oi2 JOIN products p ON p.id = oi2.product_id
+          WHERE oi2.order_id = o.id AND oi2.status_id <> 3
+      )                                       AS order_cogs,
+      (
+          SELECT SUM(oi3.price_during_order * oi3.quantity)
+          FROM order_items oi3
+          WHERE oi3.order_id = o.id AND oi3.status_id <> 3
+      )                                       AS order_line_revenue,
+      sh.area_sqm                            AS shop_area_sqm,
+      (SELECT kt.target_value FROM kpi_targets kt WHERE kt.metric_key = 'revenue' AND kt.deleted_at IS NULL AND kt.is_active = 1 AND (kt.shop_id = o.shop_id OR kt.shop_id IS NULL) AND kt.period_start <= DATE(o.created_at) AND kt.period_end >= DATE(o.created_at) ORDER BY (kt.shop_id IS NULL) ASC LIMIT 1) AS target_revenue,
+      (SELECT kt.target_value FROM kpi_targets kt WHERE kt.metric_key = 'orders_count' AND kt.deleted_at IS NULL AND kt.is_active = 1 AND (kt.shop_id = o.shop_id OR kt.shop_id IS NULL) AND kt.period_start <= DATE(o.created_at) AND kt.period_end >= DATE(o.created_at) ORDER BY (kt.shop_id IS NULL) ASC LIMIT 1) AS target_orders_count,
+      (SELECT kt.target_value FROM kpi_targets kt WHERE kt.metric_key = 'avg_check' AND kt.deleted_at IS NULL AND kt.is_active = 1 AND (kt.shop_id = o.shop_id OR kt.shop_id IS NULL) AND kt.period_start <= DATE(o.created_at) AND kt.period_end >= DATE(o.created_at) ORDER BY (kt.shop_id IS NULL) ASC LIMIT 1) AS target_avg_check,
+      (SELECT kt.target_value FROM kpi_targets kt WHERE kt.metric_key = 'gross_margin_pct' AND kt.deleted_at IS NULL AND kt.is_active = 1 AND (kt.shop_id = o.shop_id OR kt.shop_id IS NULL) AND kt.period_start <= DATE(o.created_at) AND kt.period_end >= DATE(o.created_at) ORDER BY (kt.shop_id IS NULL) ASC LIMIT 1) AS target_gross_margin_pct,
+      (SELECT kt.target_value FROM kpi_targets kt WHERE kt.metric_key = 'repeat_rate_pct' AND kt.deleted_at IS NULL AND kt.is_active = 1 AND (kt.shop_id = o.shop_id OR kt.shop_id IS NULL) AND kt.period_start <= DATE(o.created_at) AND kt.period_end >= DATE(o.created_at) ORDER BY (kt.shop_id IS NULL) ASC LIMIT 1) AS target_repeat_rate_pct,
+      (SELECT kt.target_value FROM kpi_targets kt WHERE kt.metric_key = 'sla_on_time_pct' AND kt.deleted_at IS NULL AND kt.is_active = 1 AND (kt.shop_id = o.shop_id OR kt.shop_id IS NULL) AND kt.period_start <= DATE(o.created_at) AND kt.period_end >= DATE(o.created_at) ORDER BY (kt.shop_id IS NULL) ASC LIMIT 1) AS target_sla_on_time_pct,
+      (SELECT kt.target_value FROM kpi_targets kt WHERE kt.metric_key = 'cancel_rate_pct' AND kt.deleted_at IS NULL AND kt.is_active = 1 AND (kt.shop_id = o.shop_id OR kt.shop_id IS NULL) AND kt.period_start <= DATE(o.created_at) AND kt.period_end >= DATE(o.created_at) ORDER BY (kt.shop_id IS NULL) ASC LIMIT 1) AS target_cancel_rate_pct,
+      (SELECT kt.target_value FROM kpi_targets kt WHERE kt.metric_key = 'assembly_accuracy_pct' AND kt.deleted_at IS NULL AND kt.is_active = 1 AND (kt.shop_id = o.shop_id OR kt.shop_id IS NULL) AND kt.period_start <= DATE(o.created_at) AND kt.period_end >= DATE(o.created_at) ORDER BY (kt.shop_id IS NULL) ASC LIMIT 1) AS target_assembly_accuracy_pct,
+      (SELECT kt.target_value FROM kpi_targets kt WHERE kt.metric_key = 'revenue_per_sqm' AND kt.deleted_at IS NULL AND kt.is_active = 1 AND (kt.shop_id = o.shop_id OR kt.shop_id IS NULL) AND kt.period_start <= DATE(o.created_at) AND kt.period_end >= DATE(o.created_at) ORDER BY (kt.shop_id IS NULL) ASC LIMIT 1) AS target_revenue_per_sqm
+  FROM orders o
+  JOIN shops sh ON sh.id = o.shop_id AND sh.deleted_at IS NULL
+  LEFT JOIN item_stats ist ON ist.order_id = o.id
+  WHERE o.parent_order_id IS NULL
+uuid: 7992080f-db78-413e-8fc7-17cd1b83b02e
+columns: []
+metrics: []
+version: 1.0.0

@@ -1,0 +1,6 @@
+mutation ($id: Int!) {
+  ExplainReasonDelete(id: $id) {
+    code
+    message
+  }
+}

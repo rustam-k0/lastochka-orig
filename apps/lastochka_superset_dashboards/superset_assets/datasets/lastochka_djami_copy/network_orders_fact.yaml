@@ -1,0 +1,179 @@
+# Вкладка «Обзор сети» (по сети). Order-level, ВСЕ магазины (без shop_id-фильтра
+# в SQL - фильтрация только через нативный дашборд-фильтр). Основной датасет
+# секции, питает 9 из 11 виджетов: KPI GMV/Заказы/Средняя маржа %/Чистая
+# прибыль, топ-3/нижние-3 по марже и по SLA.
+#
+# ИСПРАВЛЕНО (ревью Task 8, round 1): добавлена колонка order_line_revenue
+# (коррелированный подзапрос по order_id, сиблинг order_cogs) - контракт
+# metric-keys.md #4 требует считать маржу от суммы позиций, НЕ от
+# orders.amount (amount включает delivery_price/assembly_cost и уменьшен на
+# скидки/бонусы - разная база). Формулы «Средняя маржа %, сеть» / «Лидеры
+# сети» / «Требуют внимания» переведены на order_line_revenue вместо amount.
+#
+# ФОРМУЛА ИТОГА ПОЗИЦИИ (правило 3, обновлённый контракт): order_items.price
+# имеет СМЕШАННУЮ семантику - при создании заказа (admin_back) цена ЗА ЕДИНИЦУ,
+# после сборки/замен (delivery_back OrderController: 'price' =>
+# $orderItem->price_during_order * $quantity) итог позиции. Поэтому в суммах
+# НЕЛЬЗЯ ни SUM(oi.price) (занижает собранные), ни SUM(oi.price*oi.quantity)
+# (задваивает: dev - по 28 доставленным SUM(price*quantity)=87211.70 vs
+# SUM(o.amount)=24540.84, в 3.55 раза). ЕДИНСТВЕННО ВЕРНО - price_during_order
+# (стабильно за единицу, 578/578 позиций dev) x quantity:
+#   SUM(oi.price_during_order * oi.quantity) WHERE oi.status_id <> 3.
+# Фильтр status_id<>3 (3 = Status::ORDER_ITEM_CANCELED) исключает
+# собранно-отменённые позиции; на dev даёт 23354.20 vs amount 24540.84 по
+# доставленным (~2%, без раздувания). status_id<>3 - канонический фильтр
+# реализованных позиций во всём проекте (round 2): на dev cancel_reason_id
+# заполнен лишь у 1 из 15 отменённых позиций доставленных заказов, поэтому
+# cancel_reason_id IS NULL вырезал бы почти ничего (~7-15% реконсиляция vs
+# ~2% у status_id<>3) - см. docs/conversion-rules.md правило 3.
+#
+# ИСПРАВЛЕНО (ревью Task 8, round 2): order_cogs был асимметричен с
+# order_line_revenue - COGS считался по ВСЕМ позициям заказа, а выручка уже
+# исключала отменённые (oi.status_id <> 3). Маржа = revenue - COGS вычитала
+# COGS отменённых позиций из выручки без них -> занижение (было замаскировано
+# NULL, т.к. cost_price ещё пуст у всех товаров на dev). order_cogs теперь
+# фильтруется тем же WHERE oi.status_id <> 3, что и order_line_revenue -
+# симметрично, обе ноги маржи считаются по одному и тому же набору позиций.
+# Заодно снят разнобой контракта: canonical-фильтр реализованных позиций
+# зафиксирован как oi.status_id <> 3 (не cancel_reason_id IS NULL) -
+# см. docs/conversion-rules.md правило 3 и docs/metric-keys.md #4.
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1 - выручка через status_id = 5 (statuses НЕ джойнится - пустая).
+#   Правило 2 - WHERE o.parent_order_id IS NULL (без фильтра GMV задвоился бы
+#     на дочерних заказах сплита).
+#   Правило 7 - MySQL 8: WITH (CTE), без EXTRACT(EPOCH)/date_trunc.
+#   Правило 8 - СНЯТО с blocked: (а) order_cogs - COGS заказа (коррелированный
+#     подзапрос order_items+products, NULL-safe: пока products.cost_price пуст
+#     у ВСЕХ 13038 товаров на dev, order_cogs = NULL - гасит валовую/чистую
+#     прибыль корректно, а НЕ подменяется нулём); (б) BUILD_PLAN'овский
+#     "margin_proxy_amount" (delivery_price+assembly_cost-discount) ПОЛНОСТЬЮ
+#     убран - маржа теперь считается по РЕАЛЬНОЙ формуле metric-keys.md #4
+#     (revenue-COGS)/revenue*100 на уровне чарта, это больше не прокси;
+#     (в) network_opex_current - опекс ВСЕЙ СЕТИ на текущий момент (не
+#     per-shop!), одно и то же значение повторено на каждой строке -
+#     используется через MAX() в KPI «Чистая прибыль сети». Формула НЕ
+#     наивная SUM per-shop (это задвоило бы сетевые shop_id=NULL правила на
+#     каждый магазин) - отдельно считает (1) сетевые fixed/pct-правила ОДИН
+#     раз, (2) per-shop fixed/pct-правила СУММОЙ по всем активным магазинам.
+#     Проверено на dev: store_operating_costs содержит 1 сетевую строку
+#     (rent/fixed_amount/50000, shop_id=NULL) -> network_opex_current = 50000
+#     на каждой строке (см. test-запрос перед пушем).
+#   Правило 9 - store_operating_costs фильтруется deleted_at IS NULL AND
+#     is_active = 1; shops - deleted_at IS NULL.
+#   Правило 10 - delivery_price/assembly_cost НЕ вычитаются как расход, просто
+#     выведены как справочные колонки (часть выручки).
+#
+# Наблюдение по схеме: shops.name НЕ существует (BUILD_PLAN ошибочно
+# предполагал sh.name) - используется shops.title. statuses.name не нужен -
+# статус маппится CASE'ом (правило 1), таблица statuses ПУСТАЯ.
+#
+# Данные на dev (проверено перед записью): 27 доставленных родительских
+# заказов, GMV = 24108.84, network_opex_current = 50000 (гасит net_profit в
+# NULL, т.к. COGS = NULL - корректно, не 0). Только 1 магазин (id=4,
+# «Ласточка Джами») - «топ-3»/«нижние-3» по марже/SLA вернут 1 строку, это
+# текущее состояние данных сети, не баг.
+table_name: network_orders_fact
+main_dttm_col: order_dttm
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  WITH network_opex_calc AS (
+      SELECT
+          COALESCE(SUM(CASE WHEN soc.shop_id IS NULL AND soc.rule_type = 'fixed_amount' THEN soc.value ELSE 0 END), 0)
+          +
+          COALESCE(SUM(CASE WHEN soc.shop_id IS NULL AND soc.rule_type = 'pct_of_revenue' THEN soc.value ELSE 0 END), 0)
+              / 100.0 * (
+                  SELECT COALESCE(SUM(o2.amount), 0)
+                  FROM orders o2
+                  WHERE o2.status_id = 5 AND o2.parent_order_id IS NULL
+              )
+          AS network_wide_opex
+      FROM store_operating_costs soc
+      WHERE soc.deleted_at IS NULL AND soc.is_active = 1
+        AND soc.period_start <= CURDATE()
+        AND (soc.period_end IS NULL OR soc.period_end >= CURDATE())
+  ),
+  shop_specific_opex_calc AS (
+      SELECT
+          COALESCE(SUM(CASE WHEN soc.rule_type = 'fixed_amount' THEN soc.value ELSE 0 END), 0) AS shop_fixed_sum
+      FROM store_operating_costs soc
+      WHERE soc.deleted_at IS NULL AND soc.is_active = 1
+        AND soc.shop_id IS NOT NULL
+        AND soc.period_start <= CURDATE()
+        AND (soc.period_end IS NULL OR soc.period_end >= CURDATE())
+  ),
+  shop_specific_pct_opex_calc AS (
+      SELECT
+          COALESCE(SUM(soc.value / 100.0 * shop_rev.rev), 0) AS shop_pct_sum
+      FROM store_operating_costs soc
+      JOIN (
+          SELECT o3.shop_id, SUM(o3.amount) AS rev
+          FROM orders o3
+          WHERE o3.status_id = 5 AND o3.parent_order_id IS NULL
+          GROUP BY o3.shop_id
+      ) shop_rev ON shop_rev.shop_id = soc.shop_id
+      WHERE soc.deleted_at IS NULL AND soc.is_active = 1
+        AND soc.rule_type = 'pct_of_revenue' AND soc.shop_id IS NOT NULL
+        AND soc.period_start <= CURDATE()
+        AND (soc.period_end IS NULL OR soc.period_end >= CURDATE())
+  )
+  SELECT
+      o.id                                     AS order_id,
+      o.shop_id                                AS shop_id,
+      sh.title                                 AS shop_name,
+      o.created_at                             AS order_dttm,
+      o.amount                                 AS amount,
+      o.items_subtotal                         AS items_subtotal,
+      o.discount                               AS discount,
+      o.bonus_spent                            AS bonus_spent,
+      o.bonus_earned                           AS bonus_earned,
+      o.delivery_price                         AS delivery_price,
+      o.assembly_cost                          AS assembly_cost,
+      o.paid                                   AS paid,
+      o.payment_status                         AS payment_status,
+      o.payment_type_id                        AS payment_type_id,
+      o.status_id                              AS status_id,
+      CASE o.status_id
+        WHEN 1 THEN 'Создан'  WHEN 2 THEN 'На сборке' WHEN 3 THEN 'Собран'
+        WHEN 4 THEN 'В доставке' WHEN 5 THEN 'Доставлен' WHEN 6 THEN 'Отменён'
+        WHEN 7 THEN 'Готовится' ELSE 'Неизвестно'
+      END                                       AS status_name,
+      o.shipping_method                        AS shipping_method,
+      o.type_id                                AS type_id,
+      o.total_weight                           AS total_weight,
+      o.slot_start_date                        AS slot_start_date,
+      o.slot_end_date                          AS slot_end_date,
+      o.finished_at                            AS finished_at,
+      o.parent_order_id                        AS parent_order_id,
+      o.zone_id                                AS zone_id,
+      CASE
+        WHEN o.type_id IN (2, 5) AND o.finished_at IS NOT NULL AND o.slot_end_date IS NOT NULL
+          THEN CASE WHEN o.finished_at <= o.slot_end_date THEN 1 ELSE 0 END
+      END                                       AS is_on_time,
+      (
+          SELECT SUM(oi.quantity * p.cost_price)
+          FROM order_items oi
+          JOIN products p ON p.id = oi.product_id
+          WHERE oi.order_id = o.id AND oi.status_id <> 3
+      )                                         AS order_cogs,
+      (
+          SELECT SUM(oi.price_during_order * oi.quantity)
+          FROM order_items oi
+          WHERE oi.order_id = o.id AND oi.status_id <> 3
+      )                                         AS order_line_revenue,
+      (
+          net.network_wide_opex
+          + COALESCE(ssf.shop_fixed_sum, 0)
+          + COALESCE(ssp.shop_pct_sum, 0)
+      )                                         AS network_opex_current
+  FROM orders o
+  LEFT JOIN shops sh ON sh.id = o.shop_id AND sh.deleted_at IS NULL
+  CROSS JOIN network_opex_calc net
+  CROSS JOIN shop_specific_opex_calc ssf
+  CROSS JOIN shop_specific_pct_opex_calc ssp
+  WHERE o.parent_order_id IS NULL
+uuid: 920e6c66-08db-49d0-9518-3e0ffd86598c
+columns: []
+metrics: []
+version: 1.0.0

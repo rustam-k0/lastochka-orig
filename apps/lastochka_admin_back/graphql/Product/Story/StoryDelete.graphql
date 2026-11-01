@@ -1,0 +1,8 @@
+extend type Mutation {
+  "Удаление истории (soft delete)"
+  StoryDelete(
+    "ID истории"
+    id: Int!
+  ): Story @delete
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "stories")
+}

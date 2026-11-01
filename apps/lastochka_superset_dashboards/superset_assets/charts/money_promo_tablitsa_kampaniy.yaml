@@ -1,0 +1,32 @@
+slice_name: Экономика промо — таблица кампаний
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - promocode_name
+  - promocode_code
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      column_name: discount_amount
+    aggregate: SUM
+    label: Расход на промо, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(total)
+    label: Выручка заказов с промо (не инкремент), ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: (SUM(total) - SUM(discount_amount)) / NULLIF(SUM(discount_amount),
+      0)
+    label: ROI (приблизительно)
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 90892047-5af6-478c-9308-72d3eda1cd27
+uuid: 3417a342-40b5-4f23-b811-f2b34e7cdad3
+version: 1.0.0

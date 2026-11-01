@@ -1,0 +1,47 @@
+extend type Query {
+  "Получение списка товарных групп мерчантов с пагинацией"
+  merchantProductGroups(
+    shop_id: Int
+    is_active: Boolean
+    show_on_main: Boolean
+    show_on_merchant_page: Boolean
+    show_in_merchant_catalog: Boolean
+    show_on_search: Boolean
+    is_recommended: Boolean
+    is_cart_page: Boolean
+    is_complex_solution: Boolean
+    search: String
+    ordering: [DefaultOrdering]
+  ): [MerchantProductGroup] @paginate(defaultCount: 10, scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-product-groups")
+
+  "Получение всех товарных групп мерчантов"
+  merchantProductGroupsAll(
+    shop_id: Int
+    is_active: Boolean
+    show_on_main: Boolean
+    show_on_merchant_page: Boolean
+    show_in_merchant_catalog: Boolean
+    show_on_search: Boolean
+    is_recommended: Boolean
+    is_cart_page: Boolean
+    is_complex_solution: Boolean
+    search: String
+    ordering: [DefaultOrdering]
+  ): [MerchantProductGroup] @all(scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-product-groups")
+
+  "Получение одной товарной группы по ID"
+  merchantProductGroup(
+    id: Int @eq
+  ): MerchantProductGroup @find
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-product-groups")
+
+  "Товары мерчанта для выбора в группу"
+  shopProductsForGroup(
+    shop_id: Int!
+    exclude_group_id: Int
+    search: String
+  ): [Product] @paginate(defaultCount: 20, builder: "App\\GraphQL\\Queries\\ShopProductsForGroupQuery@builder")
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-product-groups")
+}

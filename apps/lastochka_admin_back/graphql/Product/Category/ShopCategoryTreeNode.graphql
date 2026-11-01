@@ -1,0 +1,14 @@
+"""
+Узел дерева категорий магазина. Используется только в query shop_categories.
+
+Отдельный тип (вместо Category) нужен, чтобы Lighthouse-директива @hasMany
+на Category.child_categories не перезаписывала отфильтрованную коллекцию,
+которую формирует GetShopCategories. Значения берутся из plain array
+(resolver возвращает массивы), директивы на полях отсутствуют.
+"""
+type ShopCategoryTreeNode {
+  id: Int
+  title: String
+  is_cooking: Boolean
+  child_categories: [ShopCategoryTreeNode]
+}

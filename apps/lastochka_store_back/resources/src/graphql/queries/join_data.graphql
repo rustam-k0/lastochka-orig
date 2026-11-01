@@ -1,0 +1,30 @@
+query (
+  $first: Int!
+  $page: Int
+  $ordering: [DefaultOrdering]
+  $filter: DataFilter
+  $type: [String]
+) {
+  join_data(
+    first: $first
+    ordering: $ordering
+    filter: $filter
+    page: $page
+    type: $type
+  ) {
+    data {
+      id
+      title
+      status {
+        id
+        name
+        code
+        table_name
+      }
+      updated_at
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}

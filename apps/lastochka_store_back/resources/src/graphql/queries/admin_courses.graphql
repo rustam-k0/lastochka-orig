@@ -1,0 +1,5 @@
+query {
+  admin_courses {
+    id title 
+  }
+}

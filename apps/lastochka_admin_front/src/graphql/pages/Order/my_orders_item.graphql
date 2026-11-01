@@ -1,0 +1,15 @@
+query($id: Int) {
+  admin_orders_item(id: $id) {
+    id
+    items {
+      product {
+        id
+        title
+        price {
+          step
+        }
+      }
+      quantity
+    }
+  }
+}

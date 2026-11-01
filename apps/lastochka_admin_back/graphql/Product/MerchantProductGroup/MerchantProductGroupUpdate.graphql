@@ -1,0 +1,48 @@
+extend type Mutation {
+  "Обновление товарной группы мерчанта"
+  updateMerchantProductGroup(id: Int!, input: UpdateMerchantProductGroupInput! @spread): MerchantProductGroup!
+    @field(resolver: "MerchantProductGroup\\UpdateMerchantProductGroup")
+    @validator(class: "MerchantProductGroup\\UpdateMerchantProductGroupValidator")
+    @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-product-groups")
+}
+
+input UpdateMerchantProductGroupInput {
+  "ID магазина (для валидации товаров)"
+  shop_id: Int
+  "Название группы"
+  title: String
+  "Описание проекта"
+  description: String
+  "Мета-данные (SEO, доп. информация) в формате JSON"
+  meta: String
+  "Выводить на главную"
+  show_on_main: Boolean
+  "Выводить на странице мерчанта"
+  show_on_merchant_page: Boolean
+  "Выводить в каталоге мерчанта"
+  show_in_merchant_catalog: Boolean
+  "Выводить на странице поиска"
+  show_on_search: Boolean
+  "Порядок сортировки"
+  sort_order: Int
+  "Активность"
+  is_active: Boolean
+  "Рекомендуемая группа товаров"
+  is_recommended: Boolean
+  "Показывать в корзине"
+  is_cart_page: Boolean
+  "Комплексное решение (при true места размещения сбрасываются)"
+  is_complex_solution: Boolean
+  "Способ наполнения: manual | purchase_history | viewed_not_bought | is_new | is_hurry_up (не manual — товары группы очищаются, product_ids/products_with_qty игнорируются)"
+  fill_type: String
+  "ID товаров в группе (без количества)"
+  product_ids: [Int!]
+  "Товары с количеством [{product_id, quantity}]"
+  products_with_qty: [ProductGroupItemInput!]
+  "ID значений фильтров (Ванная, 8м², Минимализм)"
+  filter_value_ids: [Int!]
+  "Изображение группы"
+  image: ImgInput
+  "Динамические чекбоксы (JSON-строка map field => bool)"
+  custom_checkboxes: String
+}

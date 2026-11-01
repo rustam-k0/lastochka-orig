@@ -1,0 +1,31 @@
+type Query {
+
+  "Родительские категории"
+  parent_categories(
+    title:String
+  ):[Category] @all(scopes: ["parent","filter"]) @orderBy(column: "position")
+
+  "Все категории"
+  categories(
+    title:String
+  ):[Category] @paginate(scopes: ["filter"]) @orderBy(column: "position")
+
+  "Важные категории"
+  important_categories:[Category] @all(scopes: ["important"]) @orderBy(column: "position")
+
+  "Получить категории, у которых нет дочерних категорий"
+  child_categories:[Category] @all(scopes: ["onlyChild"]) @orderBy(column: "position")
+
+  "Получить одну категорию по слагу"
+  category(
+    link:String @eq
+    id:Int @eq
+  ):Category @first
+
+  shop_categories(
+    shop_id:Int!
+    parent_id:Int
+    title:String
+  ):[ShopCategory] @field(resolver: "GetShopCategories")
+
+}

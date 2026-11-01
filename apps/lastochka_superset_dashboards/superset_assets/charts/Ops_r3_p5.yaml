@@ -1,0 +1,58 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Детализация показателей
+description: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: raw
+  all_columns:
+  - product_name
+  - revenue
+  - quantity
+  - orders
+  - avg_price
+  - revenue_share_pct
+  - cum_share_pct
+  - abc_class
+  - class_change
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: order_date
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: false
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  column_config:
+    revenue:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    quantity:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+    orders:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    avg_price:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    revenue_share_pct:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+    cum_share_pct:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+  order_by_cols:
+  - '["revenue", false]'
+cache_timeout: null
+dataset_uuid: 0c964450-5adb-4c83-9968-c05efd2a5aed
+uuid: d17a0f96-2ff8-50cc-b0c4-5368c3e8ffa5
+version: 1.0.0

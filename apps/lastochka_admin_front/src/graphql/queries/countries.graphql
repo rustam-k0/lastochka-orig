@@ -1,0 +1,6 @@
+query {
+  countries {
+    id
+    title
+  }
+}

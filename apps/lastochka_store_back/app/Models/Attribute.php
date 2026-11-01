@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Models;
+
+use App\Traits\ModelTools;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+
+class Attribute extends Model
+{
+  use HasFactory, ModelTools, SoftDeletes;
+
+  public function defaultAttribute(): ?HasOne
+  {
+    return $this->hasOne(DefaultAttribute::class);
+  }
+}

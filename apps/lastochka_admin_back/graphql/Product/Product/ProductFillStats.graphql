@@ -1,0 +1,14 @@
+type ProductFillStats {
+  avg_percent: Float!
+  total: Int!
+}
+
+extend type Query {
+  admin_products_fill_stats(
+    shop_id: Int
+    available_in_shop_id: Int
+    categories: [Int]
+    title: String
+    exclude_children: Boolean
+  ): ProductFillStats @field(resolver: "AdminProductsFillStats") @guard @can(model: "Admin",ability: "onlyShop") @section(key: "products")
+}

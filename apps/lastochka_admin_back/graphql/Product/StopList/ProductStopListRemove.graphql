@@ -1,0 +1,13 @@
+extend type Mutation {
+
+  "Убрать товар из стоп-листа магазина: hidden = публикация товара (как тогглер карточки), pickup_only = выключение «только самовывоз»"
+  ProductStopListRemove(
+    "ID товара"
+    product_id: Int!
+    "Тип стоп-листа: hidden | pickup_only"
+    type: String!
+  ): DefaultResponse
+    @field(resolver: "StopList\\ProductStopListRemove")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "stores")
+
+}

@@ -1,0 +1,17 @@
+slice_name: Экономика промо — доля убыточных заказов %
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: AVG(is_unprofitable) * 100
+    label: Доля убыточных заказов, %
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: NULL-safe, пусто-ожидаемо до 1С (cost_price)
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: c61130d0-4791-4c5f-a212-76931716eaba
+uuid: f3bb7770-6f49-4ff1-ae1e-a22acdbbc4aa
+version: 1.0.0

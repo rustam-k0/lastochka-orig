@@ -1,0 +1,4843 @@
+dashboard_title: Операционные отчёты
+description: null
+css: "\n.chart-slice { position: relative; }\n.chart-slice:has(> .dashboard-chart[aria-label]:not([aria-label=\"\"])) > div:first-child { padding-bottom: 20px; }\n.chart-slice > .dashboard-chart[aria-label]:not([aria-label=\"\"]) { position: static; }\n.chart-slice > .dashboard-chart[aria-label]:not([aria-label=\"\"])::before {\n  content: attr(aria-label); position: absolute; top: 31px; left: 0; right: 0;\n  font-size: 12px; line-height: 16px; color: #6b6b6b;\n  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;\n}\n.dashboard-component-tabs-content > .dragdroppable-row:nth-child(2) .grid-row > .dragdroppable-column:first-child [data-test-viz-type=\"big_number_total\"] .header-line {\n  color: #087E91 !important;\n}\n[data-test-viz-type=\"big_number_total\"] .subheader-line { font-size: 12px !important; height: auto !important; color: #6b6b6b; }\n"
+slug: ops-reports
+uuid: d4123d43-b86d-4b25-bd98-3ea54e00db90
+position:
+  DASHBOARD_VERSION_KEY: v2
+  ROOT_ID:
+    type: ROOT
+    id: ROOT_ID
+    children:
+    - GRID_ID
+  GRID_ID:
+    type: GRID
+    id: GRID_ID
+    children:
+    - TABS-c5ee9f425d
+    parents:
+    - ROOT_ID
+  HEADER_ID:
+    type: HEADER
+    id: HEADER_ID
+    meta:
+      text: Операционные отчёты
+  TABS-c5ee9f425d:
+    type: TABS
+    id: TABS-c5ee9f425d
+    children:
+    - TAB-5acbbd9c95
+    - TAB-8bd9000115
+    - TAB-b6836bd36a
+    - TAB-eb9a771b95
+    - TAB-ee2d85e274
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    meta: {}
+  TAB-5acbbd9c95:
+    type: TAB
+    id: TAB-5acbbd9c95
+    children:
+    - TABS-b052b9375a
+    parents: &id012
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    meta:
+      text: 📦 Товары · 3
+      defaultText: Tab title
+      placeholder: Tab title
+  TABS-b052b9375a:
+    type: TABS
+    id: TABS-b052b9375a
+    children:
+    - TAB-00b8eef5c5
+    - TAB-5cd2ab17d9
+    - TAB-345797b709
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    meta: {}
+  TAB-00b8eef5c5:
+    type: TAB
+    id: TAB-00b8eef5c5
+    children:
+    - ROW-83190bcc76
+    - ROW-404282fa27
+    - ROW-57c8b66b7f
+    - TABS-f44ed65fa8
+    - ROW-d2375accc7
+    - ROW-3afceca058
+    parents: &id005
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    meta:
+      text: R1 · Потери на товарах
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-83190bcc76:
+    type: ROW
+    id: ROW-83190bcc76
+    children:
+    - MARKDOWN-194991fd26
+    parents: &id001
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-00b8eef5c5
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-194991fd26:
+    type: MARKDOWN
+    id: MARKDOWN-194991fd26
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-00b8eef5c5
+    - ROW-83190bcc76
+    meta:
+      width: 12
+      height: 9
+      code: '### R1. Потери на товарах
+
+        Вкладка «Товары» · P1 · обновление: копия БД, обновляется раз в сутки ночью (около 03:30 МСК) · датасет: ops_product_losses (витрина ТЗ dm_demand_loss_daily)'
+  ROW-404282fa27:
+    type: ROW
+    id: ROW-404282fa27
+    children:
+    - CHART-0814cef04b
+    - CHART-13602e1c2b
+    - CHART-6d9f918397
+    - CHART-6d4a15be7b
+    parents: *id001
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-0814cef04b:
+    type: CHART
+    id: CHART-0814cef04b
+    children: []
+    parents: &id002
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-00b8eef5c5
+    - ROW-404282fa27
+    meta:
+      uuid: 99112642-878e-5a42-b6bf-2d3251b0baeb
+      chartId: 1
+      width: 3
+      height: 24
+      sliceName: Упущенная выручка
+  CHART-13602e1c2b:
+    type: CHART
+    id: CHART-13602e1c2b
+    children: []
+    parents: *id002
+    meta:
+      uuid: b984ebc5-e96a-5f88-8040-471fe3b6c5a5
+      chartId: 2
+      width: 3
+      height: 24
+      sliceName: Запросы без результата
+  CHART-6d9f918397:
+    type: CHART
+    id: CHART-6d9f918397
+    children: []
+    parents: *id002
+    meta:
+      uuid: 4b0a78f9-cfe2-59ab-8e74-8bcd4e96b923
+      chartId: 3
+      width: 3
+      height: 24
+      sliceName: Позиций с заменой
+  CHART-6d4a15be7b:
+    type: CHART
+    id: CHART-6d4a15be7b
+    children: []
+    parents: *id002
+    meta:
+      uuid: 1f2dc199-a5a5-5312-976a-117ba64317c0
+      chartId: 4
+      width: 3
+      height: 24
+      sliceName: Потери на заменах
+  ROW-57c8b66b7f:
+    type: ROW
+    id: ROW-57c8b66b7f
+    children:
+    - CHART-1b340eabe2
+    - CHART-d2d60f7c36
+    parents: *id001
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-1b340eabe2:
+    type: CHART
+    id: CHART-1b340eabe2
+    children: []
+    parents: &id003
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-00b8eef5c5
+    - ROW-57c8b66b7f
+    meta:
+      uuid: ca9091a2-9740-5799-8634-44b827073851
+      chartId: 5
+      width: 6
+      height: 50
+      sliceName: Динамика потерь
+  CHART-d2d60f7c36:
+    type: CHART
+    id: CHART-d2d60f7c36
+    children: []
+    parents: *id003
+    meta:
+      uuid: 0caefc17-66e9-5084-85ef-23935db9c854
+      chartId: 6
+      width: 6
+      height: 50
+      sliceName: Что формирует потери
+  TABS-f44ed65fa8:
+    type: TABS
+    id: TABS-f44ed65fa8
+    children:
+    - TAB-6ce12a2f9c
+    - TAB-58962c0f66
+    parents: *id001
+    meta: {}
+  TAB-6ce12a2f9c:
+    type: TAB
+    id: TAB-6ce12a2f9c
+    children:
+    - ROW-f0105e44ac
+    parents: &id004
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-00b8eef5c5
+    - TABS-f44ed65fa8
+    meta:
+      text: По товарам
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-f0105e44ac:
+    type: ROW
+    id: ROW-f0105e44ac
+    children:
+    - CHART-231e2878dd
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-00b8eef5c5
+    - TABS-f44ed65fa8
+    - TAB-6ce12a2f9c
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-231e2878dd:
+    type: CHART
+    id: CHART-231e2878dd
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-00b8eef5c5
+    - TABS-f44ed65fa8
+    - TAB-6ce12a2f9c
+    - ROW-f0105e44ac
+    meta:
+      uuid: 9d78107a-c220-5529-a74f-b1f949a3d490
+      chartId: 7
+      width: 12
+      height: 75
+      sliceName: Товары по объёму потерь
+  TAB-58962c0f66:
+    type: TAB
+    id: TAB-58962c0f66
+    children:
+    - ROW-705448e7e6
+    parents: *id004
+    meta:
+      text: Запросы без привязки
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-705448e7e6:
+    type: ROW
+    id: ROW-705448e7e6
+    children:
+    - CHART-c866d741cd
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-00b8eef5c5
+    - TABS-f44ed65fa8
+    - TAB-58962c0f66
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-c866d741cd:
+    type: CHART
+    id: CHART-c866d741cd
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-00b8eef5c5
+    - TABS-f44ed65fa8
+    - TAB-58962c0f66
+    - ROW-705448e7e6
+    meta:
+      uuid: 69f63bd6-275a-5d50-a87e-d2c4b9a2dc4c
+      chartId: 8
+      width: 12
+      height: 75
+      sliceName: Запросы без привязки
+  ROW-d2375accc7:
+    type: ROW
+    id: ROW-d2375accc7
+    children:
+    - MARKDOWN-8ecf722d4f
+    parents: *id001
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-8ecf722d4f:
+    type: MARKDOWN
+    id: MARKDOWN-8ecf722d4f
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-00b8eef5c5
+    - ROW-d2375accc7
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** «Не найдено» оценивается по текущей цене товара: история цен не хранится. Себестоимости в системе нет, поэтому упущенная маржа недоступна.'
+  ROW-3afceca058:
+    type: ROW
+    id: ROW-3afceca058
+    children:
+    - MARKDOWN-03658d5e1a
+    parents: *id001
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-03658d5e1a:
+    type: MARKDOWN
+    id: MARKDOWN-03658d5e1a
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-00b8eef5c5
+    - ROW-3afceca058
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        **Упущенная выручка** = оценка по поиску + Σ(цена запрошенного − цена замены) + полная стоимость отказов.
+
+
+        * **Оценка по поиску.** Итоговый запрос серии (поиск срабатывает на каждую букву, считается самый длинный запрос пользователя в окне 60 с), в котором товар есть в каталоге магазина, но без остатка. Один запрос = одна несостоявшаяся покупка по текущей цене; если без остатка нашлось несколько товаров (берутся первые 5 по релевантности), цена делится между ними поровну. Лог поиска ведётся с 20.10.2026.
+
+        * **Замена дешевле.** Замена при сборке, после которой позиция стоит меньше: разница цены запрошенного товара и замены с учётом количества.
+
+        * **Отказ от замены.** Позиция убрана из заказа без замены: полная сумма позиции.
+
+        * **Запросы без привязки.** Итоговый запрос с пустой выдачей: товара нет в каталоге, привязать к товару нельзя.
+
+        * **Доля замен** = позиции товара с заменой / все позиции товара на сборке. **Доля потерь** = потери товара / все потери.
+
+
+        Источник: лог поиска витрины `search_query_logs`, позиции сборки `order_items` + `assemblies`.
+
+
+        </details>'
+  TAB-5cd2ab17d9:
+    type: TAB
+    id: TAB-5cd2ab17d9
+    children:
+    - ROW-54ce8f5c10
+    - ROW-3b148157e1
+    - ROW-42cc438535
+    - ROW-23691281a9
+    - ROW-8c640fe7d6
+    - ROW-5f7161b650
+    parents: *id005
+    meta:
+      text: R2 · Частота замен
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-54ce8f5c10:
+    type: ROW
+    id: ROW-54ce8f5c10
+    children:
+    - MARKDOWN-3ae503f899
+    parents: &id006
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-5cd2ab17d9
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-3ae503f899:
+    type: MARKDOWN
+    id: MARKDOWN-3ae503f899
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-5cd2ab17d9
+    - ROW-54ce8f5c10
+    meta:
+      width: 12
+      height: 9
+      code: '### R2. Частота замен
+
+        Вкладка «Товары» · P1 · обновление: копия БД, обновляется раз в сутки ночью (около 03:30 МСК) · датасет: ops_assembly_items (витрина ТЗ dm_substitution_daily)'
+  ROW-3b148157e1:
+    type: ROW
+    id: ROW-3b148157e1
+    children:
+    - CHART-2760efc944
+    - CHART-ec9507651d
+    - CHART-07f291899d
+    - CHART-6a5f300732
+    parents: *id006
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-2760efc944:
+    type: CHART
+    id: CHART-2760efc944
+    children: []
+    parents: &id007
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-5cd2ab17d9
+    - ROW-3b148157e1
+    meta:
+      uuid: 364b467c-1794-54c6-9125-fe83ebff640e
+      chartId: 9
+      width: 3
+      height: 24
+      sliceName: Заменено позиций
+  CHART-ec9507651d:
+    type: CHART
+    id: CHART-ec9507651d
+    children: []
+    parents: *id007
+    meta:
+      uuid: 1217ff55-1244-50e8-b8ef-5c8dece11064
+      chartId: 10
+      width: 3
+      height: 24
+      sliceName: Заказы с заменой
+  CHART-07f291899d:
+    type: CHART
+    id: CHART-07f291899d
+    children: []
+    parents: *id007
+    meta:
+      uuid: 24d47c23-f14e-5a5e-b559-13a43ef3a4ca
+      chartId: 11
+      width: 3
+      height: 24
+      sliceName: Согласовано
+  CHART-6a5f300732:
+    type: CHART
+    id: CHART-6a5f300732
+    children: []
+    parents: *id007
+    meta:
+      uuid: 06bf7a89-b9ff-5fd1-87e0-e26fe1ba6fda
+      chartId: 12
+      width: 3
+      height: 24
+      sliceName: Без согласования
+  ROW-42cc438535:
+    type: ROW
+    id: ROW-42cc438535
+    children:
+    - CHART-1d35a9afaa
+    - CHART-a19c1e126d
+    parents: *id006
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-1d35a9afaa:
+    type: CHART
+    id: CHART-1d35a9afaa
+    children: []
+    parents: &id008
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-5cd2ab17d9
+    - ROW-42cc438535
+    meta:
+      uuid: df6af94c-e75a-5f13-9d0c-c82f3509028e
+      chartId: 13
+      width: 6
+      height: 50
+      sliceName: На что заменяют
+  CHART-a19c1e126d:
+    type: CHART
+    id: CHART-a19c1e126d
+    children: []
+    parents: *id008
+    meta:
+      uuid: c5e18c9d-6a72-5110-bf99-6b08003f0a94
+      chartId: 14
+      width: 6
+      height: 50
+      sliceName: Причины замен
+  ROW-23691281a9:
+    type: ROW
+    id: ROW-23691281a9
+    children:
+    - CHART-d3af3c1e55
+    parents: *id006
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-d3af3c1e55:
+    type: CHART
+    id: CHART-d3af3c1e55
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-5cd2ab17d9
+    - ROW-23691281a9
+    meta:
+      uuid: a1accb5a-5768-553d-9e6a-f3cff1a85b4a
+      chartId: 15
+      width: 12
+      height: 75
+      sliceName: Детализация показателей
+  ROW-8c640fe7d6:
+    type: ROW
+    id: ROW-8c640fe7d6
+    children:
+    - MARKDOWN-8e151df1e3
+    parents: *id006
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-8e151df1e3:
+    type: MARKDOWN
+    id: MARKDOWN-8e151df1e3
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-5cd2ab17d9
+    - ROW-8c640fe7d6
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Причину замены мобильное приложение сборщика пока не передаёт: почти все замены «Причина не указана». Факт звонка клиенту система не хранит.'
+  ROW-5f7161b650:
+    type: ROW
+    id: ROW-5f7161b650
+    children:
+    - MARKDOWN-e627bf2e06
+    parents: *id006
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-e627bf2e06:
+    type: MARKDOWN
+    id: MARKDOWN-e627bf2e06
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-5cd2ab17d9
+    - ROW-5f7161b650
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **Замена** = сборщик положил другой товар вместо запрошенного (запрошенный товар ≠ собранный).
+
+        * **% замен** = доставленные заказы с заменой / все доставленные заказы периода. **% по товару** = заказы с заменой товара / заказы, где товар был в корзине.
+
+        * **Согласовано / без согласования.** Ответ клиента на замену не хранится. Есть только опция при оформлении «Позвонить, если товара нет в наличии»: замена в таком заказе считается согласованной (клиент просил согласовать), без опции это «без согласования» (no_offer) и отдельный тип ошибки сборки.
+
+        * **Средняя Δ цены** = цена замены − цена запрошенного товара за единицу (минус = замена дешевле).
+
+
+        Источник: `order_items` подзаказов сборки, `product_replace_reasons`, опции чекаута заказа.
+
+
+        </details>'
+  TAB-345797b709:
+    type: TAB
+    id: TAB-345797b709
+    children:
+    - ROW-75760b9d6d
+    - ROW-7511c95f6f
+    - ROW-cdc406c14c
+    - ROW-fe0e108882
+    - ROW-85f2165cca
+    - ROW-6439ba8254
+    parents: *id005
+    meta:
+      text: R3 · Продажи и ABC
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-75760b9d6d:
+    type: ROW
+    id: ROW-75760b9d6d
+    children:
+    - MARKDOWN-99847f6fb7
+    parents: &id009
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-345797b709
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-99847f6fb7:
+    type: MARKDOWN
+    id: MARKDOWN-99847f6fb7
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-345797b709
+    - ROW-75760b9d6d
+    meta:
+      width: 12
+      height: 9
+      code: '### R3. Продажи и ABC
+
+        Вкладка «Товары» · P0 · обновление: копия БД, обновляется раз в сутки ночью (около 03:30 МСК) · датасет: ops_abc_products (витрина ТЗ dm_product_sales_abc)'
+  ROW-7511c95f6f:
+    type: ROW
+    id: ROW-7511c95f6f
+    children:
+    - CHART-1845bca552
+    - CHART-aa6c31d8b7
+    - CHART-ba6ca71634
+    - CHART-131cd3fdfe
+    parents: *id009
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-1845bca552:
+    type: CHART
+    id: CHART-1845bca552
+    children: []
+    parents: &id010
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-345797b709
+    - ROW-7511c95f6f
+    meta:
+      uuid: b58eec06-56de-505a-a696-776efef6dc56
+      chartId: 16
+      width: 3
+      height: 24
+      sliceName: Выручка net
+  CHART-aa6c31d8b7:
+    type: CHART
+    id: CHART-aa6c31d8b7
+    children: []
+    parents: *id010
+    meta:
+      uuid: c7b3a703-0ced-5c09-a9bd-3effd5cbbe5c
+      chartId: 17
+      width: 3
+      height: 24
+      sliceName: Группа A
+  CHART-ba6ca71634:
+    type: CHART
+    id: CHART-ba6ca71634
+    children: []
+    parents: *id010
+    meta:
+      uuid: 5466575a-a9cc-515e-98e4-0840b48ee3ca
+      chartId: 18
+      width: 3
+      height: 24
+      sliceName: Группа B
+  CHART-131cd3fdfe:
+    type: CHART
+    id: CHART-131cd3fdfe
+    children: []
+    parents: *id010
+    meta:
+      uuid: fc553f4d-095b-5232-b214-fc347f78aa81
+      chartId: 19
+      width: 3
+      height: 24
+      sliceName: Группа C
+  ROW-cdc406c14c:
+    type: ROW
+    id: ROW-cdc406c14c
+    children:
+    - CHART-177a419060
+    - CHART-906367fffe
+    parents: *id009
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-177a419060:
+    type: CHART
+    id: CHART-177a419060
+    children: []
+    parents: &id011
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-345797b709
+    - ROW-cdc406c14c
+    meta:
+      uuid: 4a599e22-69b1-5087-9956-cbd3b88cb168
+      chartId: 20
+      width: 6
+      height: 50
+      sliceName: ABC-анализ ассортимента
+  CHART-906367fffe:
+    type: CHART
+    id: CHART-906367fffe
+    children: []
+    parents: *id011
+    meta:
+      uuid: 565717f8-03c2-5988-9607-506cd8af09d0
+      chartId: 21
+      width: 6
+      height: 50
+      sliceName: Вклад классов в выручку
+  ROW-fe0e108882:
+    type: ROW
+    id: ROW-fe0e108882
+    children:
+    - CHART-01ba4b962b
+    parents: *id009
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-01ba4b962b:
+    type: CHART
+    id: CHART-01ba4b962b
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-345797b709
+    - ROW-fe0e108882
+    meta:
+      uuid: d17a0f96-2ff8-50cc-b0c4-5368c3e8ffa5
+      chartId: 22
+      width: 12
+      height: 75
+      sliceName: Детализация показателей
+  ROW-85f2165cca:
+    type: ROW
+    id: ROW-85f2165cca
+    children:
+    - MARKDOWN-d33d56fe76
+    parents: *id009
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-d33d56fe76:
+    type: MARKDOWN
+    id: MARKDOWN-d33d56fe76
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-345797b709
+    - ROW-85f2165cca
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Классы пересчитываются под выбранный период и магазин; фильтры «Категория» и «Товар» только сужают показ.'
+  ROW-6439ba8254:
+    type: ROW
+    id: ROW-6439ba8254
+    children:
+    - MARKDOWN-86ceff566c
+    parents: *id009
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-86ceff566c:
+    type: MARKDOWN
+    id: MARKDOWN-86ceff566c
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-5acbbd9c95
+    - TABS-b052b9375a
+    - TAB-345797b709
+    - ROW-6439ba8254
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **Выручка net** = позиции доставленных заказов минус возвращённые, без доставки (цена на момент заказа × количество).
+
+        * **ABC.** Товары по убыванию выручки: **A**: накопленная доля до 80% (товар, на котором доля переходит 80%, ещё в A), **B**: до 95%, **C**: остальное. Пороги 80/95 зашиты в датасете.
+
+        * **Смена класса**: класс в предыдущем периоде такой же длины → класс сейчас; «Новый в продажах» значит, что в прошлом периоде продаж не было.
+
+
+        Источник: `order_items` + `orders` (доставленные, status_id = 5).
+
+
+        </details>'
+  TAB-8bd9000115:
+    type: TAB
+    id: TAB-8bd9000115
+    children:
+    - TABS-87d3365fb5
+    parents: *id012
+    meta:
+      text: 🛵 Курьеры · 4
+      defaultText: Tab title
+      placeholder: Tab title
+  TABS-87d3365fb5:
+    type: TABS
+    id: TABS-87d3365fb5
+    children:
+    - TAB-47efbd3952
+    - TAB-018cc4c8cd
+    - TAB-0242999de0
+    - TAB-4a80546889
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    meta: {}
+  TAB-47efbd3952:
+    type: TAB
+    id: TAB-47efbd3952
+    children:
+    - ROW-a429c5a2fc
+    - ROW-023fc46a28
+    - ROW-978ad413ff
+    - ROW-5bcfaaffb6
+    - ROW-437a0b0d02
+    - ROW-04480d5137
+    parents: &id016
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    meta:
+      text: R4 · Производительность
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-a429c5a2fc:
+    type: ROW
+    id: ROW-a429c5a2fc
+    children:
+    - MARKDOWN-61417927c5
+    parents: &id013
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-47efbd3952
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-61417927c5:
+    type: MARKDOWN
+    id: MARKDOWN-61417927c5
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-47efbd3952
+    - ROW-a429c5a2fc
+    meta:
+      width: 12
+      height: 9
+      code: '### R4. Производительность
+
+        Вкладка «Курьеры» · P0 · обновление: живая база, без суточной задержки · датасет: ops_courier_orders, ops_courier_stats (витрина ТЗ dm_courier_perf_daily)'
+  ROW-023fc46a28:
+    type: ROW
+    id: ROW-023fc46a28
+    children:
+    - CHART-976cff7737
+    - CHART-e72d4c78cf
+    - CHART-afe2c4dc13
+    - CHART-7ba7ec7d79
+    parents: *id013
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-976cff7737:
+    type: CHART
+    id: CHART-976cff7737
+    children: []
+    parents: &id014
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-47efbd3952
+    - ROW-023fc46a28
+    meta:
+      uuid: fb497a65-afc7-5268-9641-1112f38b31c8
+      chartId: 23
+      width: 3
+      height: 24
+      sliceName: Доставлено заказов
+  CHART-e72d4c78cf:
+    type: CHART
+    id: CHART-e72d4c78cf
+    children: []
+    parents: *id014
+    meta:
+      uuid: f2fb00ba-b3b7-5979-983f-50b3f70cee9b
+      chartId: 24
+      width: 3
+      height: 24
+      sliceName: Среднее время
+  CHART-afe2c4dc13:
+    type: CHART
+    id: CHART-afe2c4dc13
+    children: []
+    parents: *id014
+    meta:
+      uuid: d7b12f7f-67dc-527a-9a57-1ae6ef06a463
+      chartId: 25
+      width: 3
+      height: 24
+      sliceName: Доставлено в срок
+  CHART-7ba7ec7d79:
+    type: CHART
+    id: CHART-7ba7ec7d79
+    children: []
+    parents: *id014
+    meta:
+      uuid: 0bd4a62c-3a1f-5aa7-9d5d-6185995a5094
+      chartId: 26
+      width: 3
+      height: 24
+      sliceName: Отмены курьером
+  ROW-978ad413ff:
+    type: ROW
+    id: ROW-978ad413ff
+    children:
+    - CHART-f08e62b0cc
+    - CHART-c0e98861e2
+    parents: *id013
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-f08e62b0cc:
+    type: CHART
+    id: CHART-f08e62b0cc
+    children: []
+    parents: &id015
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-47efbd3952
+    - ROW-978ad413ff
+    meta:
+      uuid: 4ab96445-9ba8-507b-9129-43110c6c9ea5
+      chartId: 27
+      width: 6
+      height: 50
+      sliceName: Время доставки по курьерам
+  CHART-c0e98861e2:
+    type: CHART
+    id: CHART-c0e98861e2
+    children: []
+    parents: *id015
+    meta:
+      uuid: 68ff004d-5413-5ac5-92f6-ef4cb7591819
+      chartId: 28
+      width: 6
+      height: 50
+      sliceName: Из чего складывается доставка
+  ROW-5bcfaaffb6:
+    type: ROW
+    id: ROW-5bcfaaffb6
+    children:
+    - CHART-45646cf71b
+    parents: *id013
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-45646cf71b:
+    type: CHART
+    id: CHART-45646cf71b
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-47efbd3952
+    - ROW-5bcfaaffb6
+    meta:
+      uuid: e5f83d2b-ddcc-5b51-98df-02fc7b1728b6
+      chartId: 29
+      width: 12
+      height: 75
+      sliceName: Детализация показателей
+  ROW-437a0b0d02:
+    type: ROW
+    id: ROW-437a0b0d02
+    children:
+    - MARKDOWN-75a2b73b8e
+    parents: *id013
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-75a2b73b8e:
+    type: MARKDOWN
+    id: MARKDOWN-75a2b73b8e
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-47efbd3952
+    - ROW-437a0b0d02
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Доставки, закрытые меньше чем через минуту после принятия, отмечены задним числом и в средние не входят. Заказов в час и за смену считаются по сменам: курьеры открывают их редко.'
+  ROW-04480d5137:
+    type: ROW
+    id: ROW-04480d5137
+    children:
+    - MARKDOWN-21ce569324
+    parents: *id013
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-21ce569324:
+    type: MARKDOWN
+    id: MARKDOWN-21ce569324
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-47efbd3952
+    - ROW-04480d5137
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **Время** = выдал − принял (`delivery_orders.finished_at − created_at`); принял → забрал и забрал → выдал считаются по отметке «забрал» (`started_at`). Отмены и возвраты в среднее не входят; медиана и p90 считаются по заказам, а не по средним.
+
+        * **В срок** = выдан не позже конца слота доставки.
+
+        * **Отмены курьером.** Отдельного действия «курьер отказался» в системе нет: считается заказ, отменённый после назначения курьера. **Возврат** = в заказе есть возвращённая позиция.
+
+        * **Оценка** = отзыв клиента на заказ (1–5).
+
+
+        Источник: живая база курьерки, `delivery_orders`, `deliveries`, `orders`, `shifts`, `order_reviews`.
+
+
+        </details>'
+  TAB-018cc4c8cd:
+    type: TAB
+    id: TAB-018cc4c8cd
+    children:
+    - ROW-b4cef3418c
+    - ROW-23e6e7863f
+    - ROW-7d14e45b4f
+    - ROW-3a3bff0d28
+    - ROW-a172511f99
+    - ROW-769e746630
+    parents: *id016
+    meta:
+      text: R5 · Оплаты и инкассация
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-b4cef3418c:
+    type: ROW
+    id: ROW-b4cef3418c
+    children:
+    - MARKDOWN-9bb475d652
+    parents: &id017
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-018cc4c8cd
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-9bb475d652:
+    type: MARKDOWN
+    id: MARKDOWN-9bb475d652
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-018cc4c8cd
+    - ROW-b4cef3418c
+    meta:
+      width: 12
+      height: 9
+      code: '### R5. Оплаты и инкассация
+
+        Вкладка «Курьеры» · P1 · обновление: живая база, без суточной задержки · датасет: ops_courier_orders (витрина ТЗ dm_courier_finance_daily)'
+  ROW-23e6e7863f:
+    type: ROW
+    id: ROW-23e6e7863f
+    children:
+    - CHART-9a22f79bf1
+    - CHART-f84198f98d
+    - CHART-f7fe48e642
+    - CHART-5c60f43b31
+    parents: *id017
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-9a22f79bf1:
+    type: CHART
+    id: CHART-9a22f79bf1
+    children: []
+    parents: &id018
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-018cc4c8cd
+    - ROW-23e6e7863f
+    meta:
+      uuid: 893fdebb-467e-5fc5-a4e4-c97b3c3a7f34
+      chartId: 30
+      width: 3
+      height: 24
+      sliceName: К инкассации
+  CHART-f84198f98d:
+    type: CHART
+    id: CHART-f84198f98d
+    children: []
+    parents: *id018
+    meta:
+      uuid: c2386461-fbca-5406-bd61-7318f8117d68
+      chartId: 31
+      width: 3
+      height: 24
+      sliceName: Оплата картой
+  CHART-f7fe48e642:
+    type: CHART
+    id: CHART-f7fe48e642
+    children: []
+    parents: *id018
+    meta:
+      uuid: 2a5ca7b1-add4-5f73-84b8-91693f7b386d
+      chartId: 32
+      width: 3
+      height: 24
+      sliceName: Онлайн-оплата
+  CHART-5c60f43b31:
+    type: CHART
+    id: CHART-5c60f43b31
+    children: []
+    parents: *id018
+    meta:
+      uuid: f67929d0-f69d-503e-bf1d-e21762472b37
+      chartId: 33
+      width: 3
+      height: 24
+      sliceName: Известные расхождения
+  ROW-7d14e45b4f:
+    type: ROW
+    id: ROW-7d14e45b4f
+    children:
+    - CHART-64abc1612d
+    - CHART-da44db78c3
+    parents: *id017
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-64abc1612d:
+    type: CHART
+    id: CHART-64abc1612d
+    children: []
+    parents: &id019
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-018cc4c8cd
+    - ROW-7d14e45b4f
+    meta:
+      uuid: 330af3e8-b384-5321-88ff-b16904959403
+      chartId: 34
+      width: 6
+      height: 50
+      sliceName: Способы оплаты
+  CHART-da44db78c3:
+    type: CHART
+    id: CHART-da44db78c3
+    children: []
+    parents: *id019
+    meta:
+      uuid: 4a2c8797-d425-5eba-9156-06e6c760c9f3
+      chartId: 35
+      width: 6
+      height: 50
+      sliceName: Неполные подтверждения
+  ROW-3a3bff0d28:
+    type: ROW
+    id: ROW-3a3bff0d28
+    children:
+    - CHART-e65914c4db
+    parents: *id017
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-e65914c4db:
+    type: CHART
+    id: CHART-e65914c4db
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-018cc4c8cd
+    - ROW-3a3bff0d28
+    meta:
+      uuid: ec51df6f-2150-5841-9a54-dc702f66d743
+      chartId: 36
+      width: 12
+      height: 75
+      sliceName: Детализация показателей
+  ROW-a172511f99:
+    type: ROW
+    id: ROW-a172511f99
+    children:
+    - MARKDOWN-1e5a66f63e
+    parents: *id017
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-1e5a66f63e:
+    type: MARKDOWN
+    id: MARKDOWN-1e5a66f63e
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-018cc4c8cd
+    - ROW-a172511f99
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Терминала у курьера нет: карта = онлайн-оплата в приложении. Факт сдачи наличных и расхождения система не хранит.'
+  ROW-769e746630:
+    type: ROW
+    id: ROW-769e746630
+    children:
+    - MARKDOWN-6ff90bfd46
+    parents: *id017
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-6ff90bfd46:
+    type: MARKDOWN
+    id: MARKDOWN-6ff90bfd46
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-018cc4c8cd
+    - ROW-769e746630
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **К инкассации** = Σ доставленных заказов за наличные − возвращённые позиции этих заказов.
+
+        * **Онлайн-оплата**: заказы, оплаченные картой в приложении (списание через ЮKassa), после возвратов.
+
+        * **Неполное подтверждение**: доставленный заказ за наличные, по которому оплата не отмечена. Последние 5 дней с такими заказами.
+
+        * **Сдано / расхождение** = собрано − сдано. Сдача наличных не фиксируется, поэтому «Нет данных», а не ноль.
+
+
+        Источник: живая база курьерки, `orders.payment_type_id` (1 = карта онлайн, 2 = наличные), `payment_status`.
+
+
+        </details>'
+  TAB-0242999de0:
+    type: TAB
+    id: TAB-0242999de0
+    children:
+    - ROW-ceaa76e368
+    - ROW-8d7c1b0207
+    - ROW-755cd0cf92
+    - ROW-5a509e39f5
+    - ROW-32348762fc
+    - ROW-ae27ced2a2
+    parents: *id016
+    meta:
+      text: R6 · Зоны доставки
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-ceaa76e368:
+    type: ROW
+    id: ROW-ceaa76e368
+    children:
+    - MARKDOWN-82e90208c1
+    parents: &id020
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-0242999de0
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-82e90208c1:
+    type: MARKDOWN
+    id: MARKDOWN-82e90208c1
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-0242999de0
+    - ROW-ceaa76e368
+    meta:
+      width: 12
+      height: 9
+      code: '### R6. Зоны доставки
+
+        Вкладка «Курьеры» · P1 · обновление: живая база, без суточной задержки · датасет: ops_courier_orders (витрина ТЗ dm_courier_zone_daily)'
+  ROW-8d7c1b0207:
+    type: ROW
+    id: ROW-8d7c1b0207
+    children:
+    - CHART-c4ed5cd104
+    - CHART-fd9d313968
+    - CHART-3dc81d315a
+    - CHART-ddb9c61138
+    parents: *id020
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-c4ed5cd104:
+    type: CHART
+    id: CHART-c4ed5cd104
+    children: []
+    parents: &id021
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-0242999de0
+    - ROW-8d7c1b0207
+    meta:
+      uuid: 86e38278-58ac-507e-a07a-4d65e46479ad
+      chartId: 37
+      width: 3
+      height: 24
+      sliceName: Назначено заказов
+  CHART-fd9d313968:
+    type: CHART
+    id: CHART-fd9d313968
+    children: []
+    parents: *id021
+    meta:
+      uuid: cfc3d0dd-815c-5a1a-b6b7-0d28366d6ec2
+      chartId: 38
+      width: 3
+      height: 24
+      sliceName: Активные зоны
+  CHART-3dc81d315a:
+    type: CHART
+    id: CHART-3dc81d315a
+    children: []
+    parents: *id021
+    meta:
+      uuid: dca25db6-68d1-52e9-bdcd-612a5342d91e
+      chartId: 39
+      width: 3
+      height: 24
+      sliceName: Среднее время
+  CHART-ddb9c61138:
+    type: CHART
+    id: CHART-ddb9c61138
+    children: []
+    parents: *id021
+    meta:
+      uuid: e0a886db-c066-5bd6-917d-b6d7df9ef754
+      chartId: 40
+      width: 3
+      height: 24
+      sliceName: Зона не определена
+  ROW-755cd0cf92:
+    type: ROW
+    id: ROW-755cd0cf92
+    children:
+    - CHART-722935bc30
+    - CHART-6fd6969f9a
+    parents: *id020
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-722935bc30:
+    type: CHART
+    id: CHART-722935bc30
+    children: []
+    parents: &id022
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-0242999de0
+    - ROW-755cd0cf92
+    meta:
+      uuid: 6ec54ba5-9233-5af2-8799-6280880bf5a7
+      chartId: 41
+      width: 6
+      height: 75
+      sliceName: Распределение по зонам
+  CHART-6fd6969f9a:
+    type: CHART
+    id: CHART-6fd6969f9a
+    children: []
+    parents: *id022
+    meta:
+      uuid: 1a805b32-80aa-51ad-87db-995ec9c1e069
+      chartId: 42
+      width: 6
+      height: 50
+      sliceName: Нагрузка по зонам
+  ROW-5a509e39f5:
+    type: ROW
+    id: ROW-5a509e39f5
+    children:
+    - CHART-28be892ad1
+    parents: *id020
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-28be892ad1:
+    type: CHART
+    id: CHART-28be892ad1
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-0242999de0
+    - ROW-5a509e39f5
+    meta:
+      uuid: ae3fd4ef-5d49-5342-8f5a-7c3fed2347a3
+      chartId: 43
+      width: 12
+      height: 75
+      sliceName: Детализация показателей
+  ROW-32348762fc:
+    type: ROW
+    id: ROW-32348762fc
+    children:
+    - MARKDOWN-cffe10bdef
+    parents: *id020
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-cffe10bdef:
+    type: MARKDOWN
+    id: MARKDOWN-cffe10bdef
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-0242999de0
+    - ROW-32348762fc
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Зона берётся на момент заказа (orders.zone_id); полигонов зон в отчёте нет, поэтому распределение показано таблицей.'
+  ROW-ae27ced2a2:
+    type: ROW
+    id: ROW-ae27ced2a2
+    children:
+    - MARKDOWN-bcedbf802d
+    parents: *id020
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-bcedbf802d:
+    type: MARKDOWN
+    id: MARKDOWN-bcedbf802d
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-0242999de0
+    - ROW-ae27ced2a2
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **Доля зоны** = заказы зоны / все назначенные заказы. **Отмены** = отменённые после назначения / заказы зоны.
+
+        * **Среднее время**: принял → выдал по доставленным заказам зоны.
+
+        * **Средняя выручка/заказ**: сумма доставленных заказов зоны после возвратов / доставленные заказы.
+
+
+        Источник: живая база курьерки, `orders.zone_id`, `shop_zones`.
+
+
+        </details>'
+  TAB-4a80546889:
+    type: TAB
+    id: TAB-4a80546889
+    children:
+    - ROW-1dd3b3cc4a
+    - ROW-aee2bed051
+    - ROW-77e0cf0d0b
+    - ROW-62598d11a6
+    - ROW-57afa7b0dd
+    - ROW-2e0d922728
+    parents: *id016
+    meta:
+      text: R7 · Заработок
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-1dd3b3cc4a:
+    type: ROW
+    id: ROW-1dd3b3cc4a
+    children:
+    - MARKDOWN-b6cc468227
+    parents: &id023
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-4a80546889
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-b6cc468227:
+    type: MARKDOWN
+    id: MARKDOWN-b6cc468227
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-4a80546889
+    - ROW-1dd3b3cc4a
+    meta:
+      width: 12
+      height: 9
+      code: '### R7. Заработок
+
+        Вкладка «Курьеры» · P1 · обновление: живая база, без суточной задержки · датасет: ops_courier_orders, ops_courier_earnings (витрина ТЗ dm_courier_earnings)'
+  ROW-aee2bed051:
+    type: ROW
+    id: ROW-aee2bed051
+    children:
+    - CHART-0c7d42db16
+    - CHART-dfeafd3c53
+    - CHART-c9f41d6d16
+    - CHART-6edfba0f7f
+    parents: *id023
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-0c7d42db16:
+    type: CHART
+    id: CHART-0c7d42db16
+    children: []
+    parents: &id024
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-4a80546889
+    - ROW-aee2bed051
+    meta:
+      uuid: 187b2e6b-4049-59c7-8eed-92131088da2b
+      chartId: 44
+      width: 3
+      height: 24
+      sliceName: Начислено
+  CHART-dfeafd3c53:
+    type: CHART
+    id: CHART-dfeafd3c53
+    children: []
+    parents: *id024
+    meta:
+      uuid: 7c68e92c-354a-5eb4-8993-4f9830e91141
+      chartId: 45
+      width: 3
+      height: 24
+      sliceName: Базовый заработок
+  CHART-c9f41d6d16:
+    type: CHART
+    id: CHART-c9f41d6d16
+    children: []
+    parents: *id024
+    meta:
+      uuid: 99fd1000-1f31-5f63-a5cd-bb363aeb6ad9
+      chartId: 46
+      width: 3
+      height: 24
+      sliceName: Бонусы
+  CHART-6edfba0f7f:
+    type: CHART
+    id: CHART-6edfba0f7f
+    children: []
+    parents: *id024
+    meta:
+      uuid: b4c403dd-8672-5ca9-9df4-4adb5e33b83e
+      chartId: 47
+      width: 3
+      height: 24
+      sliceName: Среднее за заказ
+  ROW-77e0cf0d0b:
+    type: ROW
+    id: ROW-77e0cf0d0b
+    children:
+    - CHART-c5d2e10206
+    - CHART-a5e90f9972
+    parents: *id023
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-c5d2e10206:
+    type: CHART
+    id: CHART-c5d2e10206
+    children: []
+    parents: &id025
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-4a80546889
+    - ROW-77e0cf0d0b
+    meta:
+      uuid: 740b679e-a621-55d1-9a94-ae4680f3b504
+      chartId: 48
+      width: 6
+      height: 50
+      sliceName: Заработок по курьерам
+  CHART-a5e90f9972:
+    type: CHART
+    id: CHART-a5e90f9972
+    children: []
+    parents: *id025
+    meta:
+      uuid: 6462d5f2-4c2b-5f8a-98e8-291c6cd8b3b7
+      chartId: 49
+      width: 6
+      height: 50
+      sliceName: Базовые начисления по зонам
+  ROW-62598d11a6:
+    type: ROW
+    id: ROW-62598d11a6
+    children:
+    - CHART-1e9fd23c11
+    parents: *id023
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-1e9fd23c11:
+    type: CHART
+    id: CHART-1e9fd23c11
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-4a80546889
+    - ROW-62598d11a6
+    meta:
+      uuid: 718b25bf-fe33-5e75-9142-bc2ff8dd587a
+      chartId: 50
+      width: 12
+      height: 75
+      sliceName: Начисления по курьерам и зонам
+  ROW-57afa7b0dd:
+    type: ROW
+    id: ROW-57afa7b0dd
+    children:
+    - MARKDOWN-fe9336f93d
+    parents: *id023
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-fe9336f93d:
+    type: MARKDOWN
+    id: MARKDOWN-fe9336f93d
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-4a80546889
+    - ROW-57afa7b0dd
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Тариф курьера = цена доставки зоны; бесплатная для клиента доставка оплачивается курьеру по цене зоны. До 23.09.2026 снимка цены нет, тариф взят по текущей цене зоны (приблизительно).'
+  ROW-2e0d922728:
+    type: ROW
+    id: ROW-2e0d922728
+    children:
+    - MARKDOWN-0203605160
+    parents: *id023
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-0203605160:
+    type: MARKDOWN
+    id: MARKDOWN-0203605160
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-8bd9000115
+    - TABS-87d3365fb5
+    - TAB-4a80546889
+    - ROW-2e0d922728
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **Итого** = Σ(заказы зоны × тариф на дату доставки) + бонусы − удержания. Бонусов и удержаний в системе нет.
+
+        * **Тариф** = цена доставки зоны, зафиксированная в заказе (снимок `delivery_price_snapshot.base_price`, есть с 23.09.2026); до этой даты берётся текущая цена зоны. Строки бара разделены по версии тарифа: «Зона · цена».
+
+        * Отменённые заказы не оплачиваются.
+
+
+        Источник: живая база курьерки, `orders`, `shop_zones`.
+
+
+        </details>'
+  TAB-b6836bd36a:
+    type: TAB
+    id: TAB-b6836bd36a
+    children:
+    - TABS-6e7fc6708b
+    parents: *id012
+    meta:
+      text: 🧺 Сборщики · 2
+      defaultText: Tab title
+      placeholder: Tab title
+  TABS-6e7fc6708b:
+    type: TABS
+    id: TABS-6e7fc6708b
+    children:
+    - TAB-8fd23c5003
+    - TAB-7aeebec271
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    meta: {}
+  TAB-8fd23c5003:
+    type: TAB
+    id: TAB-8fd23c5003
+    children:
+    - ROW-c8bed35c33
+    - ROW-813bc3b1fe
+    - ROW-b559761e96
+    - ROW-1fc9f786cf
+    - ROW-f0197cd1d6
+    - ROW-2f41708d95
+    parents: &id029
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    meta:
+      text: R8 · Производительность
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-c8bed35c33:
+    type: ROW
+    id: ROW-c8bed35c33
+    children:
+    - MARKDOWN-ba72dd0e3f
+    parents: &id026
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-8fd23c5003
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-ba72dd0e3f:
+    type: MARKDOWN
+    id: MARKDOWN-ba72dd0e3f
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-8fd23c5003
+    - ROW-c8bed35c33
+    meta:
+      width: 12
+      height: 9
+      code: '### R8. Производительность
+
+        Вкладка «Сборщики» · P0 · обновление: копия БД, обновляется раз в сутки ночью (около 03:30 МСК) · датасет: ops_picker_orders, ops_picker_stats (витрина ТЗ dm_picker_perf_daily)'
+  ROW-813bc3b1fe:
+    type: ROW
+    id: ROW-813bc3b1fe
+    children:
+    - CHART-ca71684be6
+    - CHART-6da54c3d99
+    - CHART-cd35bbf363
+    - CHART-3e5949e996
+    parents: *id026
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-ca71684be6:
+    type: CHART
+    id: CHART-ca71684be6
+    children: []
+    parents: &id027
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-8fd23c5003
+    - ROW-813bc3b1fe
+    meta:
+      uuid: 7efc34b9-7a87-58a7-b878-f1afbb1de4ac
+      chartId: 51
+      width: 3
+      height: 24
+      sliceName: Собрано заказов
+  CHART-6da54c3d99:
+    type: CHART
+    id: CHART-6da54c3d99
+    children: []
+    parents: *id027
+    meta:
+      uuid: c8162ff4-22e9-5405-9fe4-6ad2a2e9657c
+      chartId: 52
+      width: 3
+      height: 24
+      sliceName: Собрано единиц
+  CHART-cd35bbf363:
+    type: CHART
+    id: CHART-cd35bbf363
+    children: []
+    parents: *id027
+    meta:
+      uuid: d71c9d43-0b18-5d7f-816b-a74e1c7e9a63
+      chartId: 53
+      width: 3
+      height: 24
+      sliceName: Чистое время
+  CHART-3e5949e996:
+    type: CHART
+    id: CHART-3e5949e996
+    children: []
+    parents: *id027
+    meta:
+      uuid: a65c1300-14fb-54f7-87d9-18509841df23
+      chartId: 54
+      width: 3
+      height: 24
+      sliceName: Средний чек
+  ROW-b559761e96:
+    type: ROW
+    id: ROW-b559761e96
+    children:
+    - CHART-5f6e96a227
+    - CHART-af7efe04cb
+    parents: *id026
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-5f6e96a227:
+    type: CHART
+    id: CHART-5f6e96a227
+    children: []
+    parents: &id028
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-8fd23c5003
+    - ROW-b559761e96
+    meta:
+      uuid: f8257695-c545-59cc-b3ba-68e51a0ade07
+      chartId: 55
+      width: 6
+      height: 50
+      sliceName: Время сборки
+  CHART-af7efe04cb:
+    type: CHART
+    id: CHART-af7efe04cb
+    children: []
+    parents: *id028
+    meta:
+      uuid: 1d2e2d86-b5db-5ab6-8081-2b07e2e1bbc1
+      chartId: 56
+      width: 6
+      height: 50
+      sliceName: Производительность
+  ROW-1fc9f786cf:
+    type: ROW
+    id: ROW-1fc9f786cf
+    children:
+    - CHART-1710a516ff
+    parents: *id026
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-1710a516ff:
+    type: CHART
+    id: CHART-1710a516ff
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-8fd23c5003
+    - ROW-1fc9f786cf
+    meta:
+      uuid: 0105e2f7-b6c6-5359-acde-dacbdbda2ed2
+      chartId: 57
+      width: 12
+      height: 75
+      sliceName: Детализация показателей
+  ROW-f0197cd1d6:
+    type: ROW
+    id: ROW-f0197cd1d6
+    children:
+    - MARKDOWN-b41ff0f6f4
+    parents: *id026
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-b41ff0f6f4:
+    type: MARKDOWN
+    id: MARKDOWN-b41ff0f6f4
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-8fd23c5003
+    - ROW-f0197cd1d6
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Отдельного момента «назначен сборщику» система не хранит, поэтому полное время недоступно. Сборки дольше суток в среднее не входят.'
+  ROW-2f41708d95:
+    type: ROW
+    id: ROW-2f41708d95
+    children:
+    - MARKDOWN-c78d507fbc
+    parents: *id026
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-c78d507fbc:
+    type: MARKDOWN
+    id: MARKDOWN-c78d507fbc
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-8fd23c5003
+    - ROW-2f41708d95
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **Чистое время** = передача курьеру − начало сборки (первая сборка сборщика по заказу → последняя). Слотовые заказы потом ждут курьера, это время сюда не входит.
+
+        * **Заказов в час** = собранные заказы / часы смен сборщика (`shifts`). Параллельная сборка искажает среднее, поэтому смотрите медиану и p90.
+
+        * **Средний чек** считается по уникальным доставленным заказам (если заказ собирали двое, он делится между ними).
+
+        * **% с заменой**: заказы сборщика, где была хотя бы одна замена.
+
+
+        Источник: `assemblies`, `order_items` подзаказов сборки, `orders`.
+
+
+        </details>'
+  TAB-7aeebec271:
+    type: TAB
+    id: TAB-7aeebec271
+    children:
+    - ROW-540186d8a2
+    - ROW-2d2d36d1c4
+    - ROW-11b453a8bd
+    - ROW-0351cdddef
+    - ROW-128006e8da
+    - ROW-0f1c2fe4fd
+    parents: *id029
+    meta:
+      text: R9 · Качество сборки
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-540186d8a2:
+    type: ROW
+    id: ROW-540186d8a2
+    children:
+    - MARKDOWN-77a8aa6712
+    parents: &id030
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-7aeebec271
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-77a8aa6712:
+    type: MARKDOWN
+    id: MARKDOWN-77a8aa6712
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-7aeebec271
+    - ROW-540186d8a2
+    meta:
+      width: 12
+      height: 9
+      code: '### R9. Качество сборки
+
+        Вкладка «Сборщики» · P1 · обновление: копия БД, обновляется раз в сутки ночью (около 03:30 МСК) · датасет: ops_picker_orders (витрина ТЗ dm_picker_quality)'
+  ROW-2d2d36d1c4:
+    type: ROW
+    id: ROW-2d2d36d1c4
+    children:
+    - CHART-ffc73e2d70
+    - CHART-a7c6896283
+    - CHART-58085c3c86
+    - CHART-af3bd1b17b
+    parents: *id030
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-ffc73e2d70:
+    type: CHART
+    id: CHART-ffc73e2d70
+    children: []
+    parents: &id031
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-7aeebec271
+    - ROW-2d2d36d1c4
+    meta:
+      uuid: d1776f86-b5e0-5523-84d2-09c015c9e010
+      chartId: 58
+      width: 3
+      height: 24
+      sliceName: Жалобы на сборку
+  CHART-a7c6896283:
+    type: CHART
+    id: CHART-a7c6896283
+    children: []
+    parents: *id031
+    meta:
+      uuid: c11f73f0-ff55-5219-9fe2-fa7aee94a046
+      chartId: 59
+      width: 3
+      height: 24
+      sliceName: Заказы с жалобой
+  CHART-58085c3c86:
+    type: CHART
+    id: CHART-58085c3c86
+    children: []
+    parents: *id031
+    meta:
+      uuid: ea8eb2c3-f1f0-50c9-ba77-9bf3dc0e397c
+      chartId: 60
+      width: 3
+      height: 24
+      sliceName: Компенсации
+  CHART-af3bd1b17b:
+    type: CHART
+    id: CHART-af3bd1b17b
+    children: []
+    parents: *id031
+    meta:
+      uuid: 105b4303-37d4-5ec8-97b5-9ad0765b0427
+      chartId: 61
+      width: 3
+      height: 24
+      sliceName: Жалобы на курьеров
+  ROW-11b453a8bd:
+    type: ROW
+    id: ROW-11b453a8bd
+    children:
+    - CHART-c590b8d50c
+    - CHART-50da10e111
+    parents: *id030
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-c590b8d50c:
+    type: CHART
+    id: CHART-c590b8d50c
+    children: []
+    parents: &id032
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-7aeebec271
+    - ROW-11b453a8bd
+    meta:
+      uuid: e5169a58-3097-50e2-8c11-921647a3b030
+      chartId: 62
+      width: 6
+      height: 50
+      sliceName: Ошибки по сотрудникам
+  CHART-50da10e111:
+    type: CHART
+    id: CHART-50da10e111
+    children: []
+    parents: *id032
+    meta:
+      uuid: de3cfd59-dc70-5cf7-8e8f-9f1d2b81837a
+      chartId: 63
+      width: 6
+      height: 50
+      sliceName: Типы ошибок
+  ROW-0351cdddef:
+    type: ROW
+    id: ROW-0351cdddef
+    children:
+    - CHART-9e6aacb944
+    parents: *id030
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-9e6aacb944:
+    type: CHART
+    id: CHART-9e6aacb944
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-7aeebec271
+    - ROW-0351cdddef
+    meta:
+      uuid: 261ee724-c286-5576-bc1a-72beadf7eca5
+      chartId: 64
+      width: 12
+      height: 75
+      sliceName: Детализация показателей
+  ROW-128006e8da:
+    type: ROW
+    id: ROW-128006e8da
+    children:
+    - MARKDOWN-104fedf809
+    parents: *id030
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-104fedf809:
+    type: MARKDOWN
+    id: MARKDOWN-104fedf809
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-7aeebec271
+    - ROW-128006e8da
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Тип ошибки проставляет оператор в карточке отзыва на заказ (админка → отзывы). Пока типы не проставлены, жалоб нет. Компенсации и жалобы на курьеров система не хранит.'
+  ROW-0f1c2fe4fd:
+    type: ROW
+    id: ROW-0f1c2fe4fd
+    children:
+    - MARKDOWN-59f4dd0548
+    parents: *id030
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-59f4dd0548:
+    type: MARKDOWN
+    id: MARKDOWN-59f4dd0548
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-b6836bd36a
+    - TABS-6e7fc6708b
+    - TAB-7aeebec271
+    - ROW-0f1c2fe4fd
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **Жалоба** = отзыв на заказ с типом ошибки: недовоз, пересорт, просрочка или другое. Относится на сборщиков заказа.
+
+        * **Процент ошибок** = заказы с жалобой / собранные заказы. Недовоз и просрочка могут быть зоной курьера, тип выбирает оператор.
+
+        * **Несогласованная замена**: замена в заказе, где клиент не просил позвонить при отсутствии товара.
+
+
+        Источник: `order_reviews.error_type`, `assemblies`, `order_items`.
+
+
+        </details>'
+  TAB-eb9a771b95:
+    type: TAB
+    id: TAB-eb9a771b95
+    children:
+    - TABS-b0e93ef580
+    parents: *id012
+    meta:
+      text: 👥 Клиенты · 7
+      defaultText: Tab title
+      placeholder: Tab title
+  TABS-b0e93ef580:
+    type: TABS
+    id: TABS-b0e93ef580
+    children:
+    - TAB-a6bfebe006
+    - TAB-96f08d5fc6
+    - TAB-a8b4757f45
+    - TAB-eba5b9dfe0
+    - TAB-304745fc70
+    - TAB-dee60f1740
+    - TAB-365fd78ca8
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    meta: {}
+  TAB-a6bfebe006:
+    type: TAB
+    id: TAB-a6bfebe006
+    children:
+    - ROW-a5a539e34f
+    - ROW-2d23319c01
+    - ROW-5a623f5d50
+    - ROW-f6911b4e64
+    - ROW-7a090ddcb1
+    - ROW-9821c7a277
+    - ROW-bd258cb398
+    parents: &id037
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    meta:
+      text: R10 · База и рост
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-a5a539e34f:
+    type: ROW
+    id: ROW-a5a539e34f
+    children:
+    - MARKDOWN-5279da52b2
+    parents: &id033
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a6bfebe006
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-5279da52b2:
+    type: MARKDOWN
+    id: MARKDOWN-5279da52b2
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a6bfebe006
+    - ROW-a5a539e34f
+    meta:
+      width: 12
+      height: 9
+      code: '### R10. База и рост
+
+        Вкладка «Клиенты» · P0 · обновление: копия БД, обновляется раз в сутки ночью (около 03:30 МСК) · датасет: ops_client_orders, ops_client_periods (витрина ТЗ dm_customer_base_daily)'
+  ROW-2d23319c01:
+    type: ROW
+    id: ROW-2d23319c01
+    children:
+    - CHART-d85bb75fe4
+    - CHART-9f9f9daa02
+    - CHART-53ae7489cb
+    parents: *id033
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-d85bb75fe4:
+    type: CHART
+    id: CHART-d85bb75fe4
+    children: []
+    parents: &id034
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a6bfebe006
+    - ROW-2d23319c01
+    meta:
+      uuid: 28638be5-283c-5883-8b1d-4e1a0869a53c
+      chartId: 65
+      width: 4
+      height: 24
+      sliceName: Покупающие клиенты
+  CHART-9f9f9daa02:
+    type: CHART
+    id: CHART-9f9f9daa02
+    children: []
+    parents: *id034
+    meta:
+      uuid: 03571d18-ed47-569d-a211-68720a4f4694
+      chartId: 66
+      width: 4
+      height: 24
+      sliceName: Новые клиенты
+  CHART-53ae7489cb:
+    type: CHART
+    id: CHART-53ae7489cb
+    children: []
+    parents: *id034
+    meta:
+      uuid: e8669cce-e7a5-5983-808d-33686f7fc0f3
+      chartId: 67
+      width: 4
+      height: 24
+      sliceName: Повторные клиенты
+  ROW-5a623f5d50:
+    type: ROW
+    id: ROW-5a623f5d50
+    children:
+    - CHART-b028fac969
+    - CHART-9220fcb54f
+    - CHART-c20fc321f1
+    parents: *id033
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-b028fac969:
+    type: CHART
+    id: CHART-b028fac969
+    children: []
+    parents: &id035
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a6bfebe006
+    - ROW-5a623f5d50
+    meta:
+      uuid: 89d7293c-d9b6-5246-8b63-1d45349b6b03
+      chartId: 68
+      width: 4
+      height: 24
+      sliceName: Вернувшиеся
+  CHART-9220fcb54f:
+    type: CHART
+    id: CHART-9220fcb54f
+    children: []
+    parents: *id035
+    meta:
+      uuid: 7fdba2d1-d45d-5660-928c-45cad4c53031
+      chartId: 69
+      width: 4
+      height: 24
+      sliceName: Выручка на клиента
+  CHART-c20fc321f1:
+    type: CHART
+    id: CHART-c20fc321f1
+    children: []
+    parents: *id035
+    meta:
+      uuid: 39ae989d-ea94-5d07-9760-09ee496976e7
+      chartId: 70
+      width: 4
+      height: 24
+      sliceName: Частота покупок
+  ROW-f6911b4e64:
+    type: ROW
+    id: ROW-f6911b4e64
+    children:
+    - CHART-c94bc973f1
+    - CHART-bd24bad819
+    parents: *id033
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-c94bc973f1:
+    type: CHART
+    id: CHART-c94bc973f1
+    children: []
+    parents: &id036
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a6bfebe006
+    - ROW-f6911b4e64
+    meta:
+      uuid: f604dbb2-c6a5-58a6-8a07-6f36767714eb
+      chartId: 71
+      width: 6
+      height: 50
+      sliceName: Динамика клиентской базы
+  CHART-bd24bad819:
+    type: CHART
+    id: CHART-bd24bad819
+    children: []
+    parents: *id036
+    meta:
+      uuid: 4f83a957-2ab5-5bc0-9ebe-d7b3f2bc1ead
+      chartId: 72
+      width: 6
+      height: 50
+      sliceName: Приток, возврат и отток
+  ROW-7a090ddcb1:
+    type: ROW
+    id: ROW-7a090ddcb1
+    children:
+    - CHART-6b4d1b2d92
+    parents: *id033
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-6b4d1b2d92:
+    type: CHART
+    id: CHART-6b4d1b2d92
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a6bfebe006
+    - ROW-7a090ddcb1
+    meta:
+      uuid: 00945fad-843f-5426-b88b-330e0e1ac929
+      chartId: 73
+      width: 12
+      height: 75
+      sliceName: Динамика по периодам
+  ROW-9821c7a277:
+    type: ROW
+    id: ROW-9821c7a277
+    children:
+    - MARKDOWN-0c477c4332
+    parents: *id033
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-0c477c4332:
+    type: MARKDOWN
+    id: MARKDOWN-0c477c4332
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a6bfebe006
+    - ROW-9821c7a277
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Интервал выбирается фильтром «Группировка» (месяц или неделя, неделя с понедельника). Покупки клиентов идут с 19.05.2026, поэтому «вернувшихся» после 90 дней пока почти нет.'
+  ROW-bd258cb398:
+    type: ROW
+    id: ROW-bd258cb398
+    children:
+    - MARKDOWN-510127eece
+    parents: *id033
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-510127eece:
+    type: MARKDOWN
+    id: MARKDOWN-510127eece
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a6bfebe006
+    - ROW-bd258cb398
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **Покупатель** = клиент витрины с доставленным заказом. Контакты в отчёт не выводятся, только ID.
+
+        * **Новый** = первая покупка в периоде; **повторный** = покупал до начала периода; **вернувшийся** = покупка после перерыва 90 дней и больше.
+
+        * **Перешли в потерянные** = у клиента в интервале исполнилось 90 дней без покупки. **Активные на конец** = покупали за 30 дней до конца интервала.
+
+        * **Выручка** = итог доставленных заказов витрины.
+
+
+        Источник: заказы витрины (`orders`, status = delivered), бизнес-дата = дата оформления.
+
+
+        </details>'
+  TAB-96f08d5fc6:
+    type: TAB
+    id: TAB-96f08d5fc6
+    children:
+    - ROW-41151963f8
+    - ROW-57ad410578
+    - ROW-9e2b53e633
+    - ROW-a5c050805a
+    - ROW-69599a05f8
+    - ROW-33133c7fc7
+    parents: *id037
+    meta:
+      text: R11 · Удержание и отток
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-41151963f8:
+    type: ROW
+    id: ROW-41151963f8
+    children:
+    - MARKDOWN-718b743365
+    parents: &id038
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-96f08d5fc6
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-718b743365:
+    type: MARKDOWN
+    id: MARKDOWN-718b743365
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-96f08d5fc6
+    - ROW-41151963f8
+    meta:
+      width: 12
+      height: 9
+      code: '### R11. Удержание и отток
+
+        Вкладка «Клиенты» · P1 · обновление: копия БД, обновляется раз в сутки ночью (около 03:30 МСК) · датасет: ops_client_rfm, ops_client_cohorts (витрина ТЗ dm_customer_cohort)'
+  ROW-57ad410578:
+    type: ROW
+    id: ROW-57ad410578
+    children:
+    - CHART-7c5bb4d85a
+    - CHART-3e744b78e0
+    - CHART-52a9eec114
+    - CHART-9a97ec2ea2
+    parents: *id038
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-7c5bb4d85a:
+    type: CHART
+    id: CHART-7c5bb4d85a
+    children: []
+    parents: &id039
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-96f08d5fc6
+    - ROW-57ad410578
+    meta:
+      uuid: b227ef1e-2007-52c1-901b-9dee451300a6
+      chartId: 74
+      width: 3
+      height: 24
+      sliceName: Клиенты в зоне риска
+  CHART-3e744b78e0:
+    type: CHART
+    id: CHART-3e744b78e0
+    children: []
+    parents: *id039
+    meta:
+      uuid: b3456e03-6018-54e6-a2c2-1b3e69683177
+      chartId: 75
+      width: 3
+      height: 24
+      sliceName: Потерянные клиенты
+  CHART-52a9eec114:
+    type: CHART
+    id: CHART-52a9eec114
+    children: []
+    parents: *id039
+    meta:
+      uuid: 20931295-0465-584a-88db-2e638b78e04a
+      chartId: 76
+      width: 3
+      height: 24
+      sliceName: Выручка клиентов в риске
+  CHART-9a97ec2ea2:
+    type: CHART
+    id: CHART-9a97ec2ea2
+    children: []
+    parents: *id039
+    meta:
+      uuid: 718dbb51-fefb-5df7-8747-f37c8ecf376f
+      chartId: 77
+      width: 3
+      height: 24
+      sliceName: Вернувшиеся за период
+  ROW-9e2b53e633:
+    type: ROW
+    id: ROW-9e2b53e633
+    children:
+    - CHART-abf4672b64
+    - CHART-ee5dcd42f9
+    parents: *id038
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-abf4672b64:
+    type: CHART
+    id: CHART-abf4672b64
+    children: []
+    parents: &id040
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-96f08d5fc6
+    - ROW-9e2b53e633
+    meta:
+      uuid: 71005154-d87f-5178-be30-19b86aa8dffe
+      chartId: 78
+      width: 6
+      height: 50
+      sliceName: Давность последней покупки
+  CHART-ee5dcd42f9:
+    type: CHART
+    id: CHART-ee5dcd42f9
+    children: []
+    parents: *id040
+    meta:
+      uuid: b121604c-4837-5539-a405-2953dde5e41e
+      chartId: 79
+      width: 6
+      height: 50
+      sliceName: Когортное удержание
+  ROW-a5c050805a:
+    type: ROW
+    id: ROW-a5c050805a
+    children:
+    - CHART-a95c28e354
+    parents: *id038
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-a95c28e354:
+    type: CHART
+    id: CHART-a95c28e354
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-96f08d5fc6
+    - ROW-a5c050805a
+    meta:
+      uuid: 810e98b4-86be-5ec1-99c8-07df681da57d
+      chartId: 80
+      width: 12
+      height: 75
+      sliceName: Аудитории для возврата
+  ROW-69599a05f8:
+    type: ROW
+    id: ROW-69599a05f8
+    children:
+    - MARKDOWN-2294af7151
+    parents: *id038
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-2294af7151:
+    type: MARKDOWN
+    id: MARKDOWN-2294af7151
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-96f08d5fc6
+    - ROW-69599a05f8
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Когортная матрица всегда за всю историю, фильтр «Период» на неё не действует. Незавершённые месяцы жизни когорты (текущий и будущие) не показываются: ячейка пустая, а не ноль.'
+  ROW-33133c7fc7:
+    type: ROW
+    id: ROW-33133c7fc7
+    children:
+    - MARKDOWN-5bfaf3e610
+    parents: *id038
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-5bfaf3e610:
+    type: MARKDOWN
+    id: MARKDOWN-5bfaf3e610
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-96f08d5fc6
+    - ROW-33133c7fc7
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **Риск** = 31–89 дней без покупки, **потерян** = 90 и больше. Дата среза = конец выбранного периода; RFM на дату считается из истории заказов (история с 19.05.2026, ежедневных снимков нет).
+
+        * **Удержание когорты** = клиенты когорты с покупкой в месяце жизни M / размер когорты. Когорта = месяц первой покупки, M0 = месяц первой покупки.
+
+        * **Аудитории** = сегменты RFM на дату среза. Сегменты: потерянные (90+ дней без покупки), риск (31–89), новые (одна покупка за 365 дней), лучшие (R≥4 · F≥4 · M≥4), лояльные (3+ заказа), развивающиеся (остальные). Проверяются по порядку, клиент попадает в один сегмент.
+
+
+        Источник: заказы витрины, status = delivered.
+
+
+        </details>'
+  TAB-a8b4757f45:
+    type: TAB
+    id: TAB-a8b4757f45
+    children:
+    - ROW-d52f14fbe6
+    - ROW-5d57c5aed5
+    - ROW-9ad85fa643
+    - ROW-0ddf45ce27
+    - ROW-44ef3276c1
+    - ROW-b1164012a6
+    parents: *id037
+    meta:
+      text: R12 · RFM-анализ
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-d52f14fbe6:
+    type: ROW
+    id: ROW-d52f14fbe6
+    children:
+    - MARKDOWN-55918d388e
+    parents: &id041
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a8b4757f45
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-55918d388e:
+    type: MARKDOWN
+    id: MARKDOWN-55918d388e
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a8b4757f45
+    - ROW-d52f14fbe6
+    meta:
+      width: 12
+      height: 9
+      code: '### R12. RFM-анализ
+
+        Вкладка «Клиенты» · P1 · обновление: копия БД, обновляется раз в сутки ночью (около 03:30 МСК) · датасет: ops_client_rfm (витрина ТЗ dm_customer_rfm)'
+  ROW-5d57c5aed5:
+    type: ROW
+    id: ROW-5d57c5aed5
+    children:
+    - CHART-cf5fc442e4
+    - CHART-55d506d6c5
+    - CHART-d4635a3667
+    - CHART-bd36f1adf7
+    parents: *id041
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-cf5fc442e4:
+    type: CHART
+    id: CHART-cf5fc442e4
+    children: []
+    parents: &id042
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a8b4757f45
+    - ROW-5d57c5aed5
+    meta:
+      uuid: 6cc5795b-7885-5e60-b59e-ce5485ee08c4
+      chartId: 81
+      width: 3
+      height: 24
+      sliceName: Клиенты в RFM
+  CHART-55d506d6c5:
+    type: CHART
+    id: CHART-55d506d6c5
+    children: []
+    parents: *id042
+    meta:
+      uuid: 6dc339e7-c5cc-50e5-9868-f304d72befc0
+      chartId: 82
+      width: 3
+      height: 24
+      sliceName: Лучшие клиенты
+  CHART-d4635a3667:
+    type: CHART
+    id: CHART-d4635a3667
+    children: []
+    parents: *id042
+    meta:
+      uuid: 033abbbb-7007-5dd4-8892-9e0df68980df
+      chartId: 83
+      width: 3
+      height: 24
+      sliceName: Лояльные клиенты
+  CHART-bd36f1adf7:
+    type: CHART
+    id: CHART-bd36f1adf7
+    children: []
+    parents: *id042
+    meta:
+      uuid: 69368195-7902-58c3-a9e3-fc87b2e3dc71
+      chartId: 84
+      width: 3
+      height: 24
+      sliceName: Выручка базы
+  ROW-9ad85fa643:
+    type: ROW
+    id: ROW-9ad85fa643
+    children:
+    - CHART-89eee87cd5
+    - CHART-bfe6863bd5
+    parents: *id041
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-89eee87cd5:
+    type: CHART
+    id: CHART-89eee87cd5
+    children: []
+    parents: &id043
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a8b4757f45
+    - ROW-9ad85fa643
+    meta:
+      uuid: 91e3c80d-c659-5417-9a4c-2c56ee59d5af
+      chartId: 85
+      width: 6
+      height: 50
+      sliceName: Структура клиентской базы
+  CHART-bfe6863bd5:
+    type: CHART
+    id: CHART-bfe6863bd5
+    children: []
+    parents: *id043
+    meta:
+      uuid: 08649fdc-fcaf-566b-9960-7b26cdf99385
+      chartId: 86
+      width: 6
+      height: 50
+      sliceName: Матрица R × F
+  ROW-0ddf45ce27:
+    type: ROW
+    id: ROW-0ddf45ce27
+    children:
+    - CHART-714ae43a6a
+    parents: *id041
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-714ae43a6a:
+    type: CHART
+    id: CHART-714ae43a6a
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a8b4757f45
+    - ROW-0ddf45ce27
+    meta:
+      uuid: e5fbdfdb-079b-586d-a5c3-953b2e872a1f
+      chartId: 87
+      width: 12
+      height: 75
+      sliceName: Клиенты выбранного RFM-сегмента
+  ROW-44ef3276c1:
+    type: ROW
+    id: ROW-44ef3276c1
+    children:
+    - MARKDOWN-3661fe0ab7
+    parents: *id041
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-3661fe0ab7:
+    type: MARKDOWN
+    id: MARKDOWN-3661fe0ab7
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a8b4757f45
+    - ROW-44ef3276c1
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Сегмент над таблицей выбирается фильтром «Сегмент».'
+  ROW-b1164012a6:
+    type: ROW
+    id: ROW-b1164012a6
+    children:
+    - MARKDOWN-2dd23b59ab
+    parents: *id041
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-2dd23b59ab:
+    type: MARKDOWN
+    id: MARKDOWN-2dd23b59ab
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-a8b4757f45
+    - ROW-b1164012a6
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        **R** по давности: 0–7 / 8–14 / 15–30 / 31–60 / 61+ дней → R5…R1. **F** по заказам за 365 дней: 1 / 2 / 3–4 / 5–9 / 10+ → F1…F5. **M** по сумме за 365 дней: до 1 тыс. / 1–3 / 3–7 / 7–15 / от 15 тыс. ₽ → M1…M5.
+
+
+        Сегменты: потерянные (90+ дней без покупки), риск (31–89), новые (одна покупка за 365 дней), лучшие (R≥4 · F≥4 · M≥4), лояльные (3+ заказа), развивающиеся (остальные). Проверяются по порядку, клиент попадает в один сегмент. Дата среза = конец выбранного периода; RFM на дату считается из истории заказов (история с 19.05.2026, ежедневных снимков нет).
+
+
+        Источник: заказы витрины, status = delivered.
+
+
+        </details>'
+  TAB-eba5b9dfe0:
+    type: TAB
+    id: TAB-eba5b9dfe0
+    children:
+    - ROW-e80c7ca25a
+    - ROW-cf0adb1c69
+    - ROW-32f5ec1675
+    - ROW-e695a4b756
+    - ROW-50a73abb56
+    - ROW-9e79f46de6
+    parents: *id037
+    meta:
+      text: R13 · Работа с клиентами
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-e80c7ca25a:
+    type: ROW
+    id: ROW-e80c7ca25a
+    children:
+    - MARKDOWN-2d7deb112b
+    parents: &id044
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-eba5b9dfe0
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-2d7deb112b:
+    type: MARKDOWN
+    id: MARKDOWN-2d7deb112b
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-eba5b9dfe0
+    - ROW-e80c7ca25a
+    meta:
+      width: 12
+      height: 9
+      code: '### R13. Работа с клиентами
+
+        Вкладка «Клиенты» · P1 · обновление: копия БД, обновляется раз в сутки ночью (около 03:30 МСК) · датасет: ops_client_rfm (витрина ТЗ dm_customer_rfm)'
+  ROW-cf0adb1c69:
+    type: ROW
+    id: ROW-cf0adb1c69
+    children:
+    - CHART-f6aa015841
+    - CHART-695262c5fc
+    - CHART-6b0820bc7b
+    - CHART-97c756cdd8
+    parents: *id044
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-f6aa015841:
+    type: CHART
+    id: CHART-f6aa015841
+    children: []
+    parents: &id045
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-eba5b9dfe0
+    - ROW-cf0adb1c69
+    meta:
+      uuid: 2aa759e8-f576-56ae-b3b1-26d0ef460046
+      chartId: 88
+      width: 3
+      height: 24
+      sliceName: Клиентов в выборке
+  CHART-695262c5fc:
+    type: CHART
+    id: CHART-695262c5fc
+    children: []
+    parents: *id045
+    meta:
+      uuid: ec751323-ad17-559d-b7b7-46ec63b26e26
+      chartId: 89
+      width: 3
+      height: 24
+      sliceName: В зоне риска
+  CHART-6b0820bc7b:
+    type: CHART
+    id: CHART-6b0820bc7b
+    children: []
+    parents: *id045
+    meta:
+      uuid: 392ee7be-b979-50e9-bbb5-4ee31b15c485
+      chartId: 90
+      width: 3
+      height: 24
+      sliceName: Потерянные
+  CHART-97c756cdd8:
+    type: CHART
+    id: CHART-97c756cdd8
+    children: []
+    parents: *id045
+    meta:
+      uuid: 5e72928c-df1d-5325-b51b-0ce2c113c088
+      chartId: 91
+      width: 3
+      height: 24
+      sliceName: Выручка выборки
+  ROW-32f5ec1675:
+    type: ROW
+    id: ROW-32f5ec1675
+    children:
+    - CHART-15a676d579
+    - CHART-6d589ddbba
+    parents: *id044
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-15a676d579:
+    type: CHART
+    id: CHART-15a676d579
+    children: []
+    parents: &id046
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-eba5b9dfe0
+    - ROW-32f5ec1675
+    meta:
+      uuid: 8bdcae7c-4fe9-5e92-bfac-e9392fdbd400
+      chartId: 92
+      width: 6
+      height: 50
+      sliceName: Историческая выручка по сегментам
+  CHART-6d589ddbba:
+    type: CHART
+    id: CHART-6d589ddbba
+    children: []
+    parents: *id046
+    meta:
+      uuid: 2898fe27-1883-54f9-a2aa-8bf0e482beec
+      chartId: 93
+      width: 6
+      height: 50
+      sliceName: Клиенты по сегментам
+  ROW-e695a4b756:
+    type: ROW
+    id: ROW-e695a4b756
+    children:
+    - CHART-1ca69f07d6
+    parents: *id044
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-1ca69f07d6:
+    type: CHART
+    id: CHART-1ca69f07d6
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-eba5b9dfe0
+    - ROW-e695a4b756
+    meta:
+      uuid: 6b245f6b-f597-55ac-9b16-3088b870dc32
+      chartId: 94
+      width: 12
+      height: 75
+      sliceName: Список клиентов для адресных акций
+  ROW-50a73abb56:
+    type: ROW
+    id: ROW-50a73abb56
+    children:
+    - MARKDOWN-4996e4c352
+    parents: *id044
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-4996e4c352:
+    type: MARKDOWN
+    id: MARKDOWN-4996e4c352
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-eba5b9dfe0
+    - ROW-50a73abb56
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Выгрузка CSV отдаёт всю выборку по фильтрам. Согласия на рассылки в системе хранятся отдельно и здесь не учтены.'
+  ROW-9e79f46de6:
+    type: ROW
+    id: ROW-9e79f46de6
+    children:
+    - MARKDOWN-6f7c3556ec
+    parents: *id044
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-6f7c3556ec:
+    type: MARKDOWN
+    id: MARKDOWN-6f7c3556ec
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-eba5b9dfe0
+    - ROW-9e79f46de6
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **Аудитория** = клиенты, отобранные фильтрами на дату среза (сегмент, когорта, R/F/M, магазин).
+
+        * **Выручка** = net за 365 дней до даты среза: это история покупок, а не прогноз потерь.
+
+
+        Сегменты: потерянные (90+ дней без покупки), риск (31–89), новые (одна покупка за 365 дней), лучшие (R≥4 · F≥4 · M≥4), лояльные (3+ заказа), развивающиеся (остальные). Проверяются по порядку, клиент попадает в один сегмент.
+
+
+        </details>'
+  TAB-304745fc70:
+    type: TAB
+    id: TAB-304745fc70
+    children:
+    - ROW-2c63471eea
+    - ROW-1b053ca6b8
+    - ROW-fed80b29dd
+    - ROW-5693aab3a9
+    - ROW-aa31ea39f7
+    - ROW-786fcbc786
+    - ROW-1cebe5ab54
+    - ROW-ed5cba8a13
+    parents: *id037
+    meta:
+      text: R14 · Переходы RFM
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-2c63471eea:
+    type: ROW
+    id: ROW-2c63471eea
+    children:
+    - MARKDOWN-4c853f4bcb
+    parents: &id047
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-304745fc70
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-4c853f4bcb:
+    type: MARKDOWN
+    id: MARKDOWN-4c853f4bcb
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-304745fc70
+    - ROW-2c63471eea
+    meta:
+      width: 12
+      height: 9
+      code: '### R14. Переходы RFM
+
+        Вкладка «Клиенты» · P1 · обновление: копия БД, обновляется раз в сутки ночью (около 03:30 МСК) · датасет: ops_client_rfm, ops_client_segment_slices (витрина ТЗ dm_rfm_transition)'
+  ROW-1b053ca6b8:
+    type: ROW
+    id: ROW-1b053ca6b8
+    children:
+    - CHART-f258502471
+    - CHART-5de644588c
+    - CHART-7183191ff2
+    parents: *id047
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-f258502471:
+    type: CHART
+    id: CHART-f258502471
+    children: []
+    parents: &id048
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-304745fc70
+    - ROW-1b053ca6b8
+    meta:
+      uuid: c763be0e-1596-5f12-a348-0aaec9b22fb8
+      chartId: 95
+      width: 4
+      height: 24
+      sliceName: Клиентов в выборке
+  CHART-5de644588c:
+    type: CHART
+    id: CHART-5de644588c
+    children: []
+    parents: *id048
+    meta:
+      uuid: a1fc3505-5ea9-553a-940a-f6aaf3d2e9c3
+      chartId: 96
+      width: 4
+      height: 24
+      sliceName: Сохранили сегмент
+  CHART-7183191ff2:
+    type: CHART
+    id: CHART-7183191ff2
+    children: []
+    parents: *id048
+    meta:
+      uuid: dea8fb62-098a-5acb-a14b-6405c881c609
+      chartId: 97
+      width: 4
+      height: 24
+      sliceName: Перешли в риск
+  ROW-fed80b29dd:
+    type: ROW
+    id: ROW-fed80b29dd
+    children:
+    - CHART-45ef7e532d
+    - CHART-2c0ca70b92
+    - CHART-2a6ae981a6
+    parents: *id047
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-45ef7e532d:
+    type: CHART
+    id: CHART-45ef7e532d
+    children: []
+    parents: &id049
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-304745fc70
+    - ROW-fed80b29dd
+    meta:
+      uuid: 8dcf5d08-3c79-5f8a-bedb-57c1e363ecd1
+      chartId: 98
+      width: 4
+      height: 24
+      sliceName: Стали потерянными
+  CHART-2c0ca70b92:
+    type: CHART
+    id: CHART-2c0ca70b92
+    children: []
+    parents: *id049
+    meta:
+      uuid: 7bd22136-5646-5056-a2d2-50ce4ffdc2d7
+      chartId: 99
+      width: 4
+      height: 24
+      sliceName: Вернулись в активные
+  CHART-2a6ae981a6:
+    type: CHART
+    id: CHART-2a6ae981a6
+    children: []
+    parents: *id049
+    meta:
+      uuid: 8853c1cc-75af-5c84-afe2-805df8d34b54
+      chartId: 100
+      width: 4
+      height: 24
+      sliceName: Впервые купили
+  ROW-5693aab3a9:
+    type: ROW
+    id: ROW-5693aab3a9
+    children:
+    - CHART-0b148825b8
+    parents: *id047
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-0b148825b8:
+    type: CHART
+    id: CHART-0b148825b8
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-304745fc70
+    - ROW-5693aab3a9
+    meta:
+      uuid: 11ce33e5-0f51-5a9a-a6e6-341fb14059c6
+      chartId: 101
+      width: 12
+      height: 50
+      sliceName: Матрица переходов
+  ROW-aa31ea39f7:
+    type: ROW
+    id: ROW-aa31ea39f7
+    children:
+    - CHART-29793eafb1
+    - CHART-09857ae98b
+    parents: *id047
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-29793eafb1:
+    type: CHART
+    id: CHART-29793eafb1
+    children: []
+    parents: &id050
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-304745fc70
+    - ROW-aa31ea39f7
+    meta:
+      uuid: 29ee036f-b7bc-52ca-a06d-4b7d1f6acdab
+      chartId: 102
+      width: 6
+      height: 50
+      sliceName: Самые массовые переходы
+  CHART-09857ae98b:
+    type: CHART
+    id: CHART-09857ae98b
+    children: []
+    parents: *id050
+    meta:
+      uuid: 344da98a-7c56-58e2-ae49-0f9d53dceb2f
+      chartId: 103
+      width: 6
+      height: 50
+      sliceName: Изменение численности сегментов
+  ROW-786fcbc786:
+    type: ROW
+    id: ROW-786fcbc786
+    children:
+    - CHART-58f9ca86b0
+    parents: *id047
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-58f9ca86b0:
+    type: CHART
+    id: CHART-58f9ca86b0
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-304745fc70
+    - ROW-786fcbc786
+    meta:
+      uuid: e68b0b64-8c6d-58d3-821c-ea57c9628277
+      chartId: 104
+      width: 12
+      height: 75
+      sliceName: Клиенты и изменение RFM
+  ROW-1cebe5ab54:
+    type: ROW
+    id: ROW-1cebe5ab54
+    children:
+    - MARKDOWN-6d86d67014
+    parents: *id047
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-6d86d67014:
+    type: MARKDOWN
+    id: MARKDOWN-6d86d67014
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-304745fc70
+    - ROW-1cebe5ab54
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Первый срез = начало выбранного периода, второй = конец. Фильтр «Сегмент» отбирает конечный сегмент и знаменатель не меняет.'
+  ROW-ed5cba8a13:
+    type: ROW
+    id: ROW-ed5cba8a13
+    children:
+    - MARKDOWN-54cad0d557
+    parents: *id047
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-54cad0d557:
+    type: MARKDOWN
+    id: MARKDOWN-54cad0d557
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-304745fc70
+    - ROW-ed5cba8a13
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **Переход** = сегмент на дату A (начало периода) → сегмент на дату B (конец периода). Доля считается от исходного сегмента.
+
+        * «Не было в базе» = на дату A покупок ещё не было (впервые купили между срезами).
+
+        * В ячейке матрицы число клиентов; доля от исходного сегмента видна по итогу строки.
+
+
+        Сегменты: потерянные (90+ дней без покупки), риск (31–89), новые (одна покупка за 365 дней), лучшие (R≥4 · F≥4 · M≥4), лояльные (3+ заказа), развивающиеся (остальные). Проверяются по порядку, клиент попадает в один сегмент. Дата среза = конец выбранного периода; RFM на дату считается из истории заказов (история с 19.05.2026, ежедневных снимков нет).
+
+
+        </details>'
+  TAB-dee60f1740:
+    type: TAB
+    id: TAB-dee60f1740
+    children:
+    - ROW-ae224d51e9
+    - ROW-e780b57fb7
+    - ROW-27e98d23d1
+    - ROW-02e271c84d
+    - ROW-bba7e8e5a2
+    - ROW-e2288f01dc
+    - ROW-bc726b92ff
+    parents: *id037
+    meta:
+      text: R15 · Отзывы клиентов
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-ae224d51e9:
+    type: ROW
+    id: ROW-ae224d51e9
+    children:
+    - MARKDOWN-120adeabd8
+    parents: &id051
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-dee60f1740
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-120adeabd8:
+    type: MARKDOWN
+    id: MARKDOWN-120adeabd8
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-dee60f1740
+    - ROW-ae224d51e9
+    meta:
+      width: 12
+      height: 9
+      code: '### R15. Отзывы клиентов
+
+        Вкладка «Клиенты» · P1 · обновление: копия БД, обновляется раз в сутки ночью (около 03:30 МСК) · датасет: ops_client_reviews, ops_client_review_periods (витрина ТЗ dm_review_daily)'
+  ROW-e780b57fb7:
+    type: ROW
+    id: ROW-e780b57fb7
+    children:
+    - CHART-b7a57c3e5d
+    - CHART-95614fb7fe
+    - CHART-5c90bb768a
+    parents: *id051
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-b7a57c3e5d:
+    type: CHART
+    id: CHART-b7a57c3e5d
+    children: []
+    parents: &id052
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-dee60f1740
+    - ROW-e780b57fb7
+    meta:
+      uuid: a06cfc5d-32fb-5ea6-9e54-28414fc2b196
+      chartId: 105
+      width: 4
+      height: 24
+      sliceName: Средняя оценка
+  CHART-95614fb7fe:
+    type: CHART
+    id: CHART-95614fb7fe
+    children: []
+    parents: *id052
+    meta:
+      uuid: 63a17730-6562-530b-b5a7-70fd2dad7967
+      chartId: 106
+      width: 4
+      height: 24
+      sliceName: Отзывов
+  CHART-5c90bb768a:
+    type: CHART
+    id: CHART-5c90bb768a
+    children: []
+    parents: *id052
+    meta:
+      uuid: 911682f4-1487-5232-8525-9cd7a36f9eb8
+      chartId: 107
+      width: 4
+      height: 24
+      sliceName: Оценок 1–3
+  ROW-27e98d23d1:
+    type: ROW
+    id: ROW-27e98d23d1
+    children:
+    - CHART-34f0c3f127
+    - CHART-265eea6cf8
+    - CHART-a6b77ddf86
+    parents: *id051
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-34f0c3f127:
+    type: CHART
+    id: CHART-34f0c3f127
+    children: []
+    parents: &id053
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-dee60f1740
+    - ROW-27e98d23d1
+    meta:
+      uuid: 18aae782-fa07-51d8-83bd-942f6badb772
+      chartId: 108
+      width: 4
+      height: 24
+      sliceName: Недовольных клиентов
+  CHART-265eea6cf8:
+    type: CHART
+    id: CHART-265eea6cf8
+    children: []
+    parents: *id053
+    meta:
+      uuid: 8e48fb20-a880-5982-bea5-85f1632b1e0e
+      chartId: 109
+      width: 4
+      height: 24
+      sliceName: Без текста
+  CHART-a6b77ddf86:
+    type: CHART
+    id: CHART-a6b77ddf86
+    children: []
+    parents: *id053
+    meta:
+      uuid: f8c20d5b-3aa8-585b-917b-c6aece7cde13
+      chartId: 110
+      width: 4
+      height: 24
+      sliceName: Без оценки
+  ROW-02e271c84d:
+    type: ROW
+    id: ROW-02e271c84d
+    children:
+    - CHART-4a0bf74449
+    - CHART-40623cc8a7
+    - CHART-462908e4eb
+    parents: *id051
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-4a0bf74449:
+    type: CHART
+    id: CHART-4a0bf74449
+    children: []
+    parents: &id054
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-dee60f1740
+    - ROW-02e271c84d
+    meta:
+      uuid: b4ed2c11-ca34-5e70-a926-804ba2221770
+      chartId: 111
+      width: 4
+      height: 50
+      sliceName: Распределение оценок
+  CHART-40623cc8a7:
+    type: CHART
+    id: CHART-40623cc8a7
+    children: []
+    parents: *id054
+    meta:
+      uuid: 555aab36-5411-5623-9664-60c84b2d4206
+      chartId: 112
+      width: 4
+      height: 50
+      sliceName: Почему недовольны
+  CHART-462908e4eb:
+    type: CHART
+    id: CHART-462908e4eb
+    children: []
+    parents: *id054
+    meta:
+      uuid: d732b399-fad4-5037-a8a8-03f4e7a1e77c
+      chartId: 113
+      width: 4
+      height: 50
+      sliceName: Динамика средней оценки
+  ROW-bba7e8e5a2:
+    type: ROW
+    id: ROW-bba7e8e5a2
+    children:
+    - CHART-5ee7f81aab
+    parents: *id051
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-5ee7f81aab:
+    type: CHART
+    id: CHART-5ee7f81aab
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-dee60f1740
+    - ROW-bba7e8e5a2
+    meta:
+      uuid: 2c4c8957-547d-5699-a8fd-4dda5ad11237
+      chartId: 114
+      width: 12
+      height: 75
+      sliceName: Отзывы и конкретные клиенты
+  ROW-e2288f01dc:
+    type: ROW
+    id: ROW-e2288f01dc
+    children:
+    - MARKDOWN-2d35720d6f
+    parents: *id051
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-2d35720d6f:
+    type: MARKDOWN
+    id: MARKDOWN-2d35720d6f
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-dee60f1740
+    - ROW-e2288f01dc
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Причина отзыва = тип ошибки, который оператор проставляет в карточке отзыва; у остальных «Причина не указана». Выгрузка CSV таблицы отдаёт клиентов для CRM.'
+  ROW-bc726b92ff:
+    type: ROW
+    id: ROW-bc726b92ff
+    children:
+    - MARKDOWN-4f8e8974fa
+    parents: *id051
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-4f8e8974fa:
+    type: MARKDOWN
+    id: MARKDOWN-4f8e8974fa
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-dee60f1740
+    - ROW-bc726b92ff
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **Средняя оценка** только по оценкам 1–5; негатив строго 1–3; отзыв без оценки не входит в среднее и долю. Одна строка = один отзыв на заказ.
+
+        * **Динамика:** интервал по фильтру «Группировка», незавершённый интервал помечен «*», интервалы без оценок дают разрыв линии.
+
+        * **Сегмент и RFM** клиента на конец выбранного периода. Сегменты: потерянные (90+ дней без покупки), риск (31–89), новые (одна покупка за 365 дней), лучшие (R≥4 · F≥4 · M≥4), лояльные (3+ заказа), развивающиеся (остальные). Проверяются по порядку, клиент попадает в один сегмент.
+
+
+        Источник: отзывы на заказы (`order_reviews`), заказы витрины.
+
+
+        </details>'
+  TAB-365fd78ca8:
+    type: TAB
+    id: TAB-365fd78ca8
+    children:
+    - ROW-072db598f6
+    - ROW-1b11685b9d
+    - ROW-2201f1073b
+    - ROW-f97c50a971
+    - ROW-1f83cf46c3
+    - ROW-3377cb9cf9
+    - ROW-26cd9cb1c1
+    parents: *id037
+    meta:
+      text: R16 · География заказов
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-072db598f6:
+    type: ROW
+    id: ROW-072db598f6
+    children:
+    - MARKDOWN-8e9fbb7b68
+    parents: &id055
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-365fd78ca8
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-8e9fbb7b68:
+    type: MARKDOWN
+    id: MARKDOWN-8e9fbb7b68
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-365fd78ca8
+    - ROW-072db598f6
+    meta:
+      width: 12
+      height: 9
+      code: '### R16. География заказов
+
+        Вкладка «Клиенты» · P1 · обновление: копия БД, обновляется раз в сутки ночью (около 03:30 МСК) · датасет: ops_order_geo_points, ops_order_geo_flows (витрины ТЗ dm_order_geo_od, dm_order_geo_flow)'
+  ROW-1b11685b9d:
+    type: ROW
+    id: ROW-1b11685b9d
+    children:
+    - CHART-de14f065bd
+    - CHART-8229a134fb
+    - CHART-9ad6558475
+    - CHART-8a57f9a4bf
+    parents: *id055
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-de14f065bd:
+    type: CHART
+    id: CHART-de14f065bd
+    children: []
+    parents: &id056
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-365fd78ca8
+    - ROW-1b11685b9d
+    meta:
+      uuid: b92d7ab4-d3bb-5ca3-9a34-54eef3b7440c
+      chartId: 115
+      width: 3
+      height: 24
+      sliceName: Заказы на карте
+  CHART-8229a134fb:
+    type: CHART
+    id: CHART-8229a134fb
+    children: []
+    parents: *id056
+    meta:
+      uuid: fb9aa803-62e7-5d0a-b33d-a6bfe7bc315e
+      chartId: 116
+      width: 3
+      height: 24
+      sliceName: Покрытие геоданными
+  CHART-9ad6558475:
+    type: CHART
+    id: CHART-9ad6558475
+    children: []
+    parents: *id056
+    meta:
+      uuid: ac9e5e85-cc1b-587a-b61a-40dca97c5158
+      chartId: 117
+      width: 3
+      height: 24
+      sliceName: Средняя дальность
+  CHART-8a57f9a4bf:
+    type: CHART
+    id: CHART-8a57f9a4bf
+    children: []
+    parents: *id056
+    meta:
+      uuid: c537a762-e234-53cf-8270-ccc2237fccbb
+      chartId: 118
+      width: 3
+      height: 24
+      sliceName: Среднее время доставки
+  ROW-2201f1073b:
+    type: ROW
+    id: ROW-2201f1073b
+    children:
+    - CHART-8c128dbc71
+    parents: *id055
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-8c128dbc71:
+    type: CHART
+    id: CHART-8c128dbc71
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-365fd78ca8
+    - ROW-2201f1073b
+    meta:
+      uuid: 01c41d37-be42-5d4b-aabc-ef1210887122
+      chartId: 119
+      width: 12
+      height: 65
+      sliceName: Карта заказов
+  ROW-f97c50a971:
+    type: ROW
+    id: ROW-f97c50a971
+    children:
+    - CHART-bb72a3de4c
+    - CHART-0a5cfe024e
+    parents: *id055
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-bb72a3de4c:
+    type: CHART
+    id: CHART-bb72a3de4c
+    children: []
+    parents: &id057
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-365fd78ca8
+    - ROW-f97c50a971
+    meta:
+      uuid: a8c149ef-0271-5bb3-bb4e-1315fd1f0a3c
+      chartId: 120
+      width: 6
+      height: 50
+      sliceName: Откуда и куда
+  CHART-0a5cfe024e:
+    type: CHART
+    id: CHART-0a5cfe024e
+    children: []
+    parents: *id057
+    meta:
+      uuid: 86f8a044-0504-576c-9f56-c1436d2b3579
+      chartId: 121
+      width: 6
+      height: 50
+      sliceName: Заказы по районам
+  ROW-1f83cf46c3:
+    type: ROW
+    id: ROW-1f83cf46c3
+    children:
+    - CHART-6ae7198b85
+    parents: *id055
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-6ae7198b85:
+    type: CHART
+    id: CHART-6ae7198b85
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-365fd78ca8
+    - ROW-1f83cf46c3
+    meta:
+      uuid: 6704f827-3f73-5ec5-a2c8-943c7187bbac
+      chartId: 122
+      width: 12
+      height: 75
+      sliceName: Магазин → район
+  ROW-3377cb9cf9:
+    type: ROW
+    id: ROW-3377cb9cf9
+    children:
+    - MARKDOWN-a510fe6cd2
+    parents: *id055
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-a510fe6cd2:
+    type: MARKDOWN
+    id: MARKDOWN-a510fe6cd2
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-365fd78ca8
+    - ROW-3377cb9cf9
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Адреса округлены до 3 знаков координат (около 100 м): точные адреса и квартиры на карте не видны. Толщина дуг одинаковая, число заказов в подсказке и в таблице. Вид карты зафиксирован на Нальчике.'
+  ROW-26cd9cb1c1:
+    type: ROW
+    id: ROW-26cd9cb1c1
+    children:
+    - MARKDOWN-c82a587b95
+    parents: *id055
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-c82a587b95:
+    type: MARKDOWN
+    id: MARKDOWN-c82a587b95
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-eb9a771b95
+    - TABS-b0e93ef580
+    - TAB-365fd78ca8
+    - ROW-26cd9cb1c1
+    meta:
+      width: 12
+      height: 7
+      code: '<details><summary><b>Методика</b></summary>
+
+
+        * **Покрытие** = доставленные заказы с координатами / доставленные заказы.
+
+        * **Точка доставки** = адрес заказа, округлённый до ~100 м; **район** = зона доставки на момент заказа.
+
+        * **Поток** = магазин → район, цель дуги = центр доставок района; показываются 200 самых крупных потоков.
+
+        * **Дальность** = расстояние по прямой от магазина до адреса.
+
+
+        Подложка карты: OpenStreetMap без ключа. Источник: адреса заказов витрины (`order_addresses`), зоны и время доставки курьерки.
+
+
+        </details>'
+  TAB-ee2d85e274:
+    type: TAB
+    id: TAB-ee2d85e274
+    children:
+    - ROW-8b1ec6376f
+    - ROW-a8368529c9
+    - ROW-be7c6e807c
+    - ROW-7176eac98b
+    parents: *id012
+    meta:
+      text: ✅ Качество данных
+      defaultText: Tab title
+      placeholder: Tab title
+  ROW-8b1ec6376f:
+    type: ROW
+    id: ROW-8b1ec6376f
+    children:
+    - MARKDOWN-d289d453e8
+    parents: &id058
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-ee2d85e274
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-d289d453e8:
+    type: MARKDOWN
+    id: MARKDOWN-d289d453e8
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-ee2d85e274
+    - ROW-8b1ec6376f
+    meta:
+      width: 12
+      height: 9
+      code: '### Качество данных
+
+        Служебная вкладка: проверки данных · обновление: копия БД, обновляется раз в сутки ночью (около 03:30 МСК)'
+  ROW-a8368529c9:
+    type: ROW
+    id: ROW-a8368529c9
+    children:
+    - CHART-2cd32b15c0
+    - CHART-e59b2cf46e
+    - CHART-1a771b8cbf
+    - CHART-34c386464c
+    parents: *id058
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-2cd32b15c0:
+    type: CHART
+    id: CHART-2cd32b15c0
+    children: []
+    parents: &id059
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-ee2d85e274
+    - ROW-a8368529c9
+    meta:
+      uuid: bcc7632d-4f30-5ea6-b8ca-c7b61c9845cb
+      chartId: 123
+      width: 3
+      height: 24
+      sliceName: Проверки
+  CHART-e59b2cf46e:
+    type: CHART
+    id: CHART-e59b2cf46e
+    children: []
+    parents: *id059
+    meta:
+      uuid: 1b126801-3d3b-5fb8-9fe1-cc39856620b2
+      chartId: 124
+      width: 3
+      height: 24
+      sliceName: Без ошибок
+  CHART-1a771b8cbf:
+    type: CHART
+    id: CHART-1a771b8cbf
+    children: []
+    parents: *id059
+    meta:
+      uuid: ded84e09-709f-59a0-a1b0-b2d1e04a1a7b
+      chartId: 125
+      width: 3
+      height: 24
+      sliceName: Нужна проверка
+  CHART-34c386464c:
+    type: CHART
+    id: CHART-34c386464c
+    children: []
+    parents: *id059
+    meta:
+      uuid: 96bd348d-b1e5-5de3-9c98-d9bead1f8a22
+      chartId: 126
+      width: 3
+      height: 24
+      sliceName: Актуальность витрин
+  ROW-be7c6e807c:
+    type: ROW
+    id: ROW-be7c6e807c
+    children:
+    - CHART-ac13331239
+    parents: *id058
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  CHART-ac13331239:
+    type: CHART
+    id: CHART-ac13331239
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-ee2d85e274
+    - ROW-be7c6e807c
+    meta:
+      uuid: 7e592314-6f32-5653-a6ae-6944a370b9f4
+      chartId: 127
+      width: 12
+      height: 75
+      sliceName: Проверки качества данных
+  ROW-7176eac98b:
+    type: ROW
+    id: ROW-7176eac98b
+    children:
+    - MARKDOWN-8052779bbf
+    parents: *id058
+    meta:
+      background: BACKGROUND_TRANSPARENT
+  MARKDOWN-8052779bbf:
+    type: MARKDOWN
+    id: MARKDOWN-8052779bbf
+    children: []
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - TABS-c5ee9f425d
+    - TAB-ee2d85e274
+    - ROW-7176eac98b
+    meta:
+      width: 12
+      height: 6
+      code: '**Примечание.** Проверки считаются по выбранному периоду и магазину. Копия БД обновляется ночью; вкладка «Курьеры» читает живую базу.'
+metadata:
+  color_scheme: lastochkaOps
+  refresh_frequency: 0
+  expanded_slices:
+    '5': true
+    '6': true
+    '13': true
+    '14': true
+    '20': true
+    '21': true
+    '27': true
+    '28': true
+    '34': true
+    '35': true
+    '41': true
+    '42': true
+    '48': true
+    '49': true
+    '55': true
+    '56': true
+    '62': true
+    '63': true
+    '71': true
+    '72': true
+    '78': true
+    '79': true
+    '85': true
+    '86': true
+    '92': true
+    '93': true
+    '101': true
+    '102': true
+    '103': true
+    '111': true
+    '112': true
+    '113': true
+    '119': true
+    '120': true
+    '121': true
+  label_colors: {}
+  shared_label_colors: []
+  color_scheme_domain: []
+  cross_filters_enabled: true
+  default_filters: '{}'
+  filter_scopes: {}
+  chart_configuration: {}
+  global_chart_configuration:
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded: []
+    chartsInScope: []
+  native_filter_configuration:
+  - id: NATIVE_FILTER-9c7c4f9e0
+    name: Период
+    filterType: filter_time
+    type: NATIVE_FILTER
+    targets:
+    - {}
+    controlValues: {}
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded: []
+    defaultDataMask:
+      filterState:
+        value: 'DATEADD(DATETIME("today"), -30, day) : DATEADD(DATETIME("today"), 1, day)'
+      extraFormData:
+        time_range: 'DATEADD(DATETIME("today"), -30, day) : DATEADD(DATETIME("today"), 1, day)'
+    description: По умолчанию последние 30 дней включая сегодня. Для клиентских отчётов начало периода = первый срез, конец = дата среза.
+  - id: NATIVE_FILTER-e5f6a7c31
+    name: Магазин
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: 7f64de2b-ba11-4e40-a875-f5f51593a14d
+      column:
+        name: shop_name
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-f1f04a7ae
+    name: Категория
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: 47fddec7-0198-47af-bebf-6193d5235a0d
+      column:
+        name: category_name
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-5acbbd9c95
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-fa68096dc
+    name: Товары
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: 47fddec7-0198-47af-bebf-6193d5235a0d
+      column:
+        name: product_name
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: true
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-5acbbd9c95
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-cbff120db
+    name: Причина замены
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: 47fddec7-0198-47af-bebf-6193d5235a0d
+      column:
+        name: replace_reason_name
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-5cd2ab17d9
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-ccb0b4795
+    name: Сборщик
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: 7f64de2b-ba11-4e40-a875-f5f51593a14d
+      column:
+        name: picker_name
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-5cd2ab17d9
+      - TAB-b6836bd36a
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-bbc2aa99d
+    name: Курьер
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: 36a9cf7e-b5c0-4c80-a5be-79eaa4d1810a
+      column:
+        name: courier_name
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-8bd9000115
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-060ac8e11
+    name: Зона
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: 36a9cf7e-b5c0-4c80-a5be-79eaa4d1810a
+      column:
+        name: zone_name
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-47efbd3952
+      - TAB-0242999de0
+      - TAB-4a80546889
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-e398aa7e1
+    name: Способ оплаты
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: 36a9cf7e-b5c0-4c80-a5be-79eaa4d1810a
+      column:
+        name: payment_method
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-018cc4c8cd
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-a49ba9e49
+    name: Группировка
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: 6267cc2a-b9c5-5319-934e-a0123cf13731
+      column:
+        name: grain
+    controlValues:
+      enableEmptyFilter: true
+      defaultToFirstItem: false
+      multiSelect: false
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-eb9a771b95
+      excluded: []
+    defaultDataMask:
+      filterState:
+        value: &id060
+        - Месяц
+        label: Месяц
+      extraFormData:
+        filters:
+        - col: grain
+          op: IN
+          val: *id060
+    sortMetric: null
+    description: 'Интервал для динамики: месяц или неделя (с понедельника).'
+  - id: NATIVE_FILTER-ebce025d8
+    name: Сегмент
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+      column:
+        name: segment
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-eb9a771b95
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-400c1f786
+    name: Сегмент на первом срезе
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+      column:
+        name: a_segment
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-304745fc70
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-941f78b32
+    name: Когорта
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+      column:
+        name: cohort_month
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-eb9a771b95
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-b35a82d7f
+    name: R
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+      column:
+        name: r_score
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-eb9a771b95
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-03e0898d1
+    name: F
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+      column:
+        name: f_score
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-eb9a771b95
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-4f8236703
+    name: M
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+      column:
+        name: m_score
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-eb9a771b95
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-2170e6a95
+    name: ID клиента
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+      column:
+        name: client_id
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: true
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-eb9a771b95
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-9c9d12561
+    name: Оценка
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: 061549f5-8d56-5036-baed-944599899194
+      column:
+        name: rating_label
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-dee60f1740
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+  - id: NATIVE_FILTER-29243171d
+    name: Причина отзыва
+    filterType: filter_select
+    type: NATIVE_FILTER
+    targets:
+    - datasetUuid: 061549f5-8d56-5036-baed-944599899194
+      column:
+        name: reason_name
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - TAB-dee60f1740
+      excluded: []
+    defaultDataMask:
+      filterState: {}
+      extraFormData: {}
+    sortMetric: null
+    description: ''
+version: 1.0.0
+is_managed_externally: false
+published: true

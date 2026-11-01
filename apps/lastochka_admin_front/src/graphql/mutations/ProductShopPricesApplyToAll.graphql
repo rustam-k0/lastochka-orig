@@ -1,0 +1,8 @@
+mutation ($product_id: Int!, $price: Float!, $stock_quantity: Float!, $price_tiers: [PriceTierInput!]) {
+  ProductShopPricesApplyToAll(
+    product_id: $product_id
+    price: $price
+    stock_quantity: $stock_quantity
+    price_tiers: $price_tiers
+  )
+}

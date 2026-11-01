@@ -1,0 +1,15 @@
+query OrderReview($id: Int!) {
+  orderReview(id: $id) {
+    id
+    order_id
+    order_number
+    rating
+    description
+    author_name
+    author_phone
+    error_type
+    error_type_label
+    created_at
+    updated_at
+  }
+}

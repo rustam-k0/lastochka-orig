@@ -1,0 +1,15 @@
+query($id: Int!) {
+  collector(order_id: $id) {
+    id
+    name
+    surname
+    patronymic
+  }
+
+  courier(order_id: $id) {
+    id
+    name
+    surname
+    patronymic
+  }
+}

@@ -1,0 +1,8 @@
+type Remain {
+  id:Int
+  product_id:Int
+  shop_id:Int
+  quantity:Float
+  "Магазин остатка — нужен таблице «Цены и остатки по магазинам» для строк, где остаток есть, а цены нет"
+  shop:Shop @hasOne
+}

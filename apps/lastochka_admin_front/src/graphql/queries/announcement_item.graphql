@@ -1,0 +1,22 @@
+query announcement_item($id: Int!) {
+  announcement(id: $id) {
+    id
+    title
+    short_description
+    description
+    promocode_id
+    is_active
+    created_at
+    updated_at
+    promocode {
+      id
+      title
+      discount_percent
+    }
+    image {
+      id
+      path
+      origin_name
+    }
+  }
+}

@@ -1,0 +1,10 @@
+type ProductGroup {
+  "ID"
+  id:Int
+  "Название"
+  title:String
+  "Товары. Пагинация"
+  products:[Product] @method(name: "getLimitedProducts")
+  "Количество товаров"
+  products_count:Int @method(name: "getProductsCount")
+}

@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: lastochka_analytics_pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-lastochka_analytics}
+      POSTGRES_USER: ${DB_USERNAME:-analytics}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+    ports:
+      - "127.0.0.1:${DB_PORT:-5433}:5432"
+    volumes:
+      - analytics_pg_data:/var/lib/postgresql/data
+
+volumes:
+  analytics_pg_data:

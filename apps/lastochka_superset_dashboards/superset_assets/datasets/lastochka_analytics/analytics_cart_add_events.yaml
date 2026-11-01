@@ -1,0 +1,52 @@
+# Вкладка «Маркетинг / CRM» (по магазину). События 'добавление товара в
+# корзину' (event_type cart.item_added) на стороне покупательского сайта/
+# приложения. Имя датасета verbatim из BUILD_PLAN. Потребитель - «Канал
+# добавления в корзину» (переименован из «Источник добавления в корзину», см.
+# ниже). Источник: lastochka_analytics (db3, PostgreSQL).
+#
+# ИСПРАВЛЕНО против допущений BUILD_PLAN (docs/conversion-rules.md, правило
+# 6, проверено полным SELECT payload на dev):
+#   - event_type = 'b2c.cart_item_added' (BUILD_PLAN) НЕ СУЩЕСТВУЕТ -> реальное
+#     имя 'cart.item_added'.
+#   - BUILD_PLAN предполагал ключи payload->>'source' (значения
+#     home/category/search/product_card - позиция добавления НА СТРАНИЦЕ),
+#     'block_id'/'block_name' (промо-блок), 'price', 'qty'. Реальный payload
+#     cart.item_added содержит ТОЛЬКО: id, source, event_id, metadata,
+#     quantity, client_id, shop_code, event_type, product_id, session_id,
+#     occurred_at, _routing_key, event_source, event_timestamp,
+#     device_client_id (проверено `SELECT payload` на dev, единственное
+#     живое событие). НЕТ ни 'block_id', ни 'block_name', ни 'price' - виджет
+#     «Вклад спецблоков» (нуждался именно в них) из-за этого переведён в
+#     BLOCKED (см. отчёт Task 7).
+#   - payload->>'source' СУЩЕСТВУЕТ, но по факту это не "место на странице"
+#     (home/category/search), а идентификатор системы-источника события
+#     (значение на dev - 'storefront'; после запуска мобильного приложения
+#     ожидается 'mobile' или аналог) - тот же смысл, что и колонка
+#     analytics_events.source верхнего уровня, продублированная в payload.
+#     Использован как ЧЕСТНЫЙ прокси "канал добавления в корзину" (сайт vs
+#     приложение), а НЕ оригинальный замысел BUILD_PLAN "позиция на
+#     странице/промо-блок".
+#
+# B2C-поток единичный (мобилка не выпущена) - пустой/скудный результат это
+# норма (правило 6). Проверено на dev: 1 строка (product_id=10, quantity=2,
+# event_source='storefront') - НЕ пусто, но единично.
+table_name: analytics_cart_add_events
+main_dttm_col: occurred_at
+database_uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+schema: null
+sql: |
+  SELECT
+      ae.id                                     AS event_id,
+      ae.occurred_at                            AS occurred_at,
+      ae.store_id                               AS store_id,
+      ae.client_id                              AS client_id,
+      ae.session_id                             AS session_id,
+      ae.payload->>'source'                     AS event_source,
+      (ae.payload->>'product_id')::bigint       AS product_id,
+      (ae.payload->>'quantity')::numeric        AS quantity
+  FROM analytics_events ae
+  WHERE ae.event_type = 'cart.item_added'
+uuid: e40e1266-7fd3-44df-8230-2f2554774806
+columns: []
+metrics: []
+version: 1.0.0

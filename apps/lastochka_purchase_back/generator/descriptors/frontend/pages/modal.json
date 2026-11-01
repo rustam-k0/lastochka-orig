@@ -1,0 +1,182 @@
+{
+  "type": "modal",
+  "name": "HomeModal",
+  "title": "Просмотр",
+  "graphql": {
+    "update": {
+      "name": "CourseUpdate",
+      "type": "mutation",
+      "variables": [
+        {
+          "name": "first",
+          "type": "Int!"
+        },
+        {
+          "name": "page",
+          "type": "Int"
+        },
+        {
+          "name": "ordering",
+          "type": "[DefaultOrdering]"
+        }
+      ],
+      "body": {
+        "code": true,
+        "message": true
+      }
+    }
+  },
+  "fields": [
+    {
+      "editable": true,
+      "field": "title",
+      "title": "Заголовок",
+      "type": "string",
+      "autofocus": true
+    },
+    {
+      "editable": true,
+      "field": "price",
+      "title": "Цена",
+      "type": "string",
+      "inputType": "number",
+      "min": 0,
+      "max": 10
+    },
+    {
+      "editable": true,
+      "field": "description",
+      "title": "Описание",
+      "type": "textarea",
+      "rows": 5
+    },
+    {
+      "editable": false,
+      "field": "article",
+      "title": "Статья",
+      "type": "article",
+      "placeholder": "Статья"
+    },
+    {
+      "editable": true,
+      "field": "head_img",
+      "title": "Главная картинка",
+      "type": "image"
+    },
+    {
+      "type": "row",
+      "fields": [
+        {
+          "editable": false,
+          "field": "study_period",
+          "title": "Дата обучения",
+          "type": "date",
+          "range": true,
+          "mode": "dateTime"
+        },
+        {
+          "editable": true,
+          "field": "video",
+          "title": "Видео",
+          "type": "file"
+        }
+      ]
+    },
+    {
+      "editable": true,
+      "field": "modules",
+      "title": "Модули",
+      "type": "array",
+      "fields": [
+        {
+          "type": "column",
+          "fields": [
+            {
+              "editable": false,
+              "field": "head_img",
+              "title": "Главная картинка",
+              "type": "image"
+            },
+            {
+              "type": "row",
+              "fields": [
+                {
+                  "editable": false,
+                  "field": "moduleTag",
+                  "title": "Тег модуля",
+                  "clearable": false,
+                  "labelName": "title",
+                  "idName": "id",
+                  "type": "select",
+                  "options": {
+                    "type": "array",
+                    "array": [
+                      {
+                        "id": 0,
+                        "title": "Первый элемент"
+                      },
+                      {
+                        "id": 1,
+                        "title": "Второй элемент"
+                      },
+                      {
+                        "id": 2,
+                        "title": "Третий элемент"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "editable": false,
+                  "field": "study_period",
+                  "title": "Дата обучения",
+                  "type": "date",
+                  "range": true,
+                  "mode": "dateTime"
+                },
+                {
+                  "editable": true,
+                  "field": "video",
+                  "title": "Видео",
+                  "type": "file"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "field": "modules2",
+      "title": "Модули2",
+      "type": "array",
+      "fields": [
+        {
+          "editable": true,
+          "field": "head_img",
+          "title": "Главная картинка",
+          "type": "image"
+        },
+        {
+          "editable": true,
+          "field": "video",
+          "title": "Видео",
+          "type": "file"
+        },
+        {
+          "editable": false,
+          "type": "row",
+          "fields": [
+            {
+              "editable": false,
+              "field": "article",
+              "title": "Статья",
+              "type": "article",
+              "placeholder": "Статья"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

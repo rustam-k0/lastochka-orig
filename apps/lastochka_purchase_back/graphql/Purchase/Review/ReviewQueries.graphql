@@ -1,0 +1,9 @@
+extend type Query {
+  admin_shop_reviews_paginate(
+    "1 - На модерации, 2 - Опубликованный, 3 - Скрытый"
+    status_id:Int @eq
+    ordering:[DefaultOrdering]
+  ):[ShopReview]
+  @paginate(scopes: ["shop","filter","sorter","withComment"])
+  @guard(with: ["api"])
+}

@@ -1,0 +1,51 @@
+extend type Mutation {
+
+  CategoryUpdate(
+    id: Int
+    "Название"
+    title: String
+    "Родительская категория"
+    parent: Int
+    "Важные категории"
+    important: Boolean
+    "Изображение для каталога(Сайт)"
+    site_catalog_img: ImgInput
+    "Изображение квадрат (Сайт)"
+    site_square_img: ImgInput
+    "Изображение прямоугольник(Сайт)"
+    site_rect_img: ImgInput
+    "Изображение колонка(Мобильная версия)"
+    mobile_column_img: ImgInput
+    "Изображение квадрат(Мобильная версия)"
+    mobile_square_img: ImgInput
+    "Изображение прямоугольник(Мобильная версия)"
+    mobile_rect_img: ImgInput
+    "Фоновое изображение"
+    background_img: ImgInput
+    "Минимальные остатки для публикации"
+    min_quantity: Int
+    "Является ли категория кулинарной"
+    is_cooking: Boolean
+    "Скоропортящийся / заморозка"
+    is_perishable: Boolean
+    "Показывать на главной странице"
+    show_on_main: Boolean
+    "Активна (выводится на витрине storefront)"
+    is_active: Boolean
+    "Семейство атрибутов"
+    attribute_family_id: Int
+    "Без скрытия товара при отсутствии товаров"
+    without_blocking_price:Boolean
+    "ID зоны сборки"
+    assembly_zone_id: Int
+    "Динамические чекбоксы (JSON-строка map field => bool)"
+    custom_checkboxes: String
+    "Текст информационного тега"
+    tag_text: String
+    "Цвет информационного тега (#RRGGBB)"
+    tag_color: String
+  ):DefaultResponse @field(resolver:"Category\\CategoryUpdate")
+  @validator(class:"Category\\CategoryUpdateValidator")
+  @guard @can(model: "Admin",ability: "onlyAdmin") @section(key: "categories")
+
+}

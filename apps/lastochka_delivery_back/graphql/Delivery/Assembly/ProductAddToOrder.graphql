@@ -1,0 +1,13 @@
+extend type Mutation {
+  "Добавить новый товар в заказ во время сборки"
+  ProductAddToOrder(
+    "ID сборки"
+    assembly_id:Int
+    "ID товара"
+    product_id:Int
+    "Количество товара"
+    quantity:Int
+  ):DefaultResponse @guard @field(resolver: "Assembly\\ProductAddToOrder")
+  @validator(class: "Assembly\\ProductAddToOrderValidator")
+  @can(model: "Admin",ability: "onShift")
+}

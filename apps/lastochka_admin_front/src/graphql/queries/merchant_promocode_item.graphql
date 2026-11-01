@@ -1,0 +1,35 @@
+query ($id: Int!) {
+  merchantPromocode(id: $id) {
+    id
+    shop_id
+    scope
+    title
+    code
+    discount_percent
+    discount_type
+    discount_value
+    binding_type
+    valid_from
+    valid_to
+    is_active
+    is_valid
+    status
+    max_uses
+    max_uses_per_client
+    used_count
+    created_at
+    updated_at
+    shop {
+      id
+      title
+    }
+    products {
+      id
+      title
+    }
+    categories {
+      id
+      title
+    }
+  }
+}

@@ -1,0 +1,10 @@
+type Query {
+  "Получение авторизованного пользователя"
+  me: User @auth
+
+  "Список ролей в системе"
+  roles:[Role] @all(scopes: ["notApi", "notSuperAdmin", "forAuthScope"])
+  @guard @can(ability: "onlyShop",model: "Admin")
+
+  app_info:AppInfo @first
+}

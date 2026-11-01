@@ -1,0 +1,28 @@
+"Привязка сотрудника-сборщика к зоне сборки в рамках магазина"
+type UserAssemblyZone {
+    id: Int
+    user_id: Int
+    shop_id: Int
+    assembly_zone_id: Int
+    "Дата привязки (null = постоянная)"
+    date: Date
+    user: User @belongsTo
+    shop: Shop @belongsTo
+    "Зона сборки"
+    assembly_zone: AssemblyZone @belongsTo(relation: "assemblyZone")
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+extend type Query {
+
+    "Привязки сотрудников к зонам сборки (фильтры опциональны)"
+    user_assembly_zones(
+        user_id: Int @eq
+        shop_id: Int @eq
+        assembly_zone_id: Int @eq
+    ): [UserAssemblyZone]
+        @all(model: "UserAssemblyZone")
+        @guard @can(model: "Admin", ability: "onlyShop")
+
+}

@@ -1,0 +1,26 @@
+type Printer {
+  "ID"
+  id: Int
+  "Название принтера"
+  title: String
+  "IP-адрес"
+  ip_address: String
+  "Порт"
+  port: Int
+  "Активен"
+  is_active: Boolean
+}
+
+extend type Query {
+  "Список активных принтеров"
+  printers: [Printer!]! @all(scopes: ["active"])
+  @guard @can(ability: "onlyAdmin", model: "Admin") @section(key: "printers")
+
+  "Все принтеры (включая неактивные)"
+  allPrinters: [Printer!]! @all
+  @guard @can(ability: "onlyAdmin", model: "Admin") @section(key: "printers")
+
+  "Принтер по ID"
+  printer(id: Int! @eq): Printer @find
+  @guard @can(ability: "onlyAdmin", model: "Admin") @section(key: "printers")
+}

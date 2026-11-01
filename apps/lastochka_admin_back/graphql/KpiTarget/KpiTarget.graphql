@@ -1,0 +1,30 @@
+type KpiTarget {
+  "ID"
+  id: Int
+  "Ключ метрики (согласован с датасетами Superset)"
+  metric_key: String
+  "ID магазина (null = вся сеть)"
+  shop_id: Int
+  "Магазин"
+  shop: Shop @belongsTo
+  "ID категории (null = без разреза)"
+  category_id: Int
+  "Категория"
+  category: Category @belongsTo
+  "Начало периода"
+  period_start: Date
+  "Конец периода"
+  period_end: Date
+  "Целевое значение"
+  target_value: Float
+  "Комментарий"
+  comment: String
+  "Активно"
+  is_active: Boolean
+}
+
+extend type Query {
+  "Плановые показатели (факт vs план в аналитике)"
+  admin_kpi_targets(shop_id: Int @eq, metric_key: String @eq): [KpiTarget!]!
+    @all(scopes: ["ordered"]) @guard @can(ability: "onlyAdmin", model: "Admin")
+}

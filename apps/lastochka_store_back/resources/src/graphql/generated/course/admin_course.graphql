@@ -1,0 +1,9 @@
+query (
+  $id: Int!, 
+) {
+  admin_course(
+    id: $id, 
+  ) {
+    id title updated_at status { id name code table_name } 
+  }
+}

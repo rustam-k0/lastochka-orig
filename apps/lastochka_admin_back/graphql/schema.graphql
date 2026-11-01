@@ -1,0 +1,63 @@
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime
+  @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec"
+scalar Upload
+  @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
+
+#import inputs.graphql
+#import types.graphql
+#import admin/*.graphql
+#import Product/Attribute/*.graphql
+#import Product/AttributeFamily/*.graphql
+#import Product/Category/*.graphql
+#import Product/AssemblyZone/*.graphql
+#import Product/Price/*.graphql
+#import Product/Product/*.graphql
+#import Product/ConfigurableProduct/*.graphql
+#import Product/Remain/*.graphql
+#import Product/Shop/*.graphql
+#import Product/ShopZone/*.graphql
+#import Product/StopList/*.graphql
+#import Product/Stock/*.graphql
+#import City/*.graphql
+#import Product/CookTime/*.graphql
+#import User/*.graphql
+#import Client/*.graphql
+#import Product/Supplement/*.graphql
+#import Product/Story/*.graphql
+#import Product/Brand/*.graphql
+#import Product/MerchantSale/*.graphql
+#import Product/MerchantProductGroup/*.graphql
+#import Product/ProductGroupFilter/*.graphql
+#import Product/MerchantBanner/*.graphql
+#import Product/MerchantReview/*.graphql
+#import Product/MerchantPromocode/*.graphql
+#import Product/ProductReview/*.graphql
+#import Product/ProductDocument/*.graphql
+#import Product/Announcement/*.graphql
+#import Order/*.graphql
+#import Order/OrderReview/*.graphql
+#import IntegrationConfig/*.graphql
+#import AdminSetting/*.graphql
+#import Preorder/*.graphql
+#import ProductIssueReport/*.graphql
+#import MenuItem/*.graphql
+#import Role/*.graphql
+#import Category1c/*.graphql
+#import Aggregator/*.graphql
+#import ProductCancelReason/*.graphql
+#import ProductReplaceReason/*.graphql
+#import OrderCancelReason/*.graphql
+#import ExplainReason/*.graphql
+#import Faq/*.graphql
+#import Vacancy/*.graphql
+#import Page/*.graphql
+#import Printer/*.graphql
+#import OperatingCost/*.graphql
+#import KpiTarget/*.graphql
+#import ShopAlertRule/*.graphql

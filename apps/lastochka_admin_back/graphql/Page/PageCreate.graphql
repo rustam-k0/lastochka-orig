@@ -1,0 +1,21 @@
+extend type Mutation {
+  "Создание страницы"
+  PageCreate(
+    "Код страницы. Если не передан, генерируется из названия"
+    slug: String
+    "Название страницы"
+    title: String!
+    "Содержимое: EditorJS-документ в виде JSON-строки"
+    content: String!
+    "SEO-заголовок"
+    meta_title: String
+    "SEO-описание"
+    meta_description: String
+    "Порядок отображения"
+    position: Int
+    "Статус публикации"
+    is_published: Boolean
+  ): Page! @field(resolver: "Page\\PageCreate")
+  @validator(class: "Page\\PageCreateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "pages")
+}

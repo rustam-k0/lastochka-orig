@@ -1,0 +1,87 @@
+extend type Mutation {
+  ShopCreate(
+    "ID"
+    id:Int
+    "ID города"
+    city_id: Int
+    "Магазин по умолчанию в своём городе (требует заполненного city_id, прежний дефолт города сбрасывается)"
+    is_default: Boolean
+    "Название"
+    title:String
+    "Номер телефона"
+    phone:String
+    "Почта"
+    email:String
+    "Временной слот"
+    slot_time:Int
+    "Максимальное количество заказов за слот"
+    slot_max_orders:Int
+    "Долгота"
+    longitude:Float
+    "Широта"
+    latitude:Float
+    "Адрес"
+    address:String
+    "Комиссия агрегатора"
+    commission:Float
+    "Площадь магазина, м²"
+    area_sqm:Float
+    "Тип заведения: 1 - магазин, 2 - кафе"
+    type_id:Int
+    "Описание"
+    description:String
+    "Депозит"
+    deposit:Float
+    "Изображение"
+    img:ImgInput
+    "Изображение лого"
+    logo_img:ImgInput
+    "Изображение на фоне"
+    background_img:ImgInput
+    "Родительские категории"
+    categories:[Int]
+    """Когда списывать средства
+    1 - Списывание оплаты после сборки заказа
+    2 - Списывание оплаты после оформления заказа
+    3 - Списывание оплаты после начала сборки
+    4 - Списывание оплаты после доставки
+    """
+    payment_type_id:Int
+    "График работы"
+    schedule:String
+    "Популярный партнер"
+    is_popular:Boolean
+    "B2B-магазин (оптовый склад)"
+    is_b2b:Boolean
+    "Не учитывать остатки"
+    ignore_stock:Boolean
+    "Бонусная программа включена"
+    is_bonus_enabled:Boolean
+    "Процент начисления бонусов (0-100)"
+    bonus_earn_percent:Int
+    "Максимальный процент списания бонусов (0-100)"
+    bonus_spend_percent:Int
+    "Самовывоз включён"
+    is_pickup_enabled:Boolean
+    "Минимальная сумма заказа для самовывоза"
+    min_pickup_order_amount:Int
+    "Порог «Тяжёлого заказа» в граммах (модуль heavy_orders); null — порог не задан"
+    heavy_order_threshold:Int
+    "Стоимость сборки в рублях (модуль assembly_cost); null — не задана"
+    assembly_price:Int
+    "Доступные способы оплаты при самовывозе"
+    pickup_payment_methods:String
+    "Автоматическая отмена самовывоза при просрочке"
+    pickup_auto_cancel_enabled:Boolean
+    "Часы ожидания скоропортящихся товаров при самовывозе"
+    pickup_wait_perishable_hours:Int
+    "Часы ожидания обычных товаров при самовывозе"
+    pickup_wait_regular_hours:Int
+    "Часы грейс-периода для самовывоза"
+    pickup_grace_period_hours:Int
+    "Динамические чекбоксы (JSON-строка map field => bool)"
+    custom_checkboxes:String
+  ):DefaultResponse  @field(resolver:"Shop\\ShopCreate")
+  @validator(class:"Shop\\ShopCreateValidator")
+  @guard @can(model: "Admin",ability: "onlyAdmin") @section(key: "stores")
+}

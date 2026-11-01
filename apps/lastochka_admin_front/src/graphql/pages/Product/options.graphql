@@ -1,0 +1,26 @@
+query($shop_id: Int) {
+  shop(id: $shop_id) {
+    id
+    title
+  }
+  shop_categories(shop_id: $shop_id) {
+    id
+    title
+    is_cooking
+    child_categories {
+      id
+      title
+      is_cooking
+      child_categories {
+        id
+        title
+        is_cooking
+        child_categories {
+          id
+          title
+          is_cooking
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+# Сгенерировано scripts/ops_datasets.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками: описание правил расчёта - в генераторе.
+table_name: ops_client_review_periods
+main_dttm_col: reviewed_at
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: "WITH RECURSIVE\nr AS (SELECT\n    rv.id                                            AS review_id,\n    rv.created_at                                    AS reviewed_at,\n    so.user_id                                       AS client_id,\n    so.id                                            AS order_id,\n    CASE WHEN rv.rating BETWEEN 1 AND 5 THEN rv.rating END AS rating,\n    CASE WHEN rv.rating BETWEEN 1 AND 5 THEN CAST(rv.rating AS CHAR) ELSE 'Без оценки' END AS rating_label,\n    NULLIF(TRIM(rv.description), '')                 AS review_text,\n    CASE WHEN NULLIF(TRIM(rv.description), '') IS NULL THEN 1 ELSE 0 END AS is_without_text,\n    CASE rv.error_type\n        WHEN 'shortage' THEN 'Недовоз'\n        WHEN 'wrong_item' THEN 'Пересорт'\n        WHEN 'expired' THEN 'Просрочка'\n        WHEN 'other' THEN 'Другое'\n        ELSE 'Причина не указана'\n    END                                 AS reason_name,\n    st.name                                          AS shop_name\nFROM order_reviews\
+  \ rv\nJOIN orders o ON o.id = rv.order_id\nLEFT JOIN djami_store_copy.orders so ON so.id = CAST(o.uuid AS UNSIGNED)\nLEFT JOIN djami_store_copy.stores st ON st.id = so.store_id\nWHERE rv.deleted_at IS NULL\n  AND COALESCE(o.client_id, 0) <> 35\n  AND COALESCE(so.user_id, 0) NOT IN (21, 26, 27)),\nmonths AS (\n    SELECT CAST(DATE_FORMAT((SELECT MIN(reviewed_at) FROM r), '%Y-%m-01') AS DATETIME) AS ps\n    UNION ALL\n    SELECT ps + INTERVAL 1 MONTH FROM months WHERE ps + INTERVAL 1 MONTH <= NOW()\n),\nweeks AS (\n    SELECT CAST(DATE_SUB(DATE((SELECT MIN(reviewed_at) FROM r)),\n                         INTERVAL WEEKDAY((SELECT MIN(reviewed_at) FROM r)) DAY) AS DATETIME) AS ps\n    UNION ALL\n    SELECT ps + INTERVAL 1 WEEK FROM weeks WHERE ps + INTERVAL 1 WEEK <= NOW()\n),\nperiods AS (\n    SELECT 'Месяц' AS grain, ps, ps + INTERVAL 1 MONTH AS pe,\n           DATE_FORMAT(ps, '%Y-%m') AS label FROM months\n    UNION ALL\n    SELECT 'Неделя', ps, ps + INTERVAL 1 WEEK, DATE_FORMAT(ps, '%Y-%m-%d')\
+  \ FROM weeks\n)\nSELECT\n    p.grain,\n    CONCAT(p.label, CASE WHEN p.pe > NOW() THEN '*' ELSE '' END) AS period_label,\n    COALESCE(r.reviewed_at, p.ps)                    AS reviewed_at,\n    r.review_id,\n    r.rating,\n    r.rating_label,\n    r.reason_name,\n    r.shop_name\nFROM periods p\nLEFT JOIN r ON r.reviewed_at >= p.ps AND r.reviewed_at < p.pe\n"
+uuid: f3ddfc4b-0e48-5505-8bff-ad146cf1ff46
+columns:
+- column_name: reviewed_at
+  is_dttm: true
+  verbose_name: Дата
+- column_name: grain
+  is_dttm: false
+  verbose_name: Группировка
+  groupby: true
+  filterable: true
+- column_name: period_label
+  is_dttm: false
+  verbose_name: Период
+  groupby: true
+  filterable: true
+- column_name: shop_name
+  is_dttm: false
+  verbose_name: Магазин
+  groupby: true
+  filterable: true
+- column_name: rating_label
+  is_dttm: false
+  verbose_name: Оценка
+  groupby: true
+  filterable: true
+- column_name: reason_name
+  is_dttm: false
+  verbose_name: Причина
+  groupby: true
+  filterable: true
+metrics: []
+version: 1.0.0

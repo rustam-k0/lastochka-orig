@@ -1,0 +1,8 @@
+mutation SaveEntityCheckboxes($config: String!) {
+    saveEntityCheckboxes(config: $config) {
+        id
+        key
+        value
+        type
+    }
+}

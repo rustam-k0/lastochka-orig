@@ -1,0 +1,9 @@
+extend type Mutation {
+  "Сборщик подтверждает выдачу заказа на самовывоз клиенту: заказ переходит в «Доставлен» (для самовывоза — «Выдан»), фиксируются время выдачи и сотрудник. Выдать можно только собранный самим сборщиком заказ; при сплите по зонам сборки достаточно подтвердить любой свой подзаказ — завершается весь заказ целиком"
+  OrderPickupConfirm(
+    "ID заказа или его подзаказа"
+    id: Int!
+  ): DefaultResponse @guard @field(resolver: "Order\\OrderPickupConfirm")
+  @validator(class: "Order\\OrderPickupConfirmValidator")
+  @can(model: "Admin", ability: "onShift")
+}

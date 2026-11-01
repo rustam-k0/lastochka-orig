@@ -1,0 +1,21 @@
+query($id: Int!) {
+  admin_clients_item(id: $id) {
+    id
+    phone
+    name
+    surname
+    patronymic
+    email
+    orders_count
+    orders_amount
+    created_at
+    orders_avg
+    gender_type_id
+    birthday
+    is_b2b
+    admin_note
+    bonus_balance
+    bonus_reserved
+    available_bonus_balance
+  }
+}

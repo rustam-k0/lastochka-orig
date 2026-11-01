@@ -1,0 +1,10 @@
+mutation (
+  $items: [StatusInput]
+) {
+  ChangeStatus(
+    items: $items
+  ) {
+    code
+    message
+  }
+}

@@ -1,0 +1,9 @@
+extend type Mutation {
+  "Приехал на место выдачи"
+  DeliveryFinish(
+    "DeliveryOrder -> id"
+    id:Int
+  ):DefaultResponse @guard @field(resolver: "Delivery\\DeliveryFinish")
+  @validator(class: "Delivery\\DeliveryFinishValidator")
+  @can(model: "Admin",ability: "driverOnShift")
+}

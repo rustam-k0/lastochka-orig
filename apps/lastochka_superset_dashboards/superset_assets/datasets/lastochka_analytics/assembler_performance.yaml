@@ -1,0 +1,94 @@
+# Вкладка «Операции» (по магазину). Производительность сборщиков, датасет
+# «Рейтинг сборщиков». db3 Postgres.
+#
+# ПЕРЕСТРОЕНО с db1 на db3 по спецификации задачи (тайминги сборки/доставки
+# берём из событийного журнала picking.started/picking.finished, коррелируя
+# по order_id/assembly_id/session_id - см. brief Task 5). BUILD_PLAN исходно
+# предполагал db1-таблицу assemblies с колонками actor_id/started_at
+# (ПРЕДПОЛОЖЕНИЕ, сам документ это признавал). Реальная db1 assemblies
+# существует (122 строки на dev) и колонки другие (user_id, cooking_started_at
+# - только для кафе-сценария, всегда NULL на dev, created_at - реальный старт
+# сборки, finished_at), НО payload picking.finished (событие уже
+# спроектировано бэкендом специально под этот виджет, см.
+# analytics-collection-layer.md: "picking.finished несёт fill rate") даёт
+# ГОТОВЫЕ item-агрегаты (ordered/assembled/replaced/cancelled_items,
+# ordered/assembled_amount) БЕЗ необходимости JOIN к db1 - это самодостаточный
+# и более точный источник точности сборки, чем реконструкция через
+# assembly_items (см. примечание в assembly_product_stats.yaml почему
+# assembly_items не даёт item-level таймингов).
+#
+# Корреляция picking.started -> picking.finished: по payload->>'assembly_id'
+# (числовой id db1-сборки, присутствует в ОБОИХ event_type - проверено на
+# dev, полностью совпадает с db1 assemblies.id). order_id/session_id тоже
+# совпадают между started/finished одной сборки, но assembly_id - более узкий
+# и надёжный ключ (session_id может отсутствовать - shift не открыт, видно на
+# dev).
+#
+# employee_id - это picker_id (аналитическая колонка employee_id, НЕ payload)
+# в СЫРОМ виде (строковый id без ФИО): employee_name из db1 users
+# недостижимо без кросс-database JOIN (запрещено правилами проекта - 1
+# датасет = 1 источник). Дименшен чарта показывает id сборщика, не имя.
+#
+# ПУСТО/СКУДНО-ОЖИДАЕМО (docs/analyticv2/OPEN_QUESTIONS_ANSWERS.md,
+# контекст задачи): B2E-инструментация picking.* включена 2026-07-15, на dev
+# всего 6 picking.started / 4 picking.finished события за всю историю -
+# датасет и чарт построены корректно, малое число строк это текущее состояние
+# данных, а не баг.
+table_name: assembler_performance
+main_dttm_col: picking_finished_at
+database_uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+schema: null
+sql: |
+  WITH started AS (
+      SELECT
+          (payload ->> 'assembly_id')::bigint AS assembly_id,
+          occurred_at                          AS picking_started_at
+      FROM analytics_events
+      WHERE event_type = 'picking.started'
+  ),
+  finished AS (
+      SELECT
+          (payload ->> 'assembly_id')::bigint       AS assembly_id,
+          order_id,
+          (payload ->> 'order_local_id')::bigint     AS order_local_id,
+          store_id,
+          employee_id,
+          role,
+          session_id,
+          occurred_at                                AS picking_finished_at,
+          (payload ->> 'ordered_items')::numeric     AS ordered_items,
+          (payload ->> 'assembled_items')::numeric   AS assembled_items,
+          (payload ->> 'replaced_items')::numeric    AS replaced_items,
+          (payload ->> 'cancelled_items')::numeric   AS cancelled_items,
+          (payload ->> 'ordered_amount')::numeric    AS ordered_amount,
+          (payload ->> 'assembled_amount')::numeric  AS assembled_amount,
+          (payload ->> 'total_weight')::numeric      AS total_weight,
+          (payload ->> 'is_weight_partial')::boolean AS is_weight_partial
+      FROM analytics_events
+      WHERE event_type = 'picking.finished'
+  )
+  SELECT
+      f.assembly_id,
+      f.order_id,
+      f.order_local_id,
+      f.store_id,
+      f.employee_id,
+      f.role,
+      f.session_id,
+      s.picking_started_at,
+      f.picking_finished_at,
+      EXTRACT(EPOCH FROM (f.picking_finished_at - s.picking_started_at)) AS picking_seconds,
+      f.ordered_items,
+      f.assembled_items,
+      f.replaced_items,
+      f.cancelled_items,
+      f.ordered_amount,
+      f.assembled_amount,
+      f.total_weight,
+      f.is_weight_partial
+  FROM finished f
+  LEFT JOIN started s ON s.assembly_id = f.assembly_id
+uuid: 21331a2c-89a5-4841-ae8c-337d38a43cb7
+columns: []
+metrics: []
+version: 1.0.0

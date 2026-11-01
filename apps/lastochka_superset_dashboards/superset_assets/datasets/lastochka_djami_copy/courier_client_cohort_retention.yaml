@@ -1,0 +1,84 @@
+# Вкладка «Клиенты» (по магазину). Когортная матрица удержания по магазину:
+# для когорты клиентов (месяц первого доставленного заказа) - % клиентов с
+# ≥1 заказом в месяце M0..M5. Единственный потребитель - heatmap «Когортное
+# удержание». Имя датасета verbatim из BUILD_PLAN.
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1 - o.paid = true (BUILD_PLAN) -> o.status_id = 5 (тот же довод,
+#     что и в courier_client_shop_rfm - "оплачен" в макете == "реализован").
+#   Правило 2 - WHERE o.parent_order_id IS NULL (был в BUILD_PLAN, сохранён).
+#   Правило 7 - MySQL:
+#     DATE_TRUNC('month', x)  -> DATE(DATE_SUB(x, INTERVAL (DAYOFMONTH(x)-1) DAY))
+#       (первый день месяца как настоящий DATE, а не строка DATE_FORMAT - нужно
+#       для TIMESTAMPDIFF(MONTH, ...) ниже и чтобы Superset распознавал колонку
+#       как temporal для нативного фильтра дат).
+#     DATE_PART('year',a)-DATE_PART('year',b))*12 + (DATE_PART('month',a)-...)
+#       -> TIMESTAMPDIFF(MONTH, cohort_month, activity_month) (эквивалент в
+#       одну функцию, MySQL считает целые месяцы между двумя датами напрямую).
+#     'M' || cm.month_index (Postgres-конкатенация, в MySQL без
+#       PIPES_AS_CONCAT синтаксис недоступен) -> CONCAT('M', cm.month_index).
+#
+# Проверено на dev (SELECT-прогон перед записью YAML): 3 когорты
+# (2026-05/06/07), retention_pct считается корректно (M0=100% по построению -
+# cohort_size это те же клиенты что и M0 active_clients), майская когорта
+# показывает M1=100% (оба клиента когорты вернулись в июне) - ограниченная,
+# но реальная выборка (build-план это ready-виджет, не blocked).
+table_name: courier_client_cohort_retention
+main_dttm_col: cohort_month
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  WITH paid_orders AS (
+      SELECT
+          o.client_id,
+          o.shop_id,
+          o.id AS order_id,
+          o.created_at AS order_dt
+      FROM orders o
+      WHERE o.status_id = 5 AND o.parent_order_id IS NULL
+  ),
+  client_cohort AS (
+      SELECT
+          client_id,
+          shop_id,
+          DATE(DATE_SUB(MIN(order_dt), INTERVAL (DAYOFMONTH(MIN(order_dt)) - 1) DAY)) AS cohort_month
+      FROM paid_orders
+      GROUP BY client_id, shop_id
+  ),
+  client_month_activity AS (
+      SELECT DISTINCT
+          po.client_id,
+          po.shop_id,
+          cc.cohort_month,
+          DATE(DATE_SUB(po.order_dt, INTERVAL (DAYOFMONTH(po.order_dt) - 1) DAY)) AS activity_month
+      FROM paid_orders po
+      JOIN client_cohort cc ON cc.client_id = po.client_id AND cc.shop_id = po.shop_id
+  ),
+  cohort_matrix AS (
+      SELECT
+          shop_id,
+          cohort_month,
+          TIMESTAMPDIFF(MONTH, cohort_month, activity_month) AS month_index,
+          COUNT(DISTINCT client_id)                            AS active_clients
+      FROM client_month_activity
+      GROUP BY shop_id, cohort_month, month_index
+  ),
+  cohort_size AS (
+      SELECT shop_id, cohort_month, active_clients AS cohort_size
+      FROM cohort_matrix WHERE month_index = 0
+  )
+  SELECT
+      cm.shop_id,
+      cm.cohort_month,
+      cm.month_index,
+      CONCAT('M', cm.month_index)                                              AS month_label,
+      cm.active_clients,
+      cs.cohort_size,
+      ROUND(100.0 * cm.active_clients / NULLIF(cs.cohort_size, 0), 1)          AS retention_pct
+  FROM cohort_matrix cm
+  JOIN cohort_size cs ON cs.shop_id = cm.shop_id AND cs.cohort_month = cm.cohort_month
+  WHERE cm.month_index BETWEEN 0 AND 5
+uuid: 35ffceed-dc71-4283-87df-8524b937e750
+columns: []
+metrics: []
+version: 1.0.0

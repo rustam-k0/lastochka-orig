@@ -1,0 +1,84 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Детализация показателей
+description: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: raw
+  all_columns:
+  - courier_name
+  - delivered
+  - cancelled
+  - returned
+  - cancel_pct
+  - avg_minutes
+  - median_minutes
+  - p90_minutes
+  - accept_to_pickup_minutes
+  - pickup_to_deliver_minutes
+  - on_time_pct
+  - orders_per_hour
+  - orders_per_shift
+  - avg_rating
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: accepted_at
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: false
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  column_config:
+    delivered:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    cancelled:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    returned:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    cancel_pct:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+    avg_minutes:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+    median_minutes:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+    p90_minutes:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+    accept_to_pickup_minutes:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+    pickup_to_deliver_minutes:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+    on_time_pct:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+    orders_per_hour:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+    orders_per_shift:
+      d3NumberFormat: ',.1f'
+      horizontalAlign: right
+    avg_rating:
+      d3NumberFormat: ',.2f'
+      horizontalAlign: right
+  order_by_cols:
+  - '["delivered", false]'
+cache_timeout: null
+dataset_uuid: 15a85a3c-0644-53c0-b0c7-d155c71e56b8
+uuid: e5f83d2b-ddcc-5b51-98df-02fc7b1728b6
+version: 1.0.0

@@ -1,0 +1,88 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Детализация показателей
+description: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - product_name
+  metrics:
+  - &id001
+    expressionType: SQL
+    sqlExpression: SUM(is_replaced)
+    label: Замен
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN is_replaced = 1 THEN order_id END)
+    label: Заказов
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT replaced_delivered_order_id) / NULLIF(MAX(period_delivered_orders), 0)
+    label: '% всех заказов'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN is_replaced = 1 THEN order_id END) / NULLIF(COUNT(DISTINCT order_id), 0)
+    label: '% по товару'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(is_agreed)
+    label: Согласовано
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(is_no_offer)
+    label: Без предложения
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: AVG(price_delta)
+    label: Средняя Δ цены, ₽
+    hasCustomLabel: true
+  percent_metrics: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: order_created_at
+  - clause: HAVING
+    expressionType: SQL
+    sqlExpression: SUM(is_replaced) > 0
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: false
+  show_totals: false
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  order_desc: true
+  column_config:
+    Замен:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    Заказов:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    '% всех заказов':
+      d3NumberFormat: .1%
+      horizontalAlign: right
+    '% по товару':
+      d3NumberFormat: .1%
+      horizontalAlign: right
+    Согласовано:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    Без предложения:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    Средняя Δ цены, ₽:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+  timeseries_limit_metric: *id001
+cache_timeout: null
+dataset_uuid: 47fddec7-0198-47af-bebf-6193d5235a0d
+uuid: a1accb5a-5768-553d-9e6a-f3cff1a85b4a
+version: 1.0.0

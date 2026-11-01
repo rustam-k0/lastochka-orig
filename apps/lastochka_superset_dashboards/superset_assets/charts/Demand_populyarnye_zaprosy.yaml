@@ -1,0 +1,24 @@
+# Вкладка «Спрос». Топ-20 популярных поисковых запросов (все, без фильтра
+# results_count).
+slice_name: Популярные поисковые запросы
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - search_query
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      column_name: search_query
+    aggregate: COUNT
+    label: Кол-во запросов
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 20
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 3e83a052-bf44-4b9e-b942-5754694370e5
+uuid: af664468-d56e-4dd2-bbc9-862fc2924554
+version: 1.0.0

@@ -1,0 +1,126 @@
+# Вкладка «Обзор» (по магазину). Order-level, переиспользуется в 9 виджетах:
+# KPI Выручка/Валовая прибыль/Валовая маржа %/Чистая прибыль/Заказы/Средний чек/
+# Time-to-order, гейджи Repeat rate % и SLA %, линия «Выручка и прибыль по дням».
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1 - status_id вместо paid (метрики в чартах используют status_id = 5,
+#     statuses НЕ джойнится - таблица пустая).
+#   Правило 2 - WHERE o.parent_order_id IS NULL (финансовый order-level датасет,
+#     без фильтра выручка задваивается: на dev 106/221 заказов - дети сплита).
+#   Правило 4 - is_on_time_delivery через o.type_id IN (2,5), НЕ shipping_method =
+#     'courier' (реальный enum shipping_method: own_courier/cdek/russian_post -
+#     значения 'courier' не существует, фильтр вернул бы 0 строк всегда).
+#   Правило 7 - MySQL: TIMESTAMPDIFF(SECOND, ...) вместо EXTRACT(EPOCH FROM ...).
+#   Правило 8 - COGS/opex теперь считаются (products.cost_price, store_operating_costs
+#     существуют на dev): order_cogs - COGS заказа (коррелированный подзапрос по
+#     order_items+products, NULL-safe: пока products.cost_price пуст у ВСЕХ 13038
+#     товаров на dev, order_cogs = NULL для каждого заказа, SUM(NULL...) = NULL, что
+#     корректно "гасит" валовую и чистую прибыль до появления 1С-себестоимости, а не
+#     подменяет её нулём/100%-й маржой). order_opex_pct_share - доля выручки ЭТОГО
+#     заказа, приходящаяся на активные правила store_operating_costs с
+#     rule_type='pct_of_revenue' (аддитивно суммируется по заказам -> корректный
+#     % от периодной выручки). shop_fixed_opex_current - сумма активных правил
+#     rule_type='fixed_amount' для магазина заказа (или сетевых, shop_id IS NULL),
+#     ОДИНАКОВОЕ значение на каждой строке этого магазина (fixed-стоимость не может
+#     аддитивно суммироваться по заказам) - в чарте берётся через MAX(), НЕ SUM()
+#     (иначе на dev 43 доставленных заказа х 50000 руб. аренды = 2.15 млн вместо
+#     50000). Допущение: MAX() корректен, когда выбран ОДИН магазин (нативный
+#     shop_id-фильтр вкладки «по магазину») - при мульти-выборе агрегация неверна.
+#     На dev store_operating_costs: 1 строка (rent/fixed_amount/50000, shop_id=NULL
+#     = вся сеть, period_start=2026-07-01, period_end=NULL) - opex НЕ период-точен
+#     относительно выбранного в дашборде диапазона дат, "period" здесь = период
+#     действия самого правила (soc.period_start/period_end), а не окно фильтра.
+#   Правило 9 - store_operating_costs фильтруется deleted_at IS NULL AND is_active=1.
+#
+# ИСПРАВЛЕНО (финальная fix-волна): order_cogs был асимметричен с канонической
+# формулой выручки позиций (правило 3) - COGS считался по ВСЕМ позициям заказа
+# без фильтра oi.status_id <> 3, тогда как маржа/margin-виджеты обязаны считать
+# обе ноги (revenue и COGS) по одному набору позиций (см. conversion-rules.md
+# правило 3, "Симметрия revenue/COGS обязательна", и network_orders_fact.yaml).
+# Добавлен фильтр AND oi.status_id <> 3 в order_cogs. Заодно добавлена колонка
+# order_line_revenue = SUM(oi.price_during_order * oi.quantity) WHERE
+# oi.status_id <> 3 (тот же коррелированный подзапрос-паттерн, что в
+# network_orders_fact.yaml) - канон #4 (docs/metric-keys.md) требует считать
+# валовую маржу/прибыль от суммы позиций, а не от orders.amount (amount
+# включает delivery_price/assembly_cost и уменьшен на скидки/бонусы - другая
+# база). Overview_valovaya_marzha/Overview_valovaya_pribyl переведены на
+# order_line_revenue. Overview_vyruchka_net/Overview_sredniy_chek НЕ тронуты -
+# это другой показатель (чистая выручка/чек по orders.amount).
+#
+# Допущения BUILD_PLAN, не опровергнутые схемой: orders.created_at/clients.created_at
+# - обычные timestamp (подтверждено информационной схемой). Семантика сплита:
+# parent_order_id IS NULL = "финансово реальный" заказ (см. правило 2).
+table_name: djami_orders_core
+main_dttm_col: order_created_at
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      o.id                                     AS order_id,
+      o.shop_id                                AS shop_id,
+      o.client_id                              AS client_id,
+      o.parent_order_id                        AS parent_order_id,
+      o.sub_number                              AS sub_number,
+      o.created_at                              AS order_created_at,
+      o.finished_at                             AS order_finished_at,
+      o.slot_start_date                         AS slot_start_date,
+      o.slot_end_date                           AS slot_end_date,
+      o.status_id                               AS status_id,
+      o.payment_status                          AS payment_status,
+      o.paid                                    AS paid,
+      o.paid_at                                 AS paid_at,
+      o.shipping_method                         AS shipping_method,
+      o.type_id                                 AS type_id,
+      o.amount                                  AS amount,
+      o.items_subtotal                          AS items_subtotal,
+      o.discount                                AS discount,
+      o.bonus_spent                             AS bonus_spent,
+      o.bonus_earned                            AS bonus_earned,
+      o.delivery_price                          AS delivery_price,
+      o.assembly_cost                           AS assembly_cost,
+      o.total_weight                            AS total_weight,
+      c.created_at                              AS client_created_at,
+      ROW_NUMBER() OVER (PARTITION BY o.client_id ORDER BY o.created_at) AS client_order_seq,
+      CASE
+          WHEN o.type_id IN (2, 5) AND o.finished_at IS NOT NULL AND o.slot_end_date IS NOT NULL
+              THEN CASE WHEN o.finished_at <= o.slot_end_date THEN 1 ELSE 0 END
+      END                                        AS is_on_time_delivery,
+      TIMESTAMPDIFF(SECOND, c.created_at, o.created_at) / 3600.0 AS hours_since_client_created,
+      (
+          SELECT SUM(oi.quantity * p.cost_price)
+          FROM order_items oi
+          JOIN products p ON p.id = oi.product_id
+          WHERE oi.order_id = o.id AND oi.status_id <> 3
+      )                                          AS order_cogs,
+      (
+          SELECT SUM(oi.price_during_order * oi.quantity)
+          FROM order_items oi
+          WHERE oi.order_id = o.id AND oi.status_id <> 3
+      )                                          AS order_line_revenue,
+      o.amount * (
+          SELECT COALESCE(SUM(soc.value), 0)
+          FROM store_operating_costs soc
+          WHERE soc.deleted_at IS NULL
+            AND soc.is_active = 1
+            AND soc.rule_type = 'pct_of_revenue'
+            AND (soc.shop_id = o.shop_id OR soc.shop_id IS NULL)
+            AND soc.period_start <= o.created_at
+            AND (soc.period_end IS NULL OR soc.period_end >= o.created_at)
+      ) / 100.0                                  AS order_opex_pct_share,
+      (
+          SELECT COALESCE(SUM(soc.value), 0)
+          FROM store_operating_costs soc
+          WHERE soc.deleted_at IS NULL
+            AND soc.is_active = 1
+            AND soc.rule_type = 'fixed_amount'
+            AND (soc.shop_id = o.shop_id OR soc.shop_id IS NULL)
+            AND soc.period_start <= CURDATE()
+            AND (soc.period_end IS NULL OR soc.period_end >= CURDATE())
+      )                                          AS shop_fixed_opex_current
+  FROM orders o
+  LEFT JOIN clients c ON c.id = o.client_id
+  WHERE o.parent_order_id IS NULL
+uuid: d991fd22-7a5f-4c1f-977b-866968e97b0c
+columns: []
+metrics: []
+version: 1.0.0

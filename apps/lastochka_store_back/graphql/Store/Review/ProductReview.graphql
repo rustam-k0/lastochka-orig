@@ -1,0 +1,13 @@
+type ProductReview @model(class: "Review")
+{
+  id:Int
+  main_mark:Int
+  comment:String
+  client:ReviewClient @hasOne
+  created_at:DateTime
+}
+
+
+type ReviewClient {
+  name:String
+}

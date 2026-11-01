@@ -1,0 +1,51 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Приток, возврат и отток
+description: Уникальные клиенты в каждом интервале
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: period_label
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(new_clients)
+    label: Новые
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(returned_clients)
+    label: Вернувшиеся
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(lost_clients)
+    label: Перешли в потерянные
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: period_start
+  orientation: vertical
+  row_limit: 1000
+  show_value: true
+  show_legend: true
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: ',d'
+  x_axis_sort: period_label
+  x_axis_sort_asc: true
+  zoomable: false
+  rich_tooltip: true
+  stack: null
+  comparison_type: values
+  x_axis_title: Интервал
+  x_axis_title_margin: 30
+  y_axis_title: Клиентов
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+cache_timeout: null
+dataset_uuid: 6267cc2a-b9c5-5319-934e-a0123cf13731
+uuid: 4f83a957-2ab5-5bc0-9ebe-d7b3f2bc1ead
+version: 1.0.0

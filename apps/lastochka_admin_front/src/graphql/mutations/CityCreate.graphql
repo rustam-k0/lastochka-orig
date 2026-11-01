@@ -1,0 +1,18 @@
+mutation (
+  $name: String!
+  $latitude: Float
+  $longitude: Float
+  $is_active: Boolean
+  $is_default: Boolean
+) {
+  CityCreate(
+    name: $name
+    latitude: $latitude
+    longitude: $longitude
+    is_active: $is_active
+    is_default: $is_default
+  ) {
+    message
+    code
+  }
+}

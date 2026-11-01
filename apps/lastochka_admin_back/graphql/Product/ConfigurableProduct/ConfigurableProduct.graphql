@@ -1,0 +1,37 @@
+type ConfigurableProductAttribute {
+  "ID в pivot-таблице"
+  id: Int
+  "ID атрибута"
+  attribute_id: Int
+  "Атрибут"
+  attribute: Attribute
+  "Признак варьируемого"
+  is_configurable: Boolean
+}
+
+type ConfigurableProductItem {
+  id: Int
+  title: String
+  articul: String
+  description: String
+  categories: [Category] @belongsToMany
+  img: Img @hasOne
+  images: [Img] @hasMany
+  status_id: Int
+  is_configurable: Boolean!
+  meta_title: String
+  meta_description: String
+  meta_keywords: String
+  brand: Brand @belongsTo
+  brand_id: Int
+  video_path: String
+  configurable_attributes: [ConfigurableProductAttribute]
+    @field(resolver: "App\\GraphQL\\Queries\\ConfigurableProduct\\ConfigurableProductItem@configurableAttributes")
+  children: [Product] @hasMany
+  computed_price_min: Int
+    @field(resolver: "App\\GraphQL\\Queries\\ConfigurableProduct\\ConfigurableProductItem@computedPriceMin")
+  computed_price_max: Int
+    @field(resolver: "App\\GraphQL\\Queries\\ConfigurableProduct\\ConfigurableProductItem@computedPriceMax")
+  computed_quantity: Int
+    @field(resolver: "App\\GraphQL\\Queries\\ConfigurableProduct\\ConfigurableProductItem@computedQuantity")
+}

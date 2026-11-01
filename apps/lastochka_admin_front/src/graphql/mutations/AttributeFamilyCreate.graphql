@@ -1,0 +1,6 @@
+mutation AttributeFamilyCreate($title: String!, $code: String, $position: Int, $attributes: [FamilyAttributeInput]) {
+  AttributeFamilyCreate(title: $title, code: $code, position: $position, attributes: $attributes) {
+    code
+    message
+  }
+}

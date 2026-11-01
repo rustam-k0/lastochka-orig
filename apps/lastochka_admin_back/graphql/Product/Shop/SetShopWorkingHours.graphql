@@ -1,0 +1,30 @@
+extend type Mutation {
+  "Установить график работы магазина"
+  SetShopWorkingHours(
+    "ID магазина"
+    shop_id:Int
+    """
+    Тип работы магазина
+    1 - Работает по графику
+    2 - Работает круглосуточно
+    """
+    type_id:Int
+    "Время открытия магазина. Нужно в случае type_id = 1"
+    opening_time:String
+    "Время закрытия магазина. Нужно в случае type_id = 1"
+    closing_time:String
+    """
+    Дни работы магазина
+      MONDAY = 1
+      TUESDAY = 2
+      WEDNESDAY = 3
+      THURSDAY = 4
+      FRIDAY = 5
+      SATURDAY = 6
+      SUNDAY = 7
+    """
+    days:[Int]
+  ):DefaultResponse  @field(resolver:"Shop\\SetShopWorkingHours")
+  @validator(class:"Shop\\SetShopWorkingHoursValidator")
+  @guard @can(model: "Admin",ability: "onlyAdmin")
+}

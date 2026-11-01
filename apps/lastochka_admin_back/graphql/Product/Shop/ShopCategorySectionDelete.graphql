@@ -1,0 +1,10 @@
+extend type Mutation {
+  "Удалить секцию (категорию) из карты магазина — отвязать строку pivot shops_categories"
+  ShopCategorySectionDelete(
+    "ID магазина"
+    shop_id: Int!
+    "ID категории"
+    category_id: Int!
+  ):DefaultResponse  @field(resolver:"Shop\\ShopCategorySectionDelete")
+  @guard @can(model: "Admin",ability: "onlyAdmin")
+}

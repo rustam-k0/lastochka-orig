@@ -1,0 +1,28 @@
+type ClientBonusTransaction {
+  "ID"
+  id:Int
+  "Тип операции: earn, spend, refund, cancel"
+  type:String
+  "Сумма в баллах"
+  amount:Int
+  "Баланс после операции (заполняется фактом из storefront)"
+  balance_after:Int
+  "Источник: manual, online, offline, initial"
+  source:String
+  "Комментарий администратора или описание операции"
+  description:String
+  "Статус: pending, applied, rejected"
+  status:String
+  "Причина отказа"
+  reject_reason:String
+  "Пояснение к отказу"
+  reject_message:String
+  "Внешний номер заказа, если операция по заказу"
+  order_external_id:String
+  "Время операции в storefront"
+  occurred_at:DateTime
+  "Когда операция создана в админке"
+  created_at:DateTime
+  "Администратор, проводивший ручную операцию"
+  admin:User @belongsTo
+}

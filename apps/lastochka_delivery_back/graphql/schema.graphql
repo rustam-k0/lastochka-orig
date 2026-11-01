@@ -1,0 +1,27 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime
+@scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec"
+scalar Upload
+@scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
+
+#import inputs.graphql
+#import types.graphql
+
+#import Delivery/User/*.graphql
+#import Delivery/Order/*.graphql
+#import Delivery/Product/*.graphql
+#import Delivery/Assembly/*.graphql
+#import Delivery/ExplainReason/*.graphql
+#import Delivery/ProductCancelReason/*.graphql
+#import Delivery/ProductReplaceReason/*.graphql
+#import Delivery/OrderCancelReason/*.graphql
+#import Delivery/Delivery/*.graphql
+#import Delivery/Supplement/*.graphql
+#import Delivery/Fcm/*.graphql
+#import Delivery/Printer/*.graphql
+
+extend type Query {
+  app_info:DeliveryAppInfo @first
+}

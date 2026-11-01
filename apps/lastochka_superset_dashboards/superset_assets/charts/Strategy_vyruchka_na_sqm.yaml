@@ -1,0 +1,33 @@
+# Вкладка «Стратегия». Удельные метрики: выручка на м² площади магазина.
+# РАЗБЛОКИРОВАНО правилом 8 conversion-rules.md (shops.area_sqm теперь
+# существует) - виджет был blocked в BUILD_PLAN на момент написания. Формула
+# идентична metric_key #9 revenue_per_sqm (docs/metric-keys.md). NULL-safe:
+# NULLIF(area_sqm, 0) - магазины без площади дают NULL, не деление на ноль.
+slice_name: 'Удельные метрики: выручка на м² площади магазина'
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - shop_title
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END)
+    label: Выручка магазина, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX(area_sqm)
+    label: Площадь, м²
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END) / NULLIF(MAX(area_sqm), 0)
+    label: Выручка на м², ₽/м²
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: d8bb6cd4-3580-407d-97c6-9ad1ea4c9202
+uuid: 877dfe0e-5c62-46e5-a696-1c276d042962
+version: 1.0.0

@@ -1,0 +1,15 @@
+extend type Mutation {
+  "Добавить товар в собрано"
+  ProductConfirm(
+    assembly_item_id:Int
+    replacement_product_id:Int
+    quantity:Int
+    "Фактический вес в граммах (для весовых товаров)"
+    actual_weight:Int
+    "ID причины замены (опционально, из справочника product_replace_reasons)"
+    replace_reason_id:Int
+  ):DefaultResponse @guard @field(resolver: "Assembly\\ProductConfirm")
+  @validator(class: "Assembly\\ProductConfirmValidator")
+  @can(model: "Admin",ability: "onShift")
+
+}

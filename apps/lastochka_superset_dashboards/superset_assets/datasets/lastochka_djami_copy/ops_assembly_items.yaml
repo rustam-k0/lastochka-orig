@@ -1,0 +1,47 @@
+# Сгенерировано scripts/ops_datasets.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками: описание правил расчёта - в генераторе.
+table_name: ops_assembly_items
+main_dttm_col: order_created_at
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: "{% set period = get_time_filter('order_created_at', target_type='DATETIME') %}\n{% set shops = filter_values('shop_name') %}\nSELECT\n    t.*,\n    CASE WHEN t.is_replaced = 1 AND t.has_call_option = 1 THEN 1 ELSE 0 END AS is_agreed,\n    CASE WHEN t.is_replaced = 1 AND t.has_call_option = 0 THEN 1 ELSE 0 END AS is_no_offer,\n    CASE WHEN t.is_replaced = 1 AND t.is_order_delivered = 1 THEN t.order_id END AS replaced_delivered_order_id,\n    pd.period_delivered_orders\nFROM (\n    SELECT\n        oi.id                                           AS order_item_id,\n        po.id                                           AS order_id,\n        o.shop_id                                       AS shop_id,\n        s.title                                         AS shop_name,\n        o.created_at                                    AS order_created_at,\n        a.user_id                                       AS picker_id,\n        COALESCE(NULLIF(TRIM(CONCAT_WS(' ', u.surname, u.name)), ''),\
+  \ CONCAT('Сборщик #', a.user_id))           AS picker_name,\n        COALESCE(oi.origin_product_id, oi.product_id)   AS product_id,\n        COALESCE(p.title, oi.origin_title, CONCAT('Товар #', COALESCE(oi.origin_product_id, oi.product_id))) AS product_name,\n        COALESCE(cat4.title, cat3.title, cat2.title, cat1.title, 'Без категории')                               AS category_name,\n        CASE WHEN oi.origin_product_id IS NOT NULL AND oi.origin_product_id <> oi.product_id\n             THEN 1 ELSE 0 END                          AS is_replaced,\n        CASE WHEN oi.origin_product_id IS NOT NULL AND oi.origin_product_id <> oi.product_id\n             THEN oi.product_id END                     AS replacement_product_id,\n        CASE WHEN oi.origin_product_id IS NOT NULL AND oi.origin_product_id <> oi.product_id\n             THEN COALESCE(pr.title, CONCAT('Товар #', oi.product_id)) END AS replacement_product_name,\n        CASE WHEN oi.origin_product_id IS NOT NULL AND oi.origin_product_id\
+  \ <> oi.product_id\n             THEN COALESCE(rr.title, 'Причина не указана') END AS replace_reason_name,\n        CASE WHEN JSON_SEARCH(po.checkout_options, 'one', 'call_if_no_exists') IS NOT NULL\n             THEN 1 ELSE 0 END                          AS has_call_option,\n        CASE WHEN po.status_id = 5 THEN 1 ELSE 0 END    AS is_order_delivered,\n        CASE WHEN oi.origin_product_id IS NOT NULL AND oi.origin_product_id <> oi.product_id\n             THEN oi.price_during_order - oi.origin_price END AS price_delta,\n        CASE WHEN oi.origin_product_id IS NOT NULL AND oi.origin_product_id <> oi.product_id\n             THEN GREATEST(oi.origin_price * COALESCE(oi.origin_quantity, oi.quantity)\n                           - oi.price_during_order * oi.quantity, 0)\n             ELSE 0 END                                 AS cheaper_loss_amount,\n        CASE WHEN oi.status_id = 3 THEN 1 ELSE 0 END    AS is_refused,\n        CASE WHEN oi.status_id = 3 THEN oi.price_during_order * oi.quantity\
+  \ ELSE 0 END AS refused_amount,\n        CASE WHEN oi.status_id = 3 AND COALESCE(oi.cancel_reason_id, 0) <> 5\n             THEN 1 ELSE 0 END                          AS is_not_found,\n        CASE WHEN oi.status_id = 3 THEN COALESCE(cr.title, 'Причина не указана') END AS cancel_reason_name,\n        oi.price_during_order * oi.quantity             AS line_amount\n    FROM order_items oi\n    JOIN assemblies a ON a.order_id = oi.order_id AND a.deleted_at IS NULL\n    JOIN orders o     ON o.id = oi.order_id\n    JOIN orders po    ON po.id = COALESCE(o.parent_order_id, o.id)\n    LEFT JOIN shops s ON s.id = o.shop_id\n    LEFT JOIN users u ON u.id = a.user_id\n    LEFT JOIN products p  ON p.id = COALESCE(oi.origin_product_id, oi.product_id)\n    LEFT JOIN products pr ON pr.id = oi.product_id\n    LEFT JOIN product_replace_reasons rr ON rr.id = oi.replace_reason_id\n    LEFT JOIN product_cancel_reasons cr ON cr.id = oi.cancel_reason_id\n    LEFT JOIN category_product catp ON catp.product_id\
+  \ = COALESCE(oi.origin_product_id, oi.product_id)\n  LEFT JOIN categories cat1 ON cat1.id = catp.category_id\n  LEFT JOIN categories cat2 ON cat2.id = cat1.parent_id\n  LEFT JOIN categories cat3 ON cat3.id = cat2.parent_id\n  LEFT JOIN categories cat4 ON cat4.id = cat3.parent_id\n    WHERE oi.deleted_at IS NULL\n      AND o.deleted_at IS NULL\n      AND COALESCE(po.client_id, 0) <> 35\n      AND COALESCE(CONCAT_WS(' ', u.surname, u.name), '') NOT LIKE '%тест%'\n) t\nCROSS JOIN (\n    SELECT COUNT(*) AS period_delivered_orders\n    FROM orders x\n    LEFT JOIN shops xs ON xs.id = x.shop_id\n    WHERE x.parent_order_id IS NULL\n      AND x.deleted_at IS NULL\n      AND x.status_id = 5\n      AND COALESCE(x.client_id, 0) <> 35\n      {% if period.from_expr %}AND x.created_at >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND x.created_at < {{ period.to_expr }}{% endif %}\n      {% if shops %}AND xs.title IN {{ shops | where_in }}{% endif %}\n) pd\n"
+uuid: 47fddec7-0198-47af-bebf-6193d5235a0d
+columns:
+- column_name: order_created_at
+  is_dttm: true
+- column_name: shop_name
+  is_dttm: false
+  verbose_name: Магазин
+  groupby: true
+  filterable: true
+- column_name: category_name
+  is_dttm: false
+  verbose_name: Категория
+  groupby: true
+  filterable: true
+- column_name: product_name
+  is_dttm: false
+  verbose_name: Товар
+  groupby: true
+  filterable: true
+- column_name: replacement_product_name
+  is_dttm: false
+  verbose_name: Замена
+  groupby: true
+  filterable: true
+- column_name: replace_reason_name
+  is_dttm: false
+  verbose_name: Причина замены
+  groupby: true
+  filterable: true
+- column_name: picker_name
+  is_dttm: false
+  verbose_name: Сборщик
+  groupby: true
+  filterable: true
+metrics: []
+version: 1.0.0

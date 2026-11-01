@@ -1,0 +1,14 @@
+extend type Mutation {
+  ProductReplaceReasonUpdate(
+    "ID причины"
+    id: Int!
+    "Причина замены"
+    title: String
+    "Активна"
+    is_active: Boolean
+    "Позиция сортировки"
+    position: Int
+  ): DefaultResponse @field(resolver: "ProductReplaceReason\\ProductReplaceReasonUpdate")
+  @validator(class: "ProductReplaceReason\\ProductReplaceReasonUpdateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

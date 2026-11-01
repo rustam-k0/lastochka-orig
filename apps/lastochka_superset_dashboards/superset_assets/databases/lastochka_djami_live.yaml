@@ -1,0 +1,28 @@
+# Подключение db4 - курьерская система, ЖИВАЯ база lastochka_djami (не суточная копия).
+# Только для курьерских операционных отчётов (нал/карта и остальные курьерские):
+# им нужна свежесть, остальные отчёты читают копию db1.
+# MySQL-пользователь superset_live: SELECT только на таблицы курьерских отчётов
+# (orders, order_items, delivery_orders, deliveries, shops, shop_zones) и на
+# колонки users (id, name, surname, patronymic, deleted_at) - без паролей и 2FA.
+# Пароль: на проде /home/admin/.prod-credentials, на dev
+# /home/admin/apps/superset/.credentials. Первый импорт нового подключения -
+# с SUPERSET_ASSET_PASSWORDS='{"databases/lastochka_djami_live.yaml": "..."}',
+# дальше импортёр берёт пароль из метабазы по uuid.
+# В SQL Lab не показываем (expose_in_sqllab: false): тяжёлый ручной запрос не
+# должен грузить рабочую БД.
+database_name: Lastochka Djami (курьерка, живая)
+uuid: cf57c09a-89dc-4014-ad28-5dc33efa8cd9
+sqlalchemy_uri: mysql+mysqldb://superset_live:XXXXXXXXXX@127.0.0.1:3306/lastochka_djami?charset=utf8mb4
+cache_timeout: null
+expose_in_sqllab: false
+allow_run_async: false
+allow_ctas: false
+allow_cvas: false
+allow_dml: false
+allow_file_upload: false
+extra:
+  metadata_params: {}
+  engine_params: {}
+  metadata_cache_timeout: {}
+  schemas_allowed_for_file_upload: []
+version: 1.0.0

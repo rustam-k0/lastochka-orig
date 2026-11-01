@@ -1,0 +1,23 @@
+extend type Query {
+  "Получение всех брендов"
+  admin_brands(
+    is_active: Boolean
+    search: String
+    ordering: [DefaultOrdering]
+  ): [Brand] @all(scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+
+  "Получение брендов с пагинацией"
+  admin_brands_paginate(
+    is_active: Boolean
+    search: String
+    ordering: [DefaultOrdering]
+  ): [Brand] @paginate(defaultCount: 10, scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+
+  "Получение бренда по ID"
+  admin_brands_item(
+    id: Int @eq
+  ): Brand @find
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

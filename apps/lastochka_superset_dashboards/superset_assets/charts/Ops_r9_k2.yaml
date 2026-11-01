@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Заказы с жалобой
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN has_error = 1 THEN order_id END) / NULLIF(COUNT(DISTINCT CASE WHEN is_finished = 1 THEN order_id END), 0)
+    label: Заказы с жалобой
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: assembly_started_at
+  subheader: '% собранных заказов'
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: .1%
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 7f64de2b-ba11-4e40-a875-f5f51593a14d
+uuid: c11f73f0-ff55-5219-9fe2-fa7aee94a046
+version: 1.0.0

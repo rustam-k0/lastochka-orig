@@ -1,0 +1,16 @@
+type MenuItem {
+    id: ID!
+    name: String!
+    title: String!
+    icon: String
+    position: Int!
+    is_visible: Boolean!
+    accesses: [String!]!
+    is_folder: Boolean!
+    parent_id: ID
+}
+
+input MenuItemOrderInput {
+    name: String!
+    position: Int!
+}

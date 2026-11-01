@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Чистое время
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: AVG(assembly_minutes)
+    label: Чистое время
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: assembly_started_at
+  subheader: Начало → передача курьеру, мин
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',.1f'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 7f64de2b-ba11-4e40-a875-f5f51593a14d
+uuid: d71c9d43-0b18-5d7f-816b-a74e1c7e9a63
+version: 1.0.0

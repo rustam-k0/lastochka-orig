@@ -1,0 +1,26 @@
+# Вкладка «Лента сигналов». Полная хронологическая лента - на самом деле не
+# хронологическая (нет event-потока с временем, см. комментарий датасета) - а
+# raw-list фактических нарушений metric_key/shop_alert_rules за последние 30
+# дней, отсортированный по позиции правила (sar.position) и названию
+# магазина - задано ORDER BY внутри SQL датасета.
+slice_name: 'Лента сигналов: Полная лента сигналов по всей сети (факт vs порог)'
+viz_type: table
+params:
+  viz_type: table
+  query_mode: raw
+  all_columns:
+  - shop_name
+  - rule_name
+  - metric_key
+  - metric_value
+  - comparison
+  - threshold_value
+  - recommended_action_text
+  - shop_id
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+dataset_uuid: bdd36567-498d-4faa-b19b-9556550abdb3
+uuid: 23c4c572-2a1f-46fa-880e-db5dd6ba49dd
+version: 1.0.0

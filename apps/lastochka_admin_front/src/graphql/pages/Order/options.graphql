@@ -1,0 +1,14 @@
+query($shop_id: Int) {
+  couriers(shop_id: $shop_id) {
+    id
+    name
+    surname
+    patronymic
+  }
+  collectors(shop_id: $shop_id) {
+    id
+    name
+    surname
+    patronymic
+  }
+}

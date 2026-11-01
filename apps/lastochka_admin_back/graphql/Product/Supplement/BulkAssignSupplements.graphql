@@ -1,0 +1,8 @@
+extend type Mutation {
+  BulkAssignSupplements(
+    product_ids: [Int!]!
+    supplement: SupplementInput!
+  ): DefaultResponse @field(resolver: "App\\GraphQL\\Mutations\\Product\\BulkAssignSupplements")
+  @validator(class: "Product\\BulkAssignSupplementsValidator")
+  @can(ability: "onlyShop",model: "Shop") @section(key: "products")
+}

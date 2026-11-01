@@ -1,0 +1,17 @@
+extend type Query {
+  "Все семейства атрибутов"
+  attribute_families: [AttributeFamily] @all @guard @can(model: "Admin", ability: "onlyAdmin")
+
+  "Семейства с пагинацией"
+  attribute_families_paginate: [AttributeFamily] @paginate(defaultCount: 20) @guard @can(model: "Admin", ability: "onlyAdmin")
+
+  "Одно семейство"
+  attribute_family(
+    id: Int @eq
+  ): AttributeFamily @find @guard @can(model: "Admin", ability: "onlyAdmin")
+
+  "Атрибуты для формы товара по категории (системные + из семейства категории)"
+  category_family_attributes(
+    category_id: Int!
+  ): [AttributeFamilyAttribute] @field(resolver: "App\\GraphQL\\Queries\\CategoryFamilyAttributes") @guard @can(model: "Admin", ability: "onlyAdmin")
+}

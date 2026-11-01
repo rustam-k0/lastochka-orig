@@ -1,0 +1,35 @@
+extend type Query {
+  "Список платформенных товаров (админка). Поиск по названию или любому штрихкоду."
+  platformProducts(
+    search: String @scope(name: "search")
+    shopId: Int @scope(name: "filterByShop")
+    hasOffersInShop: Int @scope(name: "onlyHavingOffers")
+  ): [PlatformProduct!]! @paginate(defaultCount: 50, maxCount: 200)
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Детальная карточка платформенного товара"
+  platformProduct(id: Int! @eq): PlatformProduct
+    @find
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Офферы платформенного товара для витрины (фильтр по адресу доставки + сортировка по цене)"
+  offersForPlatformProduct(
+    id: Int!
+    deliveryPoint: PointInput
+  ): [ProductOffer!]!
+    @field(resolver: "Aggregator\\OffersForProductQuery")
+    @guard
+
+  "Карантин: товары, не попавшие на витрину (no_ean / double_match). shop_id опционален: без него — по всем магазинам (FOODLINK-11191)."
+  aggregatorQuarantine(
+    reason: AggregatorQuarantineReason @scope(name: "reason")
+    resolved: Boolean @scope(name: "resolvedFilter")
+    shop_id: Int @scope(name: "filterByShop")
+  ): [AggregatorQuarantine!]! @paginate(defaultCount: 50, maxCount: 200)
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Счётчик неразрешённых записей карантина (для бейджа в сайдбаре)"
+  aggregatorQuarantineCount: Int!
+    @field(resolver: "Aggregator\\QuarantineCountQuery")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+}

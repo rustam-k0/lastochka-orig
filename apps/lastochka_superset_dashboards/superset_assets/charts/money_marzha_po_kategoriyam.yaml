@@ -1,0 +1,19 @@
+slice_name: Маржа по категориям
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  metrics:
+  - expressionType: SQL
+    sqlExpression: (SUM(item_revenue) - SUM(item_cogs)) * 100.0 / NULLIF(SUM(item_revenue),
+      0)
+    label: Маржа, %
+    hasCustomLabel: true
+  groupby:
+  - category_name
+  adhoc_filters: []
+  row_limit: 10000
+  y_axis_format: SMART_NUMBER
+  x_axis: category_name
+dataset_uuid: d008a91e-bcfc-4d7a-9126-9b266fe0b8cb
+uuid: 7195a26f-d82e-4089-b06f-046409182df4
+version: 1.0.0

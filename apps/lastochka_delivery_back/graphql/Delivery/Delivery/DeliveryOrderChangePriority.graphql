@@ -1,0 +1,11 @@
+extend type Mutation {
+  "Поменять приоритет заказа"
+  DeliveryOrderChangePriority(
+    "DeliveryOrder -> id"
+    id:Int
+    "Приоритетность доставки (Чем меньше число, тем больше приоритет )"
+    priority:Int
+  ):DefaultResponse @guard @field(resolver: "Delivery\\DeliveryOrderChangePriority")
+  @validator(class: "Delivery\\DeliveryOrderChangePriorityValidator")
+  @can(model: "Admin",ability: "driverOnShift")
+}

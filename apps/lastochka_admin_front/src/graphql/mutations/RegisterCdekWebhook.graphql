@@ -1,0 +1,7 @@
+mutation RegisterCdekWebhook($shop_id: Int!) {
+    registerCdekWebhook(shop_id: $shop_id) {
+        success
+        message
+        url
+    }
+}

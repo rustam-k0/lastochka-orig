@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Зона не определена
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(CASE WHEN zone_id IS NULL THEN 1 ELSE 0 END)
+    label: Зона не определена
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: accepted_at
+  subheader: Требуют уточнения адреса
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',d'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 36a9cf7e-b5c0-4c80-a5be-79eaa4d1810a
+uuid: e0a886db-c066-5bd6-917d-b6d7df9ef754
+version: 1.0.0

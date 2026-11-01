@@ -1,0 +1,40 @@
+extend type Mutation {
+  "Обновление промокода мерчанта"
+  updateMerchantPromocode(input: UpdateMerchantPromocodeInput! @spread): MerchantPromocode!
+    @field(resolver: "MerchantPromocode\\UpdateMerchantPromocode")
+    @validator(class: "MerchantPromocode\\UpdateMerchantPromocodeValidator")
+    @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-promocodes")
+}
+
+input UpdateMerchantPromocodeInput {
+  "ID промокода"
+  id: Int!
+  "Scope промокода: store или platform. Platform-wide доступен только админам"
+  scope: MerchantPromocodeScope
+  "ID магазина (для scope=store, null для scope=platform)"
+  shop_id: Int
+  "Название промокода"
+  title: String
+  "Код промокода (уникальный в рамках магазина)"
+  code: String
+  "Тип скидки: percent | fixed"
+  discount_type: MerchantPromocodeDiscountType
+  "Значение скидки"
+  discount_value: Int
+  "Дата начала действия"
+  valid_from: Date
+  "Дата окончания действия"
+  valid_to: Date
+  "Активен ли промокод"
+  is_active: Boolean
+  "Максимальное количество использований (всего). null = без ограничений"
+  max_uses: Int
+  "Максимальное количество использований на одного клиента. null = без ограничений"
+  max_uses_per_client: Int
+  "Тип привязки: all | products | categories"
+  binding_type: MerchantPromocodeBindingType
+  "ID привязанных товаров (при binding_type = PRODUCTS)"
+  product_ids: [Int!]
+  "ID привязанных категорий (при binding_type = CATEGORIES)"
+  category_ids: [Int!]
+}

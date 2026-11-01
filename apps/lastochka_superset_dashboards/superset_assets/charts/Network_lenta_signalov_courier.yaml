@@ -1,0 +1,22 @@
+# Вкладка «Обзор сети». ВТОРАЯ панель «Лента сигналов по сети» - операционные
+# алерты курьерки (db1: SLA-нарушение слота, ошибка оплаты). См. companion
+# Network_lenta_signalov_analytics (db3) - первая панель.
+slice_name: 'Обзор сети: Лента сигналов по сети — операционные алерты курьерки'
+viz_type: table
+params:
+  viz_type: table
+  query_mode: raw
+  all_columns:
+  - order_dttm
+  - shop_name
+  - signal_type
+  - severity
+  - signal_text
+  - order_id
+  adhoc_filters: []
+  row_limit: 100
+  order_desc: true
+  table_timestamp_format: smart_date
+dataset_uuid: 801d6ab9-b0e5-4ed6-b55d-7ca89781f3fe
+uuid: 27b0ed77-0762-41b2-a89a-ebf3ff872807
+version: 1.0.0

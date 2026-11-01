@@ -1,0 +1,11 @@
+extend type Mutation {
+  "Установить режим остатков на витринной категории: normal/ignore/fixed (+ лимит и единица для fixed) (LASTOCHKI-JAMI-11207)"
+  SetCategoryStockMode(
+    category_id: Int!
+    stock_mode: String!
+    fixed_stock_quantity: Int
+    fixed_stock_unit_type_id: Int
+  ): Category
+    @field(resolver: "Category\\SetCategoryStockMode")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "categories")
+}

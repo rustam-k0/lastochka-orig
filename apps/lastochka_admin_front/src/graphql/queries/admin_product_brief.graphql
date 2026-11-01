@@ -1,0 +1,24 @@
+query ($id: Int) {
+  admin_products_item(id: $id) {
+    id
+    articul
+    title
+    img {
+      path
+    }
+    default_price {
+      value
+    }
+    remains {
+      shop_id
+      quantity
+    }
+    categories {
+      id
+      title
+    }
+    status_id
+    is_configurable
+    parent_id
+  }
+}

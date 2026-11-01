@@ -1,0 +1,22 @@
+query ($shop_id: Int, $id: Int) {
+  shop_zone(shop_id: $shop_id, id: $id) {
+    name
+    min_order_price
+    delivery_price
+    free_delivery_from
+    delivery_price_ranges {
+      from_amount
+      price
+    }
+    delivery_type
+    delivery_days
+    delivery_lead_minutes
+    assembly_price
+    is_active
+    coordinates_loaded
+    coordinates {
+      latitude
+      longitude
+    }
+  }
+}

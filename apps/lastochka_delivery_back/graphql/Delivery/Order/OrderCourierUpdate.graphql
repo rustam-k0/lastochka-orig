@@ -1,0 +1,12 @@
+extend type Mutation {
+  "Сменить курьера в заказе"
+  OrderCourierUpdate(
+    "ID заказа"
+    id:Int
+    "ID сборщика"
+    courier_id:Int
+  ):DefaultResponse @guard
+  @field(resolver: "Order\\OrderCourierUpdate")
+  @validator(class: "Order\\OrderCourierUpdateValidator")
+  @can(model: "Admin",ability: "assignCourier")
+}

@@ -1,0 +1,45 @@
+# Вкладка «Обзор» (по магазину). Item-level, единственный потребитель - гейдж
+# «Точность сборки %» (100 - доля позиций с заменой/отменой сборщиком).
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 3 - item_price_total = oi.price_during_order * oi.quantity. У oi.price
+#     СМЕШАННАЯ семантика (unit при создании, итог после сборки) - нельзя ни
+#     SUM(price), ни SUM(price*quantity); price_during_order стабильно за единицу.
+#     Cancel-фильтр НЕ применён: датасет item-level сырой (не агрегат реализованной
+#     выручки), в строках есть is_cancelled/cancel_reason_id - потребитель («Точность
+#     сборки %») решает сам; item_price_total тут справочный, не денежная сумма.
+#   Правило 2, ИСКЛЮЧЕНИЕ - НЕ добавлен WHERE o.parent_order_id IS NULL. Проверено
+#     на dev: из 564 order_items 318 живут на заказах-родителях, 246 - на дочерних
+#     (сплит), и ИМЕННО среди дочерних сосредоточен основной сигнал точности сборки
+#     (3 из 4 replace/cancel-флагов - на дочерних заказах). Сборка физически
+#     происходит на уровне дочернего заказа ДО/ВО ВРЕМЯ синхронизации на родителя
+#     (AssemblyFinish::syncItemsToParent) - фильтр по родителю вырезал бы почти весь
+#     сигнал качества сборки. Это ровно исключение, описанное в правиле 2: "витрины
+#     по позициям во время активной сборки требуют отдельного разбора". Для
+#     финансовых метрик (COGS/валовая прибыль) эта таблица НЕ используется - они
+#     считаются на djami_orders_core (order-level, там фильтр родителя есть).
+table_name: djami_order_items_assembly
+main_dttm_col: order_created_at
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      oi.id                                    AS order_item_id,
+      oi.order_id                              AS order_id,
+      o.shop_id                                 AS shop_id,
+      o.created_at                              AS order_created_at,
+      oi.product_id                             AS product_id,
+      oi.price_during_order * oi.quantity       AS item_price_total,
+      oi.parent_id                              AS parent_item_id,
+      oi.replace_reason_id                      AS replace_reason_id,
+      oi.cancel_reason_id                       AS cancel_reason_id,
+      oi.return_reason_id                       AS return_reason_id,
+      CASE WHEN oi.replace_reason_id IS NOT NULL THEN 1 ELSE 0 END AS is_replaced,
+      CASE WHEN oi.cancel_reason_id IS NOT NULL THEN 1 ELSE 0 END AS is_cancelled,
+      CASE WHEN oi.return_reason_id IS NOT NULL THEN 1 ELSE 0 END AS is_returned
+  FROM order_items oi
+  JOIN orders o ON o.id = oi.order_id
+uuid: 36a95bd0-3f98-45c3-9a0d-a4ed3ddcf4c8
+columns: []
+metrics: []
+version: 1.0.0

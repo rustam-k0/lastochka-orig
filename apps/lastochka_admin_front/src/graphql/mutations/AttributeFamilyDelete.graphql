@@ -1,0 +1,6 @@
+mutation AttributeFamilyDelete($id: Int!) {
+  AttributeFamilyDelete(id: $id) {
+    code
+    message
+  }
+}

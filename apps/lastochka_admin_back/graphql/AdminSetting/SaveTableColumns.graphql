@@ -1,0 +1,9 @@
+extend type Mutation {
+    saveTableColumns(
+        "JSON-конфигурация колонок таблиц админки"
+        config: String!
+    ): AdminSetting!
+        @field(resolver: "AdminSetting\\SaveTableColumns")
+        @guard
+        @can(ability: "manageSettings", model: "Admin")
+}

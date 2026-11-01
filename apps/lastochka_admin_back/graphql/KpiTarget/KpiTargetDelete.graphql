@@ -1,0 +1,7 @@
+extend type Mutation {
+  KpiTargetDelete(
+    "ID плана"
+    id: Int!
+  ): DefaultResponse @field(resolver: "KpiTarget\\KpiTargetDelete")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

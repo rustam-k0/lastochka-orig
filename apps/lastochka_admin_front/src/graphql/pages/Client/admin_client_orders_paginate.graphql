@@ -1,0 +1,34 @@
+query(
+  $client_id: Int
+  $page: Int
+  $first: Int
+  $statuses: [Int]
+  $created_at_start_date: DateTime
+  $created_at_end_date: DateTime
+  $ordering: [DefaultOrdering]
+) {
+  admin_orders_paginate(
+    client_id: $client_id
+    page: $page
+    first: $first
+    statuses: $statuses
+    created_at_start_date: $created_at_start_date
+    created_at_end_date: $created_at_end_date
+    ordering: $ordering
+  ) {
+    data {
+      id
+      number
+      shop {
+        title
+      }
+      amount
+      payment_type_id
+      status_id
+      created_at
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}

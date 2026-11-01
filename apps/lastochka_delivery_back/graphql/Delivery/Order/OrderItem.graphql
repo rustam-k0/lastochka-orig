@@ -1,0 +1,39 @@
+type OrderItem {
+  "ID товара в заказе"
+  id:Int
+  "Количество товара при оформлении заказа"
+  quantity:Int
+  "Возвращено курьером при доставке (порции/штуки)"
+  returned_quantity:Int
+  "Фактический вес в граммах после сборки (для весовых товаров)"
+  actual_weight:Int
+  "Цена товара вместе учитывая количество"
+  price:Float
+  "Товар"
+  product:Product @hasOne
+  "ID заказа"
+  order_id:Int
+  """
+  1 - товар ожидает сборки
+  2 - собран
+  3 - отменен
+  """
+  status_id:Int
+  "Добавки к товару"
+  supplements:[OrderItemSupplement] @hasMany
+  "Снапшот лесенки цен позиции (цены от количества, MID-308); null у позиций без лесенки"
+  price_tiers:OrderItemPriceTiers @method(name: "resolvePriceTiers")
+}
+
+"Снапшот лесенки цен позиции (цены от количества, MID-308); null у позиций без лесенки"
+type OrderItemPriceTiers {
+  base_price: Float!
+  base_price_old: Float
+  base_is_eligible: Boolean!
+  tiers: [OrderItemPriceTier!]!
+}
+
+type OrderItemPriceTier {
+  min_quantity: Float!
+  price: Float!
+}

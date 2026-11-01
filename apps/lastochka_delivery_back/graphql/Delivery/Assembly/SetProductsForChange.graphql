@@ -1,0 +1,11 @@
+extend type Mutation {
+  "Выбрать товары для замены"
+  SetProductsForChange(
+    "AssemblyItem -> id"
+    id:Int
+    "ID товаров для замены"
+    replacements:[Int]
+  ):DefaultResponse @guard @field(resolver: "Assembly\\SetProductsForChange")
+  @validator(class: "Assembly\\SetProductsForChangeValidator")
+  @can(model: "Admin",ability: "onShift")
+}

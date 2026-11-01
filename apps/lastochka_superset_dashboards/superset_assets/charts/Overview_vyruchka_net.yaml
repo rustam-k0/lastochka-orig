@@ -1,0 +1,20 @@
+slice_name: Выручка (net)
+viz_type: big_number
+params:
+  viz_type: big_number
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END)
+    label: Выручка, ₽
+    hasCustomLabel: true
+  granularity_sqla: order_created_at
+  time_grain_sqla: P1D
+  adhoc_filters: []
+  compare_lag: ''
+  compare_suffix: ''
+  show_trend_line: true
+  start_y_axis_at_zero: true
+  y_axis_format: SMART_NUMBER
+dataset_uuid: d991fd22-7a5f-4c1f-977b-866968e97b0c
+uuid: 772aead6-9057-423a-96da-fd99e9044050
+version: 1.0.0

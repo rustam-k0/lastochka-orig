@@ -1,0 +1,18 @@
+query (
+  $shop_id: Int
+  $available_in_shop_id: Int
+  $title: String
+  $categories: [Int]
+  $exclude_children: Boolean
+) {
+  admin_products_fill_stats(
+    shop_id: $shop_id
+    available_in_shop_id: $available_in_shop_id
+    title: $title
+    categories: $categories
+    exclude_children: $exclude_children
+  ) {
+    avg_percent
+    total
+  }
+}

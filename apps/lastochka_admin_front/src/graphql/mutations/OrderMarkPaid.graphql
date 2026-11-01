@@ -1,0 +1,6 @@
+mutation OrderMarkPaid($id: ID!) {
+    OrderMarkPaid(id: $id) {
+        code
+        message
+    }
+}

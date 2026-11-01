@@ -1,0 +1,45 @@
+# Сгенерировано scripts/ops_datasets.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками: описание правил расчёта - в генераторе.
+table_name: ops_client_reviews
+main_dttm_col: reviewed_at
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: "{% set period = get_time_filter('reviewed_at', target_type='DATETIME') %}\nSELECT\n    r.*,\n    COALESCE(f.segment, 'Нет покупок')               AS segment,\n    CONCAT(f.r_score, f.f_score, f.m_score)          AS rfm_code,\n    CASE\n        WHEN r.rating <= 3 THEN 'Связаться с клиентом, разобрать жалобу'\n        WHEN r.rating IS NULL THEN 'Запросить оценку'\n        ELSE 'Поблагодарить, предложить повторный заказ'\n    END                                              AS next_step\nFROM (SELECT\n    rv.id                                            AS review_id,\n    rv.created_at                                    AS reviewed_at,\n    so.user_id                                       AS client_id,\n    so.id                                            AS order_id,\n    CASE WHEN rv.rating BETWEEN 1 AND 5 THEN rv.rating END AS rating,\n    CASE WHEN rv.rating BETWEEN 1 AND 5 THEN CAST(rv.rating AS CHAR) ELSE 'Без оценки' END AS rating_label,\n    NULLIF(TRIM(rv.description), '')  \
+  \               AS review_text,\n    CASE WHEN NULLIF(TRIM(rv.description), '') IS NULL THEN 1 ELSE 0 END AS is_without_text,\n    CASE rv.error_type\n        WHEN 'shortage' THEN 'Недовоз'\n        WHEN 'wrong_item' THEN 'Пересорт'\n        WHEN 'expired' THEN 'Просрочка'\n        WHEN 'other' THEN 'Другое'\n        ELSE 'Причина не указана'\n    END                                 AS reason_name,\n    st.name                                          AS shop_name\nFROM order_reviews rv\nJOIN orders o ON o.id = rv.order_id\nLEFT JOIN djami_store_copy.orders so ON so.id = CAST(o.uuid AS UNSIGNED)\nLEFT JOIN djami_store_copy.stores st ON st.id = so.store_id\nWHERE rv.deleted_at IS NULL\n  AND COALESCE(o.client_id, 0) <> 35\n  AND COALESCE(so.user_id, 0) NOT IN (21, 26, 27)) r\nLEFT JOIN (SELECT\n        x.*,\n        CASE\n            WHEN x.recency_days >= 90 THEN 'Потерянные'\n            WHEN x.recency_days >= 31 THEN 'Риск'\n            WHEN x.frequency_365 <= 1 THEN 'Новые'\n      \
+  \      WHEN x.r_score >= 4 AND x.f_score >= 4 AND x.m_score >= 4 THEN 'Лучшие'\n            WHEN x.f_score >= 3 THEN 'Лояльные'\n            ELSE 'Развивающиеся'\n        END                                          AS segment\n    FROM (\n        SELECT\n            co.client_id,\n            MIN(co.ordered_at)                       AS first_order_at,\n            MAX(co.ordered_at)                       AS last_order_at,\n            DATEDIFF({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, MAX(co.ordered_at))     AS recency_days,\n            SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) AS frequency_365,\n            SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) AS monetary_365,\n            SUBSTRING_INDEX(GROUP_CONCAT(co.shop_name ORDER BY co.ordered_at\
+  \ DESC SEPARATOR '|'), '|', 1) AS last_shop_name,\n            CASE\n                WHEN DATEDIFF({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, MAX(co.ordered_at)) <= 7 THEN 5\n                WHEN DATEDIFF({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, MAX(co.ordered_at)) <= 14 THEN 4\n                WHEN DATEDIFF({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, MAX(co.ordered_at)) <= 30 THEN 3\n                WHEN DATEDIFF({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, MAX(co.ordered_at)) <= 60 THEN 2\n                ELSE 1\n            END                                      AS r_score,\n            CASE\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) >= 10 THEN 5\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr\
+  \ }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) >= 5 THEN 4\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) >= 3 THEN 3\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN 1 ELSE 0 END) = 2 THEN 2\n                ELSE 1\n            END                                      AS f_score,\n            CASE\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) >= 15000 THEN 5\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) >= 7000 THEN 4\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({%\
+  \ if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) >= 3000 THEN 3\n                WHEN SUM(CASE WHEN co.ordered_at >= DATE_SUB({% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}, INTERVAL 365 DAY) THEN co.total ELSE 0 END) >= 1000 THEN 2\n                ELSE 1\n            END                                      AS m_score\n        FROM (SELECT\n        o.id                                         AS order_id,\n        o.user_id                                    AS client_id,\n        o.created_at                                 AS ordered_at,\n        o.total                                      AS total,\n        st.name                                      AS shop_name\n    FROM djami_store_copy.orders o\n    LEFT JOIN djami_store_copy.stores st ON st.id = o.store_id\n    WHERE o.deleted_at IS NULL\n      AND o.status = 'delivered'\n      AND o.user_id IS NOT NULL\n      AND o.user_id NOT IN (21, 26,\
+  \ 27)) co\n        WHERE co.ordered_at < {% if period.to_expr %}{{ period.to_expr }}{% else %}NOW(){% endif %}\n        GROUP BY co.client_id\n    ) x) f ON f.client_id = r.client_id\n"
+uuid: 061549f5-8d56-5036-baed-944599899194
+columns:
+- column_name: reviewed_at
+  is_dttm: true
+  verbose_name: Дата
+- column_name: shop_name
+  is_dttm: false
+  verbose_name: Магазин
+  groupby: true
+  filterable: true
+- column_name: client_id
+  is_dttm: false
+  verbose_name: ID клиента
+  groupby: true
+  filterable: true
+- column_name: segment
+  is_dttm: false
+  verbose_name: Сегмент
+  groupby: true
+  filterable: true
+- column_name: rating_label
+  is_dttm: false
+  verbose_name: Оценка
+  groupby: true
+  filterable: true
+- column_name: reason_name
+  is_dttm: false
+  verbose_name: Причина
+  groupby: true
+  filterable: true
+metrics: []
+version: 1.0.0

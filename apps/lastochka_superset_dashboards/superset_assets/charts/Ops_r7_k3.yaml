@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Бонусы
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: CAST(NULL AS DECIMAL(12, 2))
+    label: Бонусы
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: accepted_at
+  subheader: 'Отдельные начисления: в системе нет'
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: $,.0f
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 36a9cf7e-b5c0-4c80-a5be-79eaa4d1810a
+uuid: 99fd1000-1f31-5f63-a5cd-bb363aeb6ad9
+version: 1.0.0

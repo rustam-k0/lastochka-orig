@@ -1,0 +1,40 @@
+variables:
+  BACKEND_DIR: "/home/admin/apps/lastochka_admin_back"
+
+deploy_dev:
+  stage: deploy
+  tags:
+    - lastochka
+  script:
+    - git config --global --add safe.directory $BACKEND_DIR
+    - cd $BACKEND_DIR
+    - git pull
+    - php8.2 /usr/local/bin/composer install
+    - php8.2 artisan migrate --force
+    - php8.2 artisan config:cache
+    - php8.2 artisan route:cache
+    - php8.2 artisan event:cache
+    - php8.2 artisan lighthouse:clear-cache
+    - php8.2 artisan lighthouse:cache
+    - sudo supervisorctl restart all
+  only:
+    - master
+
+deploy_prod:
+  stage: deploy
+  tags:
+    - lastochka-prod
+  script:
+    - git config --global --add safe.directory $BACKEND_DIR
+    - cd $BACKEND_DIR
+    - git pull
+    - php8.2 /usr/local/bin/composer install
+    - php8.2 artisan migrate --force
+    - php8.2 artisan config:cache
+    - php8.2 artisan route:cache
+    - php8.2 artisan event:cache
+    - php8.2 artisan lighthouse:clear-cache
+    - php8.2 artisan lighthouse:cache
+    - sudo supervisorctl restart lastochka:* lastochka_rabbitmq:*
+  only:
+    - master

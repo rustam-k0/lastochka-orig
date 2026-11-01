@@ -1,0 +1,14 @@
+extend type Query {
+  "Предпросмотр эффективного учёта остатков для набора категорий (до сохранения товара)"
+  effective_stock_preview(
+    category_ids: [Int!]
+    shop_id: Int
+    unit_type_id: Int
+  ): EffectiveStockPreview @field(resolver: "App\\GraphQL\\Queries\\EffectiveStockPreview") @guard @can(model: "Admin", ability: "onlyAdmin")
+}
+
+type EffectiveStockPreview {
+  mode: String!
+  fixed: Int
+  fixed_unit_type_id: Int
+}

@@ -1,0 +1,6 @@
+mutation AttributeFamilyUpdate($id: Int!, $title: String, $code: String, $position: Int, $attributes: [FamilyAttributeInput]) {
+  AttributeFamilyUpdate(id: $id, title: $title, code: $code, position: $position, attributes: $attributes) {
+    code
+    message
+  }
+}

@@ -1,0 +1,24 @@
+"Отзыв на мерчанта"
+type MerchantReview {
+  "ID"
+  id: Int!
+  "ID магазина"
+  shop_id: Int!
+  "Оценка 1-5"
+  rating: Int!
+  "Текст отзыва"
+  description: String
+  "Опубликован"
+  is_published: Boolean!
+  "Имя автора"
+  author_name: String
+  "Телефон автора"
+  author_phone: String
+  "Дата создания"
+  created_at: DateTime
+  "Дата обновления"
+  updated_at: DateTime
+
+  "Магазин"
+  shop: Shop! @belongsTo
+}

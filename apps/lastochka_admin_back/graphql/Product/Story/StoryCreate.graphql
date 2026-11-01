@@ -1,0 +1,31 @@
+extend type Mutation {
+  "Создание новой истории"
+  StoryCreate(
+    "Название истории"
+    title: String!
+    "Дата и время окончания показа"
+    expires_at: DateTime!
+    "Тип перехода"
+    link_type: StoryLinkType
+    "ID товара (если link_type = product)"
+    product_id: Int
+    "ID магазина (если link_type = shop)"
+    shop_id: Int
+    "Внешняя ссылка (если link_type = external)"
+    external_url: String
+    "Позиция для сортировки"
+    position: Int
+    "Активность"
+    is_active: Boolean
+    "Быстрая категория"
+    is_quick_category: Boolean
+    "Превью изображение"
+    thumbnail_image: ImgInput!
+    "Изображения слайдера"
+    images: [ImgInput!]!
+    "Динамические чекбоксы (JSON-строка map field => bool)"
+    custom_checkboxes: String
+  ): Story! @field(resolver: "Story\\StoryCreate")
+  @validator(class: "Story\\StoryCreateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "stories")
+}

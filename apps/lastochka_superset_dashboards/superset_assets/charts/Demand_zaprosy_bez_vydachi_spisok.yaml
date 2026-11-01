@@ -1,0 +1,32 @@
+# Вкладка «Спрос». Тот же датасет и логика, что и в Demand_deficity_poisk_
+# bez_rezultata (BUILD_PLAN явно допускает переиспользование виджета/чарта) -
+# отдельный chart-объект под отдельную ячейку макета «Дефициты».
+slice_name: Запросы без выдачи результата (список)
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - search_query
+  - store_id
+  - event_date
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      column_name: search_query
+    aggregate: COUNT
+    label: Запросов без результата
+    hasCustomLabel: true
+  adhoc_filters:
+  - expressionType: SIMPLE
+    subject: results_count
+    operator: '=='
+    comparator: 0
+    clause: WHERE
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 3e83a052-bf44-4b9e-b942-5754694370e5
+uuid: 69951495-3088-4231-866b-05afadf10fcd
+version: 1.0.0

@@ -1,0 +1,45 @@
+# Вкладка «Деньги» (по магазину). UNION ALL известных категорий расходов
+# (Сборка/Скидки и бонусы/Списания) для доната «Структура расходов». Имя датасета
+# verbatim из BUILD_PLAN. Статус: partial (см. примечание чарта - Доставка/
+# Эквайринг/Аренда/ФОТ/Реклама по-прежнему не покрыты этим донатом; Аренда как
+# отдельная строка P&L теперь считается в money_pnl_lines, здесь НЕ дублируется).
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 2 - WHERE o.parent_order_id IS NULL в обеих order-ветках.
+#   Правило 3 - категория «Списания»: (oi.price_during_order * oi.quantity). У
+#     oi.price СМЕШАННАЯ семантика (unit при создании, итог после сборки) - нельзя
+#     ни SUM(price), ни SUM(price*quantity); price_during_order стабильно за единицу.
+#     Cancel-фильтр не применяется: ветка «Списания» отбирает cancel/return-позиции.
+# Наблюдение по схеме: shops.name НЕ существует (только shops.title) - BUILD_PLAN
+# предполагал sh.name, здесь исправлено на sh.title.
+# Намеренно НЕ фильтруется status_id: assembly_cost/discount/bonus_spent/списания
+# - расходы, понесённые независимо от финального статуса заказа (в т.ч. на
+# отменённых заказах сборка могла быть уже выполнена, списания по определению
+# относятся к проблемным позициям вне зависимости от статуса всего заказа).
+table_name: money_expense_breakdown
+main_dttm_col: order_date
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT category, shop_id, shop_name, order_date, amount FROM (
+    SELECT 'Сборка' AS category, o.shop_id, sh.title AS shop_name,
+           DATE(COALESCE(o.paid_at, o.finished_at)) AS order_date, o.assembly_cost AS amount
+    FROM orders o LEFT JOIN shops sh ON sh.id = o.shop_id
+    WHERE o.parent_order_id IS NULL
+    UNION ALL
+    SELECT 'Скидки и бонусы' AS category, o.shop_id, sh.title AS shop_name,
+           DATE(COALESCE(o.paid_at, o.finished_at)) AS order_date, (o.discount + o.bonus_spent) AS amount
+    FROM orders o LEFT JOIN shops sh ON sh.id = o.shop_id
+    WHERE o.parent_order_id IS NULL
+    UNION ALL
+    SELECT 'Списания' AS category, o.shop_id, sh.title AS shop_name,
+           DATE(COALESCE(o.paid_at, o.finished_at)) AS order_date, (oi.price_during_order * oi.quantity) AS amount
+    FROM order_items oi
+    JOIN orders o ON o.id = oi.order_id
+    LEFT JOIN shops sh ON sh.id = o.shop_id
+    WHERE oi.cancel_reason_id IS NOT NULL OR oi.return_reason_id IS NOT NULL
+  ) t
+uuid: b0c11bdf-ab2e-4f9d-885d-7d71c5a2e4fb
+columns: []
+metrics: []
+version: 1.0.0

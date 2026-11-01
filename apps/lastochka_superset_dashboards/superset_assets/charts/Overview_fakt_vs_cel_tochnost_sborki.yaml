@@ -1,0 +1,21 @@
+slice_name: 'Факт vs цель: Точность сборки %'
+viz_type: gauge_chart
+params:
+  viz_type: gauge_chart
+  metric:
+    expressionType: SQL
+    sqlExpression: 100.0 - (SUM(CASE WHEN is_replaced = 1 OR is_cancelled = 1 THEN
+      1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0))
+    label: Точность сборки, %
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters: []
+  row_limit: 10
+  start_angle: 225
+  end_angle: -45
+  min_val: 0
+  max_val: 100
+  value_formatter: '{value}'
+dataset_uuid: 36a95bd0-3f98-45c3-9a0d-a4ed3ddcf4c8
+uuid: 3f799101-e44a-44f2-b936-35162dcb2751
+version: 1.0.0

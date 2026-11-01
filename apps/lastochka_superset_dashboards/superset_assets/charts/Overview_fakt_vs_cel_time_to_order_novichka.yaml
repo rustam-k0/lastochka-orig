@@ -1,0 +1,21 @@
+slice_name: 'Факт vs цель: Time-to-order новичка'
+viz_type: big_number
+params:
+  viz_type: big_number
+  metric:
+    expressionType: SQL
+    sqlExpression: AVG(CASE WHEN client_order_seq = 1 THEN hours_since_client_created
+      END)
+    label: Время до первого заказа, ч
+    hasCustomLabel: true
+  granularity_sqla: order_created_at
+  time_grain_sqla: P1D
+  adhoc_filters: []
+  compare_lag: ''
+  compare_suffix: ''
+  show_trend_line: true
+  start_y_axis_at_zero: true
+  y_axis_format: SMART_NUMBER
+dataset_uuid: d991fd22-7a5f-4c1f-977b-866968e97b0c
+uuid: 614fa781-35da-4905-8e53-973f01008925
+version: 1.0.0

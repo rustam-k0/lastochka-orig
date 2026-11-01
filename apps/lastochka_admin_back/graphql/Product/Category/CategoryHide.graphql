@@ -1,0 +1,5 @@
+extend type Mutation {
+  CategoryHide(id:Int):DefaultResponse  @field(resolver: "Category\\CategoryHide")
+  @validator(class: "Category\\CategoryHideValidator")
+  @guard @can(model: "Admin",ability: "onlyAdmin") @section(key: "categories")
+}

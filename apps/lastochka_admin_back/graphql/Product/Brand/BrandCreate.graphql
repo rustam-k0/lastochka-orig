@@ -1,0 +1,30 @@
+extend type Mutation {
+  "Создание бренда"
+  BrandCreate(
+    "Название"
+    title: String!
+    "Ссылка (URL перехода)"
+    link: String
+    "Страна происхождения (родина бренда)"
+    country_origin: String
+    "Код страны происхождения (ISO 3166-1 alpha-2), название подставляется из справочника"
+    country_origin_code: String
+    "Страна производства"
+    country_production: String
+    "Код страны производства (ISO 3166-1 alpha-2), название подставляется из справочника"
+    country_production_code: String
+    "Путь к файлу сертификата официального дилера (PDF)"
+    certificate_path: String
+    "Оригинальное имя файла сертификата"
+    certificate_name: String
+    "Позиция"
+    position: Int
+    "Активность"
+    is_active: Boolean
+    "Логотип"
+    logo_image: ImgInput!
+    "Динамические чекбоксы (JSON-строка map field => bool)"
+    custom_checkboxes: String
+  ): Brand! @field(resolver: "Brand\\BrandCreate")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

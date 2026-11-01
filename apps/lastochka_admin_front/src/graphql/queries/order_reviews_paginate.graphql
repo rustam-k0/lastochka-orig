@@ -1,0 +1,41 @@
+query OrderReviews(
+  $page: Int
+  $first: Int
+  $rating: Int
+  $rating_min: Int
+  $rating_max: Int
+  $search: String
+  $error_type: String
+  $ordering: [DefaultOrdering]
+) {
+  orderReviews(
+    page: $page
+    first: $first
+    rating: $rating
+    rating_min: $rating_min
+    rating_max: $rating_max
+    search: $search
+    error_type: $error_type
+    ordering: $ordering
+  ) {
+    data {
+      id
+      order_id
+      order_number
+      rating
+      description
+      author_name
+      author_phone
+      error_type
+      error_type_label
+      created_at
+      updated_at
+    }
+    paginatorInfo {
+      currentPage
+      lastPage
+      total
+      perPage
+    }
+  }
+}

@@ -1,0 +1,27 @@
+extend type Query {
+  shops(
+    title:String
+    type_id:Int @eq
+  ):[Shop] @all(scopes: ["filter","accessible"])
+  @guard @can(model: "Admin",ability: "onlyShop") @section(key: "stores")
+
+  shops_paginate(
+    title:String
+    type_id:Int @eq
+    search:String
+    active:Boolean
+    delivery_enabled:Boolean
+    pickup_enabled:Boolean
+    "Только магазины с этими id (подгрузка выбранных в селекте)"
+    ids:[Int]
+  ):[Shop] @paginate(scopes: ["filter","accessible"])
+  @guard @can(model: "Admin",ability: "onlyShop") @section(key: "stores")
+
+  shop(id:Int @eq):Shop @find
+  @guard @can(model: "Admin",ability: "onlyAdmin") @section(key: "stores")
+
+  my_shop:Shop @first(scopes: ["userShop"])
+  @guard @can(model: "Admin",ability: "onlyShop") @section(key: "my_store")
+
+
+}

@@ -1,0 +1,6 @@
+type AdminSetting {
+    id: Int
+    key: String!
+    value: String
+    type: String!
+}

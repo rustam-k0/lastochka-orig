@@ -1,0 +1,7 @@
+mutation ($id: Int!) {
+  VacancyPublish(id: $id) {
+    id
+    is_published
+    published_at
+  }
+}

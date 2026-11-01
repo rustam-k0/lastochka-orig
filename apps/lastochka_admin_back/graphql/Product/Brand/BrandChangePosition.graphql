@@ -1,0 +1,10 @@
+extend type Mutation {
+  "Изменение позиции бренда"
+  BrandChangePosition(
+    "ID"
+    id: Int!
+    "Новая позиция"
+    position: Int!
+  ): Brand! @field(resolver: "Brand\\BrandChangePosition")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

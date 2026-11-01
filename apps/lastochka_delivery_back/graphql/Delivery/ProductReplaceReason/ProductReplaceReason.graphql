@@ -1,0 +1,4 @@
+type ProductReplaceReason {
+  id:Int
+  title:String
+}

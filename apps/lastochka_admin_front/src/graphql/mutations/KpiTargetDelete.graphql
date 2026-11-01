@@ -1,0 +1,6 @@
+mutation ($id: Int!) {
+  KpiTargetDelete(id: $id) {
+    code
+    message
+  }
+}

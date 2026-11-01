@@ -1,0 +1,32 @@
+variables:
+  BACKEND_DIR: "/home/admin/apps/lastochka_analytics_back"
+
+deploy_dev:
+  stage: deploy
+  tags:
+    - lastochka
+  script:
+    - git config --global --add safe.directory $BACKEND_DIR
+    - cd $BACKEND_DIR
+    - git pull
+    - php8.4 /usr/local/bin/composer install
+    - php8.4 artisan migrate --force
+    - php8.4 artisan analytics:ensure-partitions
+    - sudo supervisorctl restart lastochka_analytics:*
+  only:
+    - main
+
+deploy_prod:
+  stage: deploy
+  tags:
+    - lastochka-prod
+  script:
+    - git config --global --add safe.directory $BACKEND_DIR
+    - cd $BACKEND_DIR
+    - git pull
+    - php8.4 /usr/local/bin/composer install
+    - php8.4 artisan migrate --force
+    - php8.4 artisan analytics:ensure-partitions
+    - sudo supervisorctl restart lastochka_analytics:*
+  only:
+    - main

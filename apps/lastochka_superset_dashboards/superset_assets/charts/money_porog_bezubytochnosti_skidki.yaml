@@ -1,0 +1,17 @@
+slice_name: Экономика промо — порог безубыточности скидки %
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: AVG(gross_margin_pct)
+    label: Порог безубыточности скидки, %
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: NULL-safe, пусто-ожидаемо до 1С (cost_price)
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: c61130d0-4791-4c5f-a212-76931716eaba
+uuid: bfeb318f-b27d-42cf-8515-3cbbdcde78b8
+version: 1.0.0

@@ -1,0 +1,6 @@
+mutation ($title: String!, $is_active: Boolean, $position: Int) {
+  ProductCancelReasonCreate(title: $title, is_active: $is_active, position: $position) {
+    code
+    message
+  }
+}

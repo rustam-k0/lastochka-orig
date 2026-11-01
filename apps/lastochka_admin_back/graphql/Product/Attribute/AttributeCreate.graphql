@@ -1,0 +1,21 @@
+extend type Mutation {
+  AttributeCreate(
+    "Название атрибута"
+    title:String
+    "Системный код (slug). Латиница/цифры/подчёркивание. Уникален среди всех атрибутов."
+    code:String
+    "Описание (контент INFO-модалки в карточке товара)"
+    description:String
+    "Тип значения (1=Строка, 2=Текст, 3=Целое, 4=Дробное, 5=Выбор из списка)"
+    type_id:Int
+    "Группа (100=Состав, 101=Параметры, 103=Динамические, 104=Параметры упаковки)"
+    category_type_id:Int
+    "Системный атрибут (отображается во всех товарах)"
+    is_default:Boolean
+    "Варианты атрибута"
+    values:[AttributeValueInput]
+  ):DefaultResponse  @field(resolver:"Attribute\\AttributeCreate")
+  @validator(class:"Attribute\\AttributeCreateValidator")
+  @guard @can(model: "Admin",ability: "onlyAdmin")
+}
+

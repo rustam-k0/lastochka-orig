@@ -1,0 +1,18 @@
+extend type Mutation {
+  "Завершить сборку. Модуль collector_payment: для онлайн-заказа списание оплаты происходит здесь же (доплата разницы с карты покупателя, затем захолдированная сумма): code 200 — оплата списана и сборка завершена; 402 — доплата не прошла (текст для показа сборщику; заказ остаётся на сборке, состав редактируем, повтор той же мутацией безопасен); 500 — временный сбой списания (повторить)"
+  AssemblyFinish(
+    "ID сборки"
+    id:Int
+    """
+    Пакеты
+    Типы:
+    1 - Шкаф
+    2 - Холодильник
+    3 - Морозильник
+    """
+    packages:[PackageInput]
+  ):DefaultResponse @guard @field(resolver: "Assembly\\AssemblyFinish")
+  @validator(class: "Assembly\\AssemblyFinishValidator")
+  @can(model: "Admin",ability: "onShift")
+
+}

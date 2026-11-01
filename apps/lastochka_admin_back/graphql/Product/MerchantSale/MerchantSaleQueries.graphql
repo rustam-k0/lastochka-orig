@@ -1,0 +1,35 @@
+extend type Query {
+  "Получение списка акций мерчантов с пагинацией"
+  merchantSales(
+    shop_id: Int
+    is_active: Boolean
+    status: MerchantSaleStatus
+    search: String
+    ordering: [DefaultOrdering]
+  ): [MerchantSale] @paginate(defaultCount: 10, scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-sales")
+
+  "Получение всех акций мерчантов"
+  merchantSalesAll(
+    shop_id: Int
+    is_active: Boolean
+    status: MerchantSaleStatus
+    search: String
+    ordering: [DefaultOrdering]
+  ): [MerchantSale] @all(scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-sales")
+
+  "Получение одной акции по ID"
+  merchantSale(
+    id: Int @eq
+  ): MerchantSale @find
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-sales")
+
+  "Товары мерчанта для выбора в акцию"
+  shopProductsForSale(
+    shop_id: Int!
+    exclude_sale_id: Int
+    search: String
+  ): [Product] @paginate(defaultCount: 20, builder: "App\\GraphQL\\Queries\\ShopProductsForSaleQuery@builder")
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-sales")
+}

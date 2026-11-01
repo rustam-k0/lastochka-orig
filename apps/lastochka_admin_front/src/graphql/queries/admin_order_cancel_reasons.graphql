@@ -1,0 +1,8 @@
+query {
+  allOrderCancelReasons {
+    id
+    title
+    is_active
+    position
+  }
+}

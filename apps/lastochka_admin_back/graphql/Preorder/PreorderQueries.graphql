@@ -1,0 +1,11 @@
+extend type Query {
+  preorders(
+    page: Int
+    perPage: Int
+    status: String @eq
+    shop_id: Int @eq
+    orderBy: _ @orderBy(columns: ["id", "created_at", "updated_at"])
+  ): [Preorder!]! @paginate(defaultCount: 20) @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  preorder(id: Int! @eq): Preorder @find @guard @can(ability: "onlyAdmin", model: "Admin")
+}

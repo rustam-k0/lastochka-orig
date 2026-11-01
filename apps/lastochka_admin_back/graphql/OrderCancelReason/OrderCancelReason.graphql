@@ -1,0 +1,21 @@
+type OrderCancelReason {
+  "ID"
+  id: Int
+  "Причина отмены"
+  title: String
+  "Активна"
+  is_active: Boolean
+  "Позиция сортировки"
+  position: Int
+}
+
+extend type Query {
+  "Список активных причин отмены заказа — используется в модалке отмены заказа, доступен любому авторизованному сотруднику"
+  orderCancelReasons: [OrderCancelReason!]! @all(scopes: ["active"]) @guard
+
+  "Все причины отмены заказа (включая неактивные) — для CRUD-страницы справочника"
+  allOrderCancelReasons: [OrderCancelReason!]! @all @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Причина отмены заказа по ID — для формы редактирования"
+  orderCancelReason(id: Int! @eq): OrderCancelReason @find @guard @can(ability: "onlyAdmin", model: "Admin")
+}

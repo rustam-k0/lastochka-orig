@@ -1,0 +1,51 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: На что заменяют
+description: 'Матрица: оригинал → замена, все пары'
+viz_type: pivot_table_v2
+params:
+  viz_type: pivot_table_v2
+  groupbyRows:
+  - expressionType: SQL
+    sqlExpression: product_name
+    label: Товар
+  groupbyColumns:
+  - expressionType: SQL
+    sqlExpression: replacement_product_name
+    label: Замена
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(is_replaced)
+    label: Замен
+    hasCustomLabel: true
+  metricsLayout: COLUMNS
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: order_created_at
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: is_replaced = 1
+  row_limit: 10000
+  aggregateFunction: Sum
+  rowTotals: true
+  colTotals: true
+  rowSubTotals: false
+  colSubTotals: false
+  transposePivot: false
+  combineMetric: false
+  valueFormat: ',d'
+  rowOrder: key_a_to_z
+  colOrder: key_a_to_z
+  date_format: smart_date
+  conditional_formatting:
+  - colorScheme: '#1FA8C9'
+    column: Замен
+    operator: ≥
+    targetValue: 0
+cache_timeout: null
+dataset_uuid: 47fddec7-0198-47af-bebf-6193d5235a0d
+uuid: df6af94c-e75a-5f13-9d0c-c82f3509028e
+version: 1.0.0

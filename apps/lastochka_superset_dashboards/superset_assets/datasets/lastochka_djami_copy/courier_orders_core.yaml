@@ -1,0 +1,77 @@
+# Вкладка «Операции» (по магазину). Order-level срез курьерских заказов с
+# таймингами/весом/SLA/зоной, переиспользуется в 4 виджетах: «Тепловая карта
+# доставки» (ready), «Доставка по зонам», и во ВРЕМЕННЫХ заменах двух blocked
+# виджетов («Профиль вес x дальность» -> bubble по shipping_method, «Матрица
+# выбора транспорта 3x3» -> pivot весовой бакет x shipping_method).
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1 - statuses НЕ джойнится (таблица пустая), status_id оставлен
+#     сырым (для этого датасета текстовая метка не требуется ни одному из 4
+#     чартов).
+#   Правило 2 - WHERE o.parent_order_id IS NULL (order-level агрегаты по
+#     времени/весу, без фильтра задваиваются сплит-подзаказами).
+#   Правило 4 - SLA (in_sla) по o.type_id IN (2,5), НЕ shipping_method =
+#     'courier' (реальный enum shipping_method: own_courier/cdek/
+#     russian_post - на dev 100% own_courier, см. ниже).
+#   Правило 7 - MySQL: DAYOFWEEK(x)-1 вместо EXTRACT(DOW FROM x) (MySQL
+#     DAYOFWEEK 1=вс..7=сб, "-1" даёт 0=вс..6=сб как в Postgres EXTRACT(DOW));
+#     TIMESTAMPDIFF(SECOND,...) вместо EXTRACT(EPOCH FROM (a-b)).
+#   Правило 8 - o.zone_id -> JOIN shop_zones z ON z.id=o.zone_id (не
+#     price-matching хак BUILD_PLAN). На dev zone_id заполнен у 157/221
+#     заказов (в т.ч. родителей).
+#   Правило 9 - shop_zones фильтруется z.deleted_at IS NULL.
+#
+# ДОПУЩЕНИЯ, проверенные напрямую на dev (SELECT, до записи YAML):
+#   - o.shipping_method на dev ВСЕГДА 'own_courier' (115/115 родительских
+#     заказов) - cdek/russian_post ни разу не встретились. Bubble-чарт
+#     «Профиль вес x дальность» (temp-замена) на dev даст 1 точку по X-оси
+#     shipping_method - это честная картина текущих данных, не баг SQL.
+#   - o.total_weight заполнен только у 12/115 родительских заказов (как и
+#     items_subtotal в других датасетах - см. CLAUDE.md проекта). weight_bucket
+#     содержит явную корзину 'Не указан' для NULL, чтобы не терять эти строки
+#     молча.
+#
+# main_dttm_col = order_created_at (для heatmap используется НЕ как time-axis,
+# а order_dow/order_hour как обычные dimension-колонки).
+table_name: courier_orders_core
+main_dttm_col: order_created_at
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      o.id                                        AS order_id,
+      o.shop_id                                   AS shop_id,
+      sh.title                                    AS shop_name,
+      o.zone_id                                   AS zone_id,
+      z.name                                      AS zone_name,
+      o.created_at                                AS order_created_at,
+      o.finished_at                               AS order_finished_at,
+      o.slot_start_date                           AS slot_start_date,
+      o.slot_end_date                             AS slot_end_date,
+      o.status_id                                 AS status_id,
+      o.shipping_method                           AS shipping_method,
+      o.type_id                                   AS type_id,
+      o.total_weight                              AS total_weight,
+      o.amount                                    AS amount,
+      TIMESTAMPDIFF(SECOND, o.created_at, o.finished_at) / 60.0 AS delivery_minutes,
+      DAYOFWEEK(o.created_at) - 1                 AS order_dow,
+      HOUR(o.created_at)                          AS order_hour,
+      CASE
+          WHEN o.type_id IN (2, 5) AND o.finished_at IS NOT NULL AND o.slot_end_date IS NOT NULL
+              THEN CASE WHEN o.finished_at <= o.slot_end_date THEN 1 ELSE 0 END
+      END                                          AS in_sla,
+      CASE
+          WHEN o.total_weight IS NULL THEN 'Не указан'
+          WHEN o.total_weight < 500   THEN '< 500 г'
+          WHEN o.total_weight < 1000  THEN '500-1000 г'
+          WHEN o.total_weight < 2000  THEN '1000-2000 г'
+          ELSE '> 2000 г'
+      END                                          AS weight_bucket
+  FROM orders o
+  LEFT JOIN shops sh ON sh.id = o.shop_id
+  LEFT JOIN shop_zones z ON z.id = o.zone_id AND z.deleted_at IS NULL
+  WHERE o.parent_order_id IS NULL
+uuid: 60d644ba-11b3-4618-868e-b9ab46707bf0
+columns: []
+metrics: []
+version: 1.0.0

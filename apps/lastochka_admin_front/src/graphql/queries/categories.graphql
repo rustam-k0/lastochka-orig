@@ -1,0 +1,20 @@
+query {
+  categories {
+    id
+    title
+  }
+  attributes {
+    id
+    title
+  }
+  attribute_families {
+    id
+    title
+    is_system
+  }
+  assembly_zones {
+    id
+    title
+    position
+  }
+}

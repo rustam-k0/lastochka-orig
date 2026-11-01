@@ -1,0 +1,37 @@
+type Product {
+  "ID"
+  id:Int
+  "Артикул"
+  articul:String
+  "Код товара из 1С (на ценнике «Код»), слитными цифрами без разделителей разрядов. null — кода нет"
+  code:String @method(name: "getCodeNormalized")
+  "Название"
+  title:String
+  "Единица измерения: 1=шт, 2=грамм, 3=кг, 4=литр, 5=мл"
+  info_weight_type_id:Int
+  "Шаг количества (например, 500 для 500 грамм)"
+  info_weight:Int
+  "Остатки (null для магазинов с ignore_stock — без лимита при сборке)"
+  remain:Remain @field(resolver: "App\\GraphQL\\Queries\\Product\\RemainResolver")
+  "Изображение"
+  img:Img @hasOne(relation: "headImg")
+  "Цена"
+  price:Price @hasOne
+  "PLU-код товара из 1С"
+  plu:String
+  "Время готовности товара, HH:MM (например «14:30»). null — товар готов всегда"
+  ready_fixed_time:String @method(name: "getReadyFixedTimeFormatted")
+  "Момент готовности товара на сегодня. null — время готовности не задано"
+  ready_at:DateTime @method(name: "readyAt")
+  "Готов ли товар прямо сейчас (по серверному времени). false — сборка раньше времени готовности"
+  is_ready:Boolean @method(name: "isReadyNow")
+  "Товар 18+ — продажа только совершеннолетним"
+  adult_only:Boolean
+  "Маркируемый товар (Честный знак): при включённом модуле honest_sign перед подтверждением нужно отсканировать код каждой единицы"
+  is_marked:Boolean
+}
+
+type ReplacementProduct {
+  product:Product @hasOne
+  selected:Boolean
+}

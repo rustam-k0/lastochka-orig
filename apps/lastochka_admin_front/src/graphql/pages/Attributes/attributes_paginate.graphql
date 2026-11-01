@@ -1,0 +1,23 @@
+query (
+  $first: Int
+  $page: Int
+) {
+  attributes_paginate (
+    first: $first
+    page: $page
+  ) {
+    data {
+      id
+      title
+      code
+      values {
+        id
+        title
+      }
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}
+

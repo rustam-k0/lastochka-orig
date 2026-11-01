@@ -1,0 +1,9 @@
+query {
+  allPrinters {
+    id
+    title
+    ip_address
+    port
+    is_active
+  }
+}

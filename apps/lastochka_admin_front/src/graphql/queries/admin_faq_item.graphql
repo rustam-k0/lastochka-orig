@@ -1,0 +1,9 @@
+query ($id: Int!) {
+  faq(id: $id) {
+    id
+    question
+    answer
+    is_active
+    position
+  }
+}

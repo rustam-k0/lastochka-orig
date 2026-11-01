@@ -1,0 +1,160 @@
+{
+  "type": "list",
+  "name": "Home",
+  "title": "Все материалы",
+  "pagination": true,
+  "action": {
+    "type": "route",
+    "to": "{ 'name': row.status.route, 'params': { 'id': row.id } }",
+    "title": "Редактировать"
+  },
+  "changeStatus": [
+    "delete", "hide"
+  ],
+  "initialSorting": {
+    "column": "updated_at",
+    "by": "DESC"
+  },
+  "graphql": {
+    "get": {
+      "name": "join_data",
+      "type": "query",
+      "variables": [
+        {
+          "name": "first",
+          "type": "Int!"
+        },
+        {
+          "name": "page",
+          "type": "Int!"
+        },
+        {
+          "name": "title",
+          "type": "String"
+        },
+        {
+          "name": "status",
+          "type": "Int"
+        },
+        {
+          "name": "type",
+          "type": "[String]"
+        },
+        {
+          "name": "updated_at_start_date",
+          "type": "DateTime"
+        },
+        {
+          "name": "updated_at_end_date",
+          "type": "DateTime"
+        },
+        {
+          "name": "ordering",
+          "type": "[DefaultOrdering]"
+        }
+      ],
+      "body": {
+        "data": {
+          "id": true,
+          "title": true,
+          "updated_at": true,
+          "status": {
+            "id": true,
+            "name": true,
+            "code": true,
+            "type": true,
+            "route": true,
+            "table_name": true
+          }
+        },
+        "paginatorInfo": {
+          "total": true
+        }
+      }
+    }
+  },
+  "form": [
+    {
+      "field": "title",
+      "title": "Заголовок",
+      "type": "string",
+      "autofocus": true
+    },
+    {
+      "field": "type",
+      "title": "Тип",
+      "labelName": "name",
+      "idName": "id",
+      "type": "select",
+      "options": {
+        "type": "array",
+        "array": [
+          {
+            "id": "test_entities",
+            "name": "Тестовая запись"
+          }
+        ]
+      }
+    },
+    {
+      "field": "status",
+      "title": "Статус",
+      "labelName": "name",
+      "idName": "id",
+      "type": "select",
+      "options": {
+        "type": "array",
+        "array": [
+          {
+            "id": 1,
+            "name": "Активный"
+          },
+          {
+            "id": 3,
+            "name": "Неопубликованный"
+          }
+        ]
+      }
+    },
+    {
+      "field": "updated_at",
+      "title": "Дата обновления",
+      "type": "date",
+      "range": true,
+      "mode": "dateTime",
+      "placeholder": "Не выбрано"
+    }
+  ],
+  "columns": [
+    {
+      "label": "Заголовок",
+      "field": "title",
+      "type": "string"
+    },
+    {
+      "label": "Тип",
+      "field": "type",
+      "type": "join",
+      "joinName": "status",
+      "joinField": "type"
+    },
+    {
+      "label": "Статус",
+      "field": "status",
+      "type": "join",
+      "joinName": "status",
+      "joinField": "name"
+    },
+    {
+      "label": "Дата",
+      "type": "date",
+      "field": "updated_at"
+    },
+    {
+      "width": "150px",
+      "sortable": false,
+      "type": "actions",
+      "field": "actions"
+    }
+  ]
+}

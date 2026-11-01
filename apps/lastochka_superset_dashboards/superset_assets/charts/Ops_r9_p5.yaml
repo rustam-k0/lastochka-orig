@@ -1,0 +1,75 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Детализация показателей
+description: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - picker_name
+  metrics:
+  - &id001
+    expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN has_error = 1 THEN order_id END)
+    label: Жалоб
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN has_error = 1 THEN order_id END)
+    label: Заказов с жалобой
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN has_error = 1 THEN order_id END) / NULLIF(COUNT(DISTINCT CASE WHEN is_finished = 1 THEN order_id END), 0)
+    label: Процент ошибок
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(positions_no_offer)
+    label: Несогласованные замены
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: AVG(review_rating)
+    label: Оценка
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX('Нет данных')
+    label: Компенсации, ₽
+    hasCustomLabel: true
+  percent_metrics: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: assembly_started_at
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: false
+  show_totals: false
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  order_desc: true
+  column_config:
+    Жалоб:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    Заказов с жалобой:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    Процент ошибок:
+      d3NumberFormat: .1%
+      horizontalAlign: right
+    Несогласованные замены:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    Оценка:
+      d3NumberFormat: ',.2f'
+      horizontalAlign: right
+  timeseries_limit_metric: *id001
+cache_timeout: null
+dataset_uuid: 7f64de2b-ba11-4e40-a875-f5f51593a14d
+uuid: 261ee724-c286-5576-bc1a-72beadf7eca5
+version: 1.0.0

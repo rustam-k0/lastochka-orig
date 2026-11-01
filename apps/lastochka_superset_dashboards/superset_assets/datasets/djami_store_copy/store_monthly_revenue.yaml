@@ -1,0 +1,45 @@
+# Вкладка «Клиенты» (по магазину). Месячная выручка интернет-магазина
+# (storefront) по витрине (store_id) - ПРОКСИ "онлайн-канала" (см.
+# blocked-виджет «Онлайн vs офлайн-касса» в BUILD_PLAN). Единственный
+# потребитель - «Прокси 'Онлайн': выручка интернет-магазина по месяцам». Имя
+# датасета verbatim из BUILD_PLAN. Источник: djami_store_copy (db2, MySQL).
+#
+# ИСПРАВЛЕНО против допущения BUILD_PLAN (WHERE o.is_paid = true), по
+# аналогии с правилом 1 (то же наблюдение, распространённое с courier-БД на
+# storefront-БД, проверено на dev): is_paid у djami_store_copy.orders так же
+# НЕ отражает завершённость заказа, как и lastochka_djami_copy.orders.paid -
+# из 28 заказов со status='delivered' только 4 имеют is_paid=1 (наличные/карта
+# курьеру остаются is_paid=0 навсегда). WHERE is_paid=true урезал бы выручку
+# в ~7 раз. Использован orders.status = 'delivered' (аналог status_id=5 в
+# курьерке, но здесь строковый enum status, НЕ status_id) как признак
+# реализованного заказа.
+# Добавлено: o.deleted_at IS NULL (правило 9, orders поддерживает SoftDeletes
+# в db2 - на dev пока 0 удалённых, но колонка есть, паттерн как в
+# money_promo_storefront).
+# Правило 7 - DATE_TRUNC('month', x) -> DATE(DATE_SUB(x, INTERVAL
+#   (DAYOFMONTH(x)-1) DAY)).
+#
+# ВАЖНО (перенесено из notes BUILD_PLAN): store_id НЕ имеет надёжного
+# соответствия shop_id из курьерки (см. дискуссию в BUILD_PLAN о невозможности
+# единого графика "онлайн vs офлайн" одним SQL) - нативный фильтр вкладки «по
+# магазину» (shop_id) НЕ управляет этим датасетом, он использует собственный
+# store_id как отдельный фильтр.
+#
+# Проверено на dev (SELECT-прогон перед записью YAML): 28 строк, единственный
+# store_id=2, выручка по месяцам май/июнь/июль - НЕ пусто.
+table_name: store_monthly_revenue
+main_dttm_col: order_month
+database_uuid: 22c13af4-950d-4550-9f16-1617f4df8d2f
+schema: null
+sql: |
+  SELECT
+      o.store_id                                                                       AS store_id,
+      DATE(DATE_SUB(o.created_at, INTERVAL (DAYOFMONTH(o.created_at) - 1) DAY))         AS order_month,
+      o.id                                                                              AS order_id,
+      o.total                                                                          AS total
+  FROM orders o
+  WHERE o.status = 'delivered' AND o.deleted_at IS NULL
+uuid: a1fd27f3-664b-4c5e-b26f-bca1a95d5b2c
+columns: []
+metrics: []
+version: 1.0.0

@@ -1,0 +1,21 @@
+# Вкладка «Операции». Экономика замен — дополнительные расходы: прямая
+# разница в цене между заменённой и оригинальной позицией (когда замена
+# дороже). Не включает логистические/трудовые издержки повторной сборки
+# (их нет в схеме). ПУСТО-ОЖИДАЕМО: 0 замен на dev (см. assembly_product_stats.yaml).
+slice_name: Экономика замен — дополнительные расходы, ₽
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(CASE WHEN replacement_price_delta > 0 THEN replacement_price_delta ELSE 0 END)
+    label: Доп. расходы на замены, ₽
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: только разница в цене позиции; пусто-ожидаемо на dev
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: a39a8a84-d892-4d13-bd24-96190a61989a
+uuid: 41c42cec-eafc-4a1b-b843-8fe2681c3728
+version: 1.0.0

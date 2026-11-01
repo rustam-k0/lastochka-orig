@@ -1,0 +1,7 @@
+extend type Mutation {
+  ShopAlertRuleDelete(
+    "ID правила"
+    id: Int!
+  ): DefaultResponse @field(resolver: "ShopAlertRule\\ShopAlertRuleDelete")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

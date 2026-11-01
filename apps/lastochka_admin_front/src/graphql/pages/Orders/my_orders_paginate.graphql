@@ -1,0 +1,20 @@
+query($page: Int, $first: Int) {
+  my_orders_paginate(page: $page, first: $first) {
+    data {
+      id
+      shop {
+        title
+      }
+      amount
+      payment_type_id
+      status_id
+      client {
+        phone
+      }
+      created_at
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}

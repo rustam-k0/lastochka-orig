@@ -1,0 +1,11 @@
+extend type Mutation {
+  "Массово установить режим остатков для списка витринных категорий. Возвращает число обработанных. (LASTOCHKI-JAMI-11207)"
+  SetCategoriesStockMode(
+    ids: [Int!]!
+    stock_mode: String!
+    fixed_stock_quantity: Int
+    fixed_stock_unit_type_id: Int
+  ): Int
+    @field(resolver: "Category\\SetCategoriesStockMode")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "categories")
+}

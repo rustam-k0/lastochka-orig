@@ -1,0 +1,77 @@
+query(
+  $title: String
+  $page: Int
+  $first: Int
+  $shops: [Int]
+  $statuses: [Int]
+  $ordering: [DefaultOrdering]
+  $client_search: String
+  $payment_types: [Int!]
+  $payment_statuses: [String!]
+  $types: [Int!]
+  $couriers: [Int!]
+  $collectors: [Int!]
+  $amount_from: Float
+  $amount_to: Float
+  $created_at_start_date: DateTime
+  $created_at_end_date: DateTime
+) {
+  admin_orders_paginate(
+    title: $title
+    page: $page
+    first: $first
+    shops: $shops
+    statuses: $statuses
+    ordering: $ordering
+    client_search: $client_search
+    payment_types: $payment_types
+    payment_statuses: $payment_statuses
+    types: $types
+    couriers: $couriers
+    collectors: $collectors
+    amount_from: $amount_from
+    amount_to: $amount_to
+    created_at_start_date: $created_at_start_date
+    created_at_end_date: $created_at_end_date
+  ) {
+    data {
+      id
+      number
+      shop {
+        title
+      }
+      amount
+      payment_type_id
+      payment_status
+      status_id
+      type_id
+      is_heavy
+      client {
+        name
+        surname
+        phone
+      }
+      client_info {
+        address
+      }
+      created_at
+      slot_start_date
+      slot_end_date
+      collector {
+        id
+        name
+        surname
+        patronymic
+      }
+      couriers {
+        id
+        name
+        surname
+        patronymic
+      }
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}

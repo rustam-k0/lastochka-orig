@@ -1,0 +1,38 @@
+# Вкладка «Операции». Доставка по зонам: среднее время доставки и % в SLA по
+# зоне доставки. МОДЕРНИЗИРОВАНО относительно BUILD_PLAN (правило 8 -
+# orders.zone_id теперь существует, JOIN shop_zones по id вместо
+# price-matching хака и вместо приближения "группировка по shop_id" -
+# courier_orders_core.zone_name уже готовая колонка). На dev zone_id
+# заполнен у 157/221 заказов - строки без зоны получат zone_name = NULL,
+# группировка Superset покажет их отдельной строкой "(нет данных)/NULL".
+slice_name: Доставка по зонам
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - zone_name
+  - shop_name
+  metrics:
+  - expressionType: SQL
+    sqlExpression: AVG(delivery_minutes)
+    label: Среднее время доставки, мин
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: AVG(in_sla) * 100
+    label: Доля доставок в срок, %
+    hasCustomLabel: true
+  - expressionType: SIMPLE
+    column:
+      column_name: order_id
+    aggregate: COUNT
+    label: Заказов
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 60d644ba-11b3-4618-868e-b9ab46707bf0
+uuid: a290a5e8-75d3-4a23-a5d2-ef018c4a3133
+version: 1.0.0

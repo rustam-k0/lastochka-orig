@@ -1,0 +1,26 @@
+extend type Query {
+  "Системные атрибуты"
+  default_attributes:[Attribute] @all(scopes: ["default"])
+
+  "Динамические атрибуты"
+  attributes(
+    "Получить атрибуты по категории, а так же атрибуты родителей данной категории"
+    category_id:Int
+  ):[Attribute] @all(scopes: ["notDefault","filter"])
+
+  "Динамические атрибуты пагинация"
+  attributes_paginate(
+    "Получить атрибуты по категории, а так же атрибуты родителей данной категории"
+    category_id:Int
+  ):[Attribute] @paginate(defaultCount: 10,scopes: ["notDefault","filter"])
+
+  "Динамический атрибут"
+  attributes_item(
+    id:Int @eq
+  ):Attribute @find(scopes: ["notDefault"])
+
+  "Атрибут по ID (любой)"
+  attribute_item(
+    id:Int @eq
+  ):Attribute @find
+}

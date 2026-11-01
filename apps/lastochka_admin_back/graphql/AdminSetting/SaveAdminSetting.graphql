@@ -1,0 +1,11 @@
+extend type Mutation {
+    saveAdminSetting(
+        key: String!
+        value: String
+        file: Upload
+        type: String!
+    ): AdminSetting!
+        @field(resolver: "AdminSetting\\SaveAdminSetting")
+        @guard
+        @can(ability: "manageSettings", model: "Admin")
+}

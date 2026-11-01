@@ -1,0 +1,14 @@
+mutation (
+  $files: [Upload]
+  $path: String
+) {
+  FilesUpload(
+    files: $files,
+    path: $path
+  ) {
+    path
+    origin_name
+    size
+    type
+  }
+}

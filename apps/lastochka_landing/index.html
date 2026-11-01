@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#C21E19" />
+  <title>Ласточка Джами — приложение супермаркета с доставкой в Нальчике</title>
+
+  <meta name="description" content="Ласточка Джами — мобильное приложение супермаркета в Нальчике. Свежие продукты, кулинария собственного производства и выпечка с доставкой от 30 минут. Скачайте в App Store, Google Play или AppGallery." />
+  <meta name="keywords" content="Ласточка Джами, Нальчик, доставка продуктов, супермаркет, кулинария, выпечка, приложение, App Store, Google Play, AppGallery, Huawei" />
+
+  <meta property="og:title" content="Ласточка Джами — супермаркет у вас в кармане" />
+  <meta property="og:description" content="Свежие продукты, готовые блюда и выпечка с доставкой от 30 минут по Нальчику. Приложение в App Store, Google Play и AppGallery." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://lastochki.store" />
+  <meta property="og:image" content="https://lastochki.store/assets/logo.png" />
+  <meta property="og:locale" content="ru_RU" />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/logo-small.png" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />
+
+  <!-- Smart App Banner (Safari iOS) -->
+  <meta name="apple-itunes-app" content="app-id=6758952125" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+
+  <!-- ========== NAV ========== -->
+  <header class="nav" id="nav">
+    <div class="nav__shell">
+      <a class="nav__brand" href="#" aria-label="Ласточка Джами — на главную">
+        <img src="assets/logo.png" alt="" width="36" height="36" class="nav__logo" />
+        <span class="nav__wordmark">Ласточка</span>
+        <span class="nav__dot" aria-hidden="true"></span>
+        <span class="nav__sub">Джами</span>
+      </a>
+
+      <nav class="nav__links" aria-label="Основная навигация">
+        <a href="#about">О приложении</a>
+        <a href="#features">Возможности</a>
+        <a href="#store">Магазин</a>
+        <a href="#faq">Вопросы</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+
+      <a href="#download" class="btn btn--ghost nav__cta">
+        Скачать
+        <svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+
+      <button class="nav__burger" type="button" aria-label="Открыть меню" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="nav__panel" hidden>
+      <a href="#about">О приложении</a>
+      <a href="#features">Возможности</a>
+      <a href="#store">Магазин</a>
+      <a href="#faq">Вопросы</a>
+      <a href="#contacts">Контакты</a>
+      <a href="#download" class="btn btn--solid">Скачать приложение</a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ========== HERO ========== -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__grain" aria-hidden="true"></div>
+
+      <div class="hero__inner">
+        <div class="hero__column hero__column--text">
+          <div class="hero__download reveal" id="hero-download">
+            <p class="hero__download-title">
+              <span class="hero__download-lead">Скачивай приложение</span>
+              <span class="hero__download-brand">
+                <img src="assets/logo.png" alt="" width="48" height="48" />
+                <strong>Ласточка Джами</strong>
+              </span>
+              <span>по&nbsp;<a href="#hero-download" class="hero__download-links" data-store-link>ссылкам</a></span>
+            </p>
+            <div class="hero__ctas">
+              <a href="https://apps.apple.com/ru/app/id6758952125" target="_blank" rel="noopener" class="store-btn store-btn--apple" aria-label="Скачать в App Store">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M16.365 1.43c0 1.14-.43 2.23-1.13 3.05-.78.92-2.06 1.62-3.13 1.55-.13-1.1.42-2.27 1.13-3.06.81-.9 2.16-1.6 3.13-1.54zM20.5 17.05c-.53 1.22-.78 1.77-1.45 2.85-.94 1.5-2.27 3.37-3.92 3.39-1.46.02-1.84-.95-3.83-.94-1.99.01-2.4.96-3.86.94-1.65-.02-2.91-1.71-3.85-3.21-2.62-4.18-2.9-9.08-1.28-11.7 1.15-1.86 2.97-2.95 4.69-2.95 1.74 0 2.83.96 4.27.96 1.4 0 2.25-.96 4.27-.96 1.53 0 3.15.83 4.31 2.27-3.78 2.07-3.16 7.47.65 9.35z"/></svg>
+                <span>
+                  <small>Скачать в</small>
+                  <strong>App Store</strong>
+                </span>
+              </a>
+
+              <a href="https://play.google.com/store/apps/details?id=com.app.lastochka.djami" target="_blank" rel="noopener" class="store-btn store-btn--google" aria-label="Скачать в Google Play">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3.5 2.3c-.3.3-.5.7-.5 1.2v17c0 .5.2.9.5 1.2l9.5-9.7-9.5-9.7zm10.7 10.9l2.6 2.7L5 22.5c-.2.1-.3.1-.5.1l9.7-9.4zm0-2.4L4.5 1.4c.2 0 .3 0 .5.1l11.8 6.6-2.6 2.7zm6.2 1.2l-2.7 1.5-2.9-3 2.9-3 2.7 1.5c1 .6 1 2.4 0 3z"/></svg>
+                <span>
+                  <small>Скачать в</small>
+                  <strong>Google Play</strong>
+                </span>
+              </a>
+
+              <a href="https://appgallery.huawei.com/#/app/C118601879" target="_blank" rel="noopener" class="store-btn store-btn--huawei" aria-label="Скачать в AppGallery">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 16c0-3.6 2-6.5 4.5-6.5s4.5 2.9 4.5 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9.3 9.2C9.8 7.9 10.8 7 12 7s2.2.9 2.7 2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                <span>
+                  <small>Скачать в</small>
+                  <strong>AppGallery</strong>
+                </span>
+              </a>
+            </div>
+          </div>
+
+          <div class="hero__eyebrow reveal">
+            <span class="dot"></span>
+            <span>Нальчик · ул. Калинина, 76</span>
+          </div>
+
+          <h1 class="hero__title reveal" id="hero-title">
+            <span class="line">Супермаркет</span>
+            <span class="line"><em>Ласточка Джами</em></span>
+            <span class="line">у&nbsp;вас в&nbsp;кармане</span>
+          </h1>
+
+          <p class="hero__lede reveal">
+            Свежие продукты, готовые блюда и выпечка собственного производства —
+            в&nbsp;приложении. Выбираете, оплачиваете и получаете заказ у&nbsp;двери
+            уже через 30&nbsp;минут.
+          </p>
+
+          <div class="hero__meta reveal">
+            <div class="hero__meta-item">
+              <span class="hero__meta-num">от 30 мин</span>
+              <span class="hero__meta-cap">доставка по&nbsp;Нальчику</span>
+            </div>
+            <div class="hero__meta-divider" aria-hidden="true"></div>
+            <div class="hero__meta-item">
+              <span class="hero__meta-num">Своя</span>
+              <span class="hero__meta-cap">кулинария и&nbsp;пекарня</span>
+            </div>
+            <div class="hero__meta-divider" aria-hidden="true"></div>
+            <div class="hero__meta-item">
+              <span class="hero__meta-num">Бонусы</span>
+              <span class="hero__meta-cap">за&nbsp;каждую покупку</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone mockup -->
+        <div class="hero__column hero__column--phone reveal" aria-hidden="true">
+          <div class="phone">
+            <div class="phone__frame">
+              <div class="phone__notch"></div>
+              <div class="phone__screen">
+                <div class="phone__statusbar">
+                  <span class="phone__time">9:41</span>
+                  <span class="phone__icons">
+                    <svg viewBox="0 0 18 12" width="18" height="12"><rect x="0" y="6" width="2" height="6" rx="1" fill="currentColor"/><rect x="4" y="4" width="2" height="8" rx="1" fill="currentColor"/><rect x="8" y="2" width="2" height="10" rx="1" fill="currentColor"/><rect x="12" y="0" width="2" height="12" rx="1" fill="currentColor"/></svg>
+                    <svg viewBox="0 0 16 12" width="16" height="12"><path d="M8 11.5c.6 0 1.1-.45 1.1-1S8.6 9.5 8 9.5s-1.1.45-1.1 1 .5 1 1.1 1zm-3-3.4l1.4 1.4a2.3 2.3 0 0 1 3.2 0L11 8.1a4.3 4.3 0 0 0-6 0zm-2.7-2.7L3.7 6.8a6.3 6.3 0 0 1 8.6 0L13.7 5.4a8.3 8.3 0 0 0-11.4 0zm-2.7-2.7L0 4.1a10.3 10.3 0 0 1 16 0l-1.4-1.4a8.3 8.3 0 0 0-12.6 0z" fill="currentColor"/></svg>
+                    <svg viewBox="0 0 26 12" width="26" height="12"><rect x="0" y="0" width="22" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="1"/><rect x="2" y="2" width="16" height="8" rx="1" fill="currentColor"/><rect x="23" y="4" width="2" height="4" rx="1" fill="currentColor"/></svg>
+                  </span>
+                </div>
+
+                <div class="phone__appbar">
+                  <div class="phone__brand">
+                    <span class="phone__brand-mark">Л</span>
+                    <span class="phone__brand-text">Ласточка</span>
+                  </div>
+                  <div class="phone__bell" aria-hidden="true">
+                    <svg viewBox="0 0 20 20" width="18" height="18"><path d="M10 2a5 5 0 0 0-5 5v3l-1.5 2.5h13L15 10V7a5 5 0 0 0-5-5zM8 16a2 2 0 1 0 4 0H8z" fill="currentColor"/></svg>
+                  </div>
+                </div>
+
+                <div class="phone__address">
+                  <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 1a5 5 0 0 0-5 5c0 4 5 9 5 9s5-5 5-9a5 5 0 0 0-5-5zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" fill="currentColor"/></svg>
+                  <span>ул. Калинина, 26</span>
+                  <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 4l3 3 3-3" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
+                </div>
+
+                <div class="phone__search">
+                  <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  <span>Найти товар</span>
+                </div>
+
+                <div class="phone__stories">
+                  <div class="phone__story" style="--c:#E5241F"><span>%</span></div>
+                  <div class="phone__story" style="--c:#FCC900"><span>🔥</span></div>
+                  <div class="phone__story" style="--c:#21A038"><span>🥗</span></div>
+                  <div class="phone__story" style="--c:#E07A3F"><span>🥖</span></div>
+                  <div class="phone__story" style="--c:#7E110E"><span>🎁</span></div>
+                </div>
+
+                <p class="phone__sectionlabel">Категории</p>
+                <div class="phone__cats">
+                  <div class="phone__cat" style="--bg:#FAD8D7;--ink:#7E110E">
+                    <span class="phone__cat-emoji">🍕</span>
+                    <span>Кулинария</span>
+                  </div>
+                  <div class="phone__cat" style="--bg:#FCE7B3;--ink:#7A4A12">
+                    <span class="phone__cat-emoji">🥐</span>
+                    <span>Выпечка</span>
+                  </div>
+                  <div class="phone__cat" style="--bg:#CFE9D5;--ink:#1F5A2F">
+                    <span class="phone__cat-emoji">🥗</span>
+                    <span>Здоровое</span>
+                  </div>
+                  <div class="phone__cat" style="--bg:#F8D5A6;--ink:#7A3F0E">
+                    <span class="phone__cat-emoji">🥩</span>
+                    <span>Мясо</span>
+                  </div>
+                  <div class="phone__cat" style="--bg:#DCE9D5;--ink:#2F5A1F">
+                    <span class="phone__cat-emoji">🍎</span>
+                    <span>Овощи, фрукты</span>
+                  </div>
+                  <div class="phone__cat" style="--bg:#CFE6F4;--ink:#114B6B">
+                    <span class="phone__cat-emoji">🧴</span>
+                    <span>Для дома</span>
+                  </div>
+                </div>
+
+                <div class="phone__sectionhead">
+                  <p class="phone__sectionlabel">Рекомендуем</p>
+                  <span class="phone__sectionall">Все →</span>
+                </div>
+
+                <div class="phone__store">
+                  <div class="phone__store-img" style="--c:linear-gradient(135deg,#F4A261,#E76F51)">🫓</div>
+                  <div class="phone__store-info">
+                    <div class="phone__store-name">Хычины с сыром</div>
+                    <div class="phone__store-meta">
+                      <span class="phone__star">★ 4.9</span>
+                      <span>·</span>
+                      <span>кулинария</span>
+                      <span>·</span>
+                      <span>190 ₽</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="phone__store">
+                  <div class="phone__store-img" style="--c:linear-gradient(135deg,#E9C46A,#C9993A)">🍞</div>
+                  <div class="phone__store-info">
+                    <div class="phone__store-name">Хлеб бездрожжевой</div>
+                    <div class="phone__store-meta">
+                      <span class="phone__star">★ 4.8</span>
+                      <span>·</span>
+                      <span>пекарня</span>
+                      <span>·</span>
+                      <span>85 ₽</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="phone__tabbar">
+                  <span class="active">⌂</span>
+                  <span>≡</span>
+                  <span class="phone__tabbar-cart">○<i>3</i></span>
+                  <span>♡</span>
+                </div>
+              </div>
+            </div>
+            <div class="phone__shadow" aria-hidden="true"></div>
+
+            <!-- Floating chips -->
+            <div class="float-chip float-chip--1" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" fill="#FCC900"/></svg>
+              <div>
+                <strong>Заказ собран</strong>
+                <small>хычины · хлеб · овощи</small>
+              </div>
+            </div>
+            <div class="float-chip float-chip--2" aria-hidden="true">
+              <span class="float-chip__pulse"></span>
+              <div>
+                <strong>Курьер выехал</strong>
+                <small>15 мин до двери</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom marquee -->
+      <div class="hero__strip" aria-hidden="true">
+        <div class="hero__strip-track">
+          <span>Нальчик</span><span>•</span>
+          <span>Доставка от 30 минут</span><span>•</span>
+          <span>Кулинария собственного производства</span><span>•</span>
+          <span>Свежая выпечка каждый день</span><span>•</span>
+          <span>Бонусы за покупки</span><span>•</span>
+          <span>Совместная корзина</span><span>•</span>
+          <span>Нальчик</span><span>•</span>
+          <span>Доставка от 30 минут</span><span>•</span>
+          <span>Кулинария собственного производства</span><span>•</span>
+          <span>Свежая выпечка каждый день</span><span>•</span>
+          <span>Бонусы за покупки</span><span>•</span>
+          <span>Совместная корзина</span><span>•</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ABOUT ========== -->
+    <section class="about" id="about" aria-labelledby="about-title">
+      <div class="container about__grid">
+        <div class="about__label reveal">
+          <span class="badge">01 — О приложении</span>
+        </div>
+
+        <h2 id="about-title" class="about__title reveal">
+          <em>Витрина</em> супермаркета,<br />которая&nbsp;помещается в&nbsp;ладонь.
+        </h2>
+
+        <div class="about__copy reveal">
+          <p>
+            «Ласточка Джами» — это удобный способ заказать свежие продукты и готовые блюда
+            из супермаркета «Ласточка Джами» с&nbsp;доставкой на дом. Традиционная кухня,
+            выпечка собственного производства, свежее мясо, овощи и фрукты — всё в&nbsp;несколько касаний.
+          </p>
+          <p>
+            Каталог, поиск, избранное и персональные рекомендации — на главном экране.
+            Акции и новинки — в&nbsp;сторис. А&nbsp;за каждую покупку копятся бонусы,
+            которыми можно оплатить следующий заказ.
+          </p>
+        </div>
+
+        <div class="about__visual reveal" aria-hidden="true">
+          <svg viewBox="0 0 480 480" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="orb" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#E5241F"/>
+                <stop offset="100%" stop-color="#7E110E"/>
+              </linearGradient>
+              <clipPath id="orb-clip">
+                <rect x="140" y="140" width="200" height="200" rx="48"/>
+              </clipPath>
+            </defs>
+            <path d="M240 40 C 360 40 440 130 440 240 C 440 360 360 440 240 440 C 130 440 40 360 40 240 C 40 130 130 40 240 40 Z" fill="url(#orb)"/>
+            <path d="M240 90 C 320 90 380 145 380 240 C 380 330 320 390 240 390 C 165 390 100 335 100 240 C 100 145 165 90 240 90 Z" fill="#FBF4EF" opacity="0.08"/>
+            <image href="assets/logo.png" x="140" y="140" width="200" height="200" clip-path="url(#orb-clip)"/>
+            <circle cx="120" cy="120" r="8" fill="#FCC900"/>
+            <circle cx="380" cy="160" r="5" fill="#FBF4EF"/>
+            <circle cx="380" cy="360" r="6" fill="#FCC900"/>
+            <circle cx="100" cy="380" r="4" fill="#FBF4EF"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== HOW IT WORKS ========== -->
+    <section class="how" id="how" aria-labelledby="how-title">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="badge badge--light">02 — Как это работает</span>
+          <h2 id="how-title" class="section-head__title">
+            Три шага между «хочется» и&nbsp;«принесли»
+          </h2>
+        </header>
+
+        <ol class="how__steps">
+          <li class="how__step reveal">
+            <div class="how__num"><span>01</span></div>
+            <h3>Выбираете товары</h3>
+            <p>Каталог супермаркета целиком: кулинария, выпечка, мясо, овощи и фрукты, товары для дома. Быстрый поиск, избранное и повтор прошлого заказа в один клик.</p>
+            <div class="how__icon" aria-hidden="true">
+              <svg viewBox="0 0 64 64" width="64" height="64">
+                <rect x="6" y="14" width="52" height="42" rx="6" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M16 14v-2a6 6 0 0 1 6-6h20a6 6 0 0 1 6 6v2" fill="none" stroke="currentColor" stroke-width="2"/>
+                <circle cx="22" cy="32" r="3" fill="currentColor"/>
+                <circle cx="32" cy="32" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                <circle cx="42" cy="32" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+          </li>
+
+          <li class="how__step how__step--accent reveal">
+            <div class="how__num"><span>02</span></div>
+            <h3>Собираем в магазине</h3>
+            <p>Сборщик берёт с полок то, что вы выбрали, и&nbsp;упаковывает заказ. Если чего-то нет в&nbsp;наличии — позвоним и&nbsp;предложим замену. Каждый этап виден в&nbsp;приложении.</p>
+            <div class="how__icon" aria-hidden="true">
+              <svg viewBox="0 0 64 64" width="64" height="64">
+                <path d="M10 22l22-12 22 12-22 12L10 22z" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M10 32l22 12 22-12M10 42l22 12 22-12" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5"/>
+              </svg>
+            </div>
+          </li>
+
+          <li class="how__step reveal">
+            <div class="how__num"><span>03</span></div>
+            <h3>Курьер привозит</h3>
+            <p>Срочно — от&nbsp;30&nbsp;минут, или в&nbsp;удобное вам время. Курьер виден на карте, с&nbsp;ним можно связаться напрямую. Оплата онлайн или при получении.</p>
+            <div class="how__icon" aria-hidden="true">
+              <svg viewBox="0 0 64 64" width="64" height="64">
+                <circle cx="18" cy="48" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+                <circle cx="48" cy="48" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M4 26h22l4 22M30 18h14l8 12v18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ========== FEATURES BENTO ========== -->
+    <section class="features" id="features" aria-labelledby="features-title">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="badge">03 — Возможности</span>
+          <h2 id="features-title" class="section-head__title">
+            Всё, ради чего ходят в&nbsp;«Ласточку», —<br />теперь без похода.
+          </h2>
+        </header>
+
+        <div class="bento">
+          <article class="bento__cell bento__cell--big reveal">
+            <div class="bento__topline">Кулинария</div>
+            <h3>Готовые блюда собственного производства</h3>
+            <p>Блюда с национальным колоритом, хычины и свежая выпечка — готовим сами, каждый день. Добавки к&nbsp;блюдам выбираете по своему вкусу.</p>
+            <div class="bento__diagram" aria-hidden="true">
+              <div class="bento__bag bento__bag--1">
+                <div class="bento__bag-handle"></div>
+                <span>🫓</span>
+                <small>хычины · пироги</small>
+              </div>
+              <div class="bento__bag bento__bag--2">
+                <div class="bento__bag-handle"></div>
+                <span>🌾</span>
+                <small>мюсли · хлебцы</small>
+              </div>
+              <div class="bento__bag bento__bag--3">
+                <div class="bento__bag-handle"></div>
+                <span>🥐</span>
+                <small>выпечка · хлеб</small>
+              </div>
+            </div>
+          </article>
+
+          <article class="bento__cell bento__cell--num reveal">
+            <div class="bento__topline">Скорость</div>
+            <p class="bento__bignum"><span>30</span><em>мин</em></p>
+            <p class="bento__caption">срочная доставка по&nbsp;городу — от&nbsp;получаса</p>
+          </article>
+
+          <article class="bento__cell bento__cell--accent reveal">
+            <div class="bento__topline">Семье</div>
+            <h3>Совместная корзина</h3>
+            <p>Поделитесь корзиной с близкими — каждый добавит нужное. Удобно для семейных закупок и&nbsp;помощи родителям.</p>
+          </article>
+
+          <article class="bento__cell bento__cell--track reveal">
+            <div class="bento__topline">Отслеживание</div>
+            <h3>Заказ виден от и до</h3>
+            <div class="bento__track">
+              <div class="bento__track-line"></div>
+              <div class="bento__track-step bento__track-step--done"><span>Принят</span></div>
+              <div class="bento__track-step bento__track-step--done"><span>Сборка</span></div>
+              <div class="bento__track-step bento__track-step--active"><span>В пути</span></div>
+              <div class="bento__track-step"><span>У&nbsp;вас</span></div>
+            </div>
+          </article>
+
+          <article class="bento__cell bento__cell--bonus reveal">
+            <div class="bento__topline">Бонусы</div>
+            <h3>Копите и&nbsp;списывайте</h3>
+            <p>Баллы за каждую покупку, промокоды, скидки на категории и&nbsp;раздел «Успей купить».</p>
+            <div class="bento__bonus" aria-hidden="true">
+              <strong>+956</strong>
+              <small>бонусов на счёте</small>
+            </div>
+          </article>
+
+          <article class="bento__cell bento__cell--push reveal">
+            <div class="bento__topline">Уведомления</div>
+            <h3>Push-уведомления без&nbsp;спама</h3>
+            <p>Только по делу: заказ собран, курьер выехал, появилась акция на то, что вы покупаете.</p>
+            <div class="bento__push" aria-hidden="true">
+              <div class="bento__push-card">
+                <strong>Курьер у двери</strong>
+                <span>Заказ №82341 · сейчас</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="bento__cell bento__cell--stories reveal">
+            <div class="bento__topline">Сторис&nbsp;и&nbsp;акции</div>
+            <h3>Новинки и рецепты в сторис</h3>
+            <p>Скидки дня, сезонные подборки и идеи, что приготовить на ужин, — прямо на главном экране.</p>
+            <div class="bento__stories" aria-hidden="true">
+              <div class="bento__story" style="--c:#E5241F"></div>
+              <div class="bento__story" style="--c:#FCC900"></div>
+              <div class="bento__story" style="--c:#21A038"></div>
+              <div class="bento__story" style="--c:#E07A3F"></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SCREENS GALLERY ========== -->
+    <section class="screens" aria-labelledby="screens-title">
+      <div class="container screens__head">
+        <div class="reveal">
+          <span class="badge">Внутри приложения</span>
+          <h2 id="screens-title" class="screens__title">
+            Так выглядит <em>Ласточка</em>
+          </h2>
+        </div>
+        <div class="screens__nav reveal" aria-hidden="true">
+          <button class="screens__btn" data-dir="prev" aria-label="Назад">
+            <svg viewBox="0 0 16 16" width="18" height="18"><path d="M10 3l-5 5 5 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="screens__btn" data-dir="next" aria-label="Вперёд">
+            <svg viewBox="0 0 16 16" width="18" height="18"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="screens__rail" id="screens-rail" tabindex="0" aria-label="Скриншоты приложения, прокрутите вбок">
+        <div class="screens__track">
+          <figure class="screens__item">
+            <img src="assets/screens/screen-1.webp" alt="Экран приложения: главная с любимыми товарами и скидками" loading="lazy" width="800" height="1731" />
+          </figure>
+          <figure class="screens__item">
+            <img src="assets/screens/screen-2.webp" alt="Экран приложения: каталог супермаркета" loading="lazy" width="800" height="1731" />
+          </figure>
+          <figure class="screens__item">
+            <img src="assets/screens/screen-3.webp" alt="Экран приложения: карточка блюда собственной кулинарии" loading="lazy" width="800" height="1731" />
+          </figure>
+          <figure class="screens__item">
+            <img src="assets/screens/screen-4.webp" alt="Экран приложения: профиль, бонусы и заказы" loading="lazy" width="800" height="1731" />
+          </figure>
+          <figure class="screens__item">
+            <img src="assets/screens/screen-5.webp" alt="Экран приложения: отслеживание заказа" loading="lazy" width="800" height="1731" />
+          </figure>
+          <figure class="screens__item">
+            <img src="assets/screens/screen-6.webp" alt="Экран приложения: рекомендации и акции" loading="lazy" width="800" height="1731" />
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== STATS ========== -->
+    <section class="stats" aria-label="Цифры">
+      <div class="container">
+        <div class="stats__grid">
+          <div class="stats__item reveal">
+            <span class="stats__num">30 мин</span>
+            <span class="stats__cap">срочная доставка — от&nbsp;получаса</span>
+          </div>
+          <div class="stats__item reveal">
+            <span class="stats__num">2</span>
+            <span class="stats__cap">способа получить заказ: доставка и&nbsp;самовывоз</span>
+          </div>
+          <div class="stats__item reveal">
+            <span class="stats__num">5.0</span>
+            <span class="stats__cap">рейтинг магазина на&nbsp;Яндекс&nbsp;Картах</span>
+          </div>
+          <div class="stats__item reveal">
+            <span class="stats__num">iOS + Android</span>
+            <span class="stats__cap">App&nbsp;Store, Google&nbsp;Play и&nbsp;AppGallery</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== STORE ========== -->
+    <section class="store" id="store" aria-labelledby="store-title">
+      <div class="store__grain" aria-hidden="true"></div>
+      <div class="container store__inner">
+        <div class="store__copy reveal">
+          <span class="badge badge--on-dark">04 — Магазин</span>
+          <h2 id="store-title" class="store__title">
+            <em>Тот самый</em> супермаркет<br />на&nbsp;Калинина, 76.
+          </h2>
+          <p class="store__lede">
+            Приложение — это витрина реального магазина «Ласточка Джами» в&nbsp;Нальчике.
+            Те же полки, та же кулинария и&nbsp;пекарня, те же цены — только заказ едет к&nbsp;вам сам.
+          </p>
+
+          <ul class="store__benefits">
+            <li>
+              <span class="store__check" aria-hidden="true">✓</span>
+              Кулинария и пекарня собственного производства
+            </li>
+            <li>
+              <span class="store__check" aria-hidden="true">✓</span>
+              Свежее мясо, овощи и фрукты каждый день
+            </li>
+            <li>
+              <span class="store__check" aria-hidden="true">✓</span>
+              Товары повседневного спроса, хозтовары и&nbsp;бытовая химия
+            </li>
+            <li>
+              <span class="store__check" aria-hidden="true">✓</span>
+              Самовывоз из магазина или доставка курьером
+            </li>
+            <li>
+              <span class="store__check" aria-hidden="true">✓</span>
+              Оплата онлайн, СБП или при получении
+            </li>
+          </ul>
+
+          <div class="store__cta">
+            <a class="btn btn--solid btn--bright" href="tel:+79640306644">
+              +7 964 030-66-44
+              <svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="btn btn--ghost-light" href="https://yandex.ru/maps/?text=Нальчик, улица Калинина, 76" target="_blank" rel="noopener">
+              Построить маршрут
+            </a>
+          </div>
+
+          <div class="store__socials">
+            <a class="store__social" href="https://t.me/lastochka_djami2" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M9.04 15.47 8.7 20.2c.48 0 .69-.21.94-.46l2.26-2.16 4.68 3.43c.86.47 1.47.22 1.7-.79l3.08-14.43c.28-1.26-.45-1.75-1.29-1.44L1.85 11.2c-1.23.48-1.21 1.17-.21 1.48l4.63 1.44 10.74-6.77c.5-.33.96-.15.58.18z"/></svg>
+              Telegram
+            </a>
+            <a class="store__social" href="https://vk.com/lastochka.djami" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12.79 17.9c-5.9 0-9.26-4.04-9.4-10.77h2.95c.1 4.94 2.27 7.03 4 7.46V7.13h2.78v4.26c1.7-.18 3.5-2.12 4.1-4.26H20c-.47 2.63-2.4 4.57-3.78 5.37 1.38.65 3.58 2.34 4.42 5.4h-3.06c-.65-2.04-2.28-3.62-4.44-3.84v3.84h-.35z"/></svg>
+              ВКонтакте
+            </a>
+          </div>
+        </div>
+
+        <aside class="store__panel reveal" aria-label="Карточка магазина">
+          <div class="store__card">
+            <div class="store__card-top">
+              <span class="store__card-dot"></span>
+              <span>Ласточка Джами · Нальчик</span>
+            </div>
+
+            <div class="store__card-row">
+              <div>
+                <small>Доставка</small>
+                <strong>30<span style="font-size:.9rem;font-weight:500"> мин</span></strong>
+              </div>
+              <div>
+                <small>Рейтинг</small>
+                <strong>5.0</strong>
+              </div>
+              <div>
+                <small>Отзывов</small>
+                <strong>300+</strong>
+              </div>
+            </div>
+
+            <div class="store__card-list">
+              <div class="store__card-item">
+                <span class="store__card-icon">📍</span>
+                ул. Калинина, 76
+                <small>Нальчик</small>
+              </div>
+              <div class="store__card-item">
+                <span class="store__card-icon">🥐</span>
+                Кулинария и пекарня
+                <small>свои</small>
+              </div>
+              <div class="store__card-item">
+                <span class="store__card-icon">🚚</span>
+                Курьер на карте
+                <small>в приложении</small>
+              </div>
+              <div class="store__card-item">
+                <span class="store__card-icon">🛍</span>
+                Самовывоз
+                <small>без очереди</small>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ========== FAQ ========== -->
+    <section class="faq" id="faq" aria-labelledby="faq-title">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="badge">05 — Вопросы</span>
+          <h2 id="faq-title" class="section-head__title">Коротко о&nbsp;главном</h2>
+        </header>
+
+        <div class="faq__list">
+          <details class="faq__item reveal">
+            <summary>
+              <span>Что такое приложение «Ласточка Джами»?</span>
+              <span class="faq__plus" aria-hidden="true"></span>
+            </summary>
+            <p>
+              Это мобильное приложение супермаркета «Ласточка Джами» в&nbsp;Нальчике. В&nbsp;нём весь
+              ассортимент магазина — продукты, кулинария собственного производства, выпечка, товары для дома.
+              Вы собираете корзину, оплачиваете и&nbsp;получаете заказ доставкой или самовывозом.
+            </p>
+          </details>
+
+          <details class="faq__item reveal">
+            <summary>
+              <span>Как сделать заказ?</span>
+              <span class="faq__plus" aria-hidden="true"></span>
+            </summary>
+            <p>
+              Установите приложение, войдите по номеру телефона, укажите адрес доставки
+              или выберите самовывоз, добавьте товары в&nbsp;корзину и&nbsp;подтвердите заказ.
+              Дальше сборку и&nbsp;путь курьера вы увидите прямо в&nbsp;приложении.
+            </p>
+          </details>
+
+          <details class="faq__item reveal">
+            <summary>
+              <span>Как оплатить заказ?</span>
+              <span class="faq__plus" aria-hidden="true"></span>
+            </summary>
+            <p>
+              Онлайн в&nbsp;приложении (банковская карта, СБП) или при получении. Часть суммы
+              можно оплатить накопленными бонусами, а&nbsp;промокоды применяются в&nbsp;корзине.
+            </p>
+          </details>
+
+          <details class="faq__item reveal">
+            <summary>
+              <span>Сколько стоит и как быстро едет доставка?</span>
+              <span class="faq__plus" aria-hidden="true"></span>
+            </summary>
+            <p>
+              Срочная доставка — от&nbsp;30&nbsp;минут, либо выберите удобный интервал.
+              Стоимость и&nbsp;минимальная сумма заказа показываются в&nbsp;корзине до подтверждения;
+              при заказе от определённой суммы доставка бесплатная.
+            </p>
+          </details>
+
+          <details class="faq__item reveal">
+            <summary>
+              <span>Как работают бонусы?</span>
+              <span class="faq__plus" aria-hidden="true"></span>
+            </summary>
+            <p>
+              За каждую покупку начисляются баллы — их видно в&nbsp;профиле. Списать бонусы можно
+              при оплате следующего заказа. Дополнительно — промокоды, скидки на категории
+              и&nbsp;раздел «Успей купить».
+            </p>
+          </details>
+
+          <details class="faq__item reveal">
+            <summary>
+              <span>Куда обратиться за поддержкой?</span>
+              <span class="faq__plus" aria-hidden="true"></span>
+            </summary>
+            <p>
+              По телефону <a href="tel:+79640306644">+7 964 030-66-44</a> или в&nbsp;<a href="https://t.me/lastochka_djami2" target="_blank" rel="noopener">Telegram</a>.
+              Отвечаем с&nbsp;9:00 до&nbsp;18:00, с&nbsp;понедельника по&nbsp;субботу.
+              Подробнее — на странице <a href="/support">«Поддержка»</a>. Удалить аккаунт можно
+              в&nbsp;приложении (Профиль → Настройки) или по&nbsp;<a href="/account-deletion">инструкции</a>.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== DOWNLOAD CTA ========== -->
+    <section class="cta" id="download" aria-labelledby="cta-title">
+      <div class="cta__grain" aria-hidden="true"></div>
+      <div class="container cta__inner">
+        <p class="cta__eyebrow reveal">Доступно в&nbsp;App Store, Google Play и&nbsp;AppGallery</p>
+        <h2 id="cta-title" class="cta__title reveal">
+          Скачайте <em>Ласточку</em><br />и&nbsp;закажите первый раз.
+        </h2>
+        <p class="cta__lede reveal">
+          Установка бесплатная. Вход по номеру телефона, первый заказ — уже через пару минут.
+        </p>
+
+        <div class="cta__stores reveal">
+          <a href="https://apps.apple.com/ru/app/id6758952125" target="_blank" rel="noopener" class="store-btn store-btn--apple store-btn--on-dark" aria-label="Скачать в App Store">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M16.365 1.43c0 1.14-.43 2.23-1.13 3.05-.78.92-2.06 1.62-3.13 1.55-.13-1.1.42-2.27 1.13-3.06.81-.9 2.16-1.6 3.13-1.54zM20.5 17.05c-.53 1.22-.78 1.77-1.45 2.85-.94 1.5-2.27 3.37-3.92 3.39-1.46.02-1.84-.95-3.83-.94-1.99.01-2.4.96-3.86.94-1.65-.02-2.91-1.71-3.85-3.21-2.62-4.18-2.9-9.08-1.28-11.7 1.15-1.86 2.97-2.95 4.69-2.95 1.74 0 2.83.96 4.27.96 1.4 0 2.25-.96 4.27-.96 1.53 0 3.15.83 4.31 2.27-3.78 2.07-3.16 7.47.65 9.35z"/></svg>
+            <span><small>Скачать в</small><strong>App Store</strong></span>
+          </a>
+          <a href="https://play.google.com/store/apps/details?id=com.app.lastochka.djami" target="_blank" rel="noopener" class="store-btn store-btn--google store-btn--on-dark" aria-label="Скачать в Google Play">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3.5 2.3c-.3.3-.5.7-.5 1.2v17c0 .5.2.9.5 1.2l9.5-9.7-9.5-9.7zm10.7 10.9l2.6 2.7L5 22.5c-.2.1-.3.1-.5.1l9.7-9.4zm0-2.4L4.5 1.4c.2 0 .3 0 .5.1l11.8 6.6-2.6 2.7zm6.2 1.2l-2.7 1.5-2.9-3 2.9-3 2.7 1.5c1 .6 1 2.4 0 3z"/></svg>
+            <span><small>Скачать в</small><strong>Google Play</strong></span>
+          </a>
+          <a href="https://appgallery.huawei.com/#/app/C118601879" target="_blank" rel="noopener" class="store-btn store-btn--huawei store-btn--on-dark" aria-label="Скачать в AppGallery">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 16c0-3.6 2-6.5 4.5-6.5s4.5 2.9 4.5 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9.3 9.2C9.8 7.9 10.8 7 12 7s2.2.9 2.7 2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <span><small>Скачать в</small><strong>AppGallery</strong></span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="foot" id="contacts" aria-labelledby="foot-title">
+    <h2 id="foot-title" class="visually-hidden">Контакты и реквизиты</h2>
+    <div class="container foot__grid">
+
+      <div class="foot__brand">
+        <a class="foot__logo" href="#" aria-label="Ласточка Джами — на главную">
+          <img src="assets/logo.png" alt="" width="40" height="40" />
+          <span>Ласточка<span class="foot__logo-sub">Джами</span></span>
+        </a>
+        <p class="foot__tagline">
+          Супермаркет в&nbsp;Нальчике с&nbsp;доставкой через приложение.<br />
+          Свежее, своё, рядом.
+        </p>
+        <p class="foot__copy">© <span data-year>2026</span> ИП Хапова Л.&nbsp;А.<br />Все права защищены.</p>
+      </div>
+
+      <div class="foot__col">
+        <h3>Сайт</h3>
+        <ul>
+          <li><a href="#about">О приложении</a></li>
+          <li><a href="#features">Возможности</a></li>
+          <li><a href="#how">Как это работает</a></li>
+          <li><a href="#faq">Вопросы</a></li>
+        </ul>
+      </div>
+
+      <div class="foot__col">
+        <h3>Покупателям</h3>
+        <ul>
+          <li><a href="#download">Скачать приложение</a></li>
+          <li><a href="/support">Поддержка</a></li>
+          <li><a href="/account-deletion">Удаление аккаунта</a></li>
+          <li><a href="https://t.me/lastochka_djami2" target="_blank" rel="noopener">Написать в Telegram</a></li>
+        </ul>
+      </div>
+
+      <div class="foot__col">
+        <h3>Приложение</h3>
+        <ul>
+          <li><a href="https://apps.apple.com/ru/app/id6758952125" target="_blank" rel="noopener">App Store</a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=com.app.lastochka.djami" target="_blank" rel="noopener">Google Play</a></li>
+          <li><a href="https://appgallery.huawei.com/#/app/C118601879" target="_blank" rel="noopener">AppGallery</a></li>
+          <li><a href="https://t.me/lastochka_djami2" target="_blank" rel="noopener">Telegram</a></li>
+          <li><a href="https://vk.com/lastochka.djami" target="_blank" rel="noopener">ВКонтакте</a></li>
+        </ul>
+      </div>
+
+      <div class="foot__col foot__contacts">
+        <h3>Контакты</h3>
+        <ul>
+          <li>
+            <span class="foot__label">Магазин</span>
+            <a href="tel:+79640306644">+7 964 030-66-44</a>
+          </li>
+          <li>
+            <span class="foot__label">Поддержка</span>
+            пн–сб, 9:00–18:00
+          </li>
+          <li>
+            <span class="foot__label">Адрес</span>
+            Нальчик,<br />ул. Калинина, 76
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="container foot__legal">
+      <ul class="foot__legal-list">
+        <li><a href="/privacy">Политика конфиденциальности</a></li>
+        <li><a href="/terms">Пользовательское соглашение</a></li>
+        <li><a href="/personal-data-consent">Согласие на обработку ПД</a></li>
+        <li><a href="/offer">Публичная оферта</a></li>
+        <li><a href="/support">Поддержка</a></li>
+        <li><a href="/account-deletion">Удаление аккаунта</a></li>
+      </ul>
+      <p class="foot__legal-meta">
+        ИП Хапова Лариса Аслануковна · ИНН 071510449657 · ОГРНИП 326070000013802
+      </p>
+    </div>
+
+    <div class="container foot__requisites">
+      <details class="requisites">
+        <summary>
+          <span>Полные реквизиты</span>
+          <span class="faq__plus" aria-hidden="true"></span>
+        </summary>
+        <div class="requisites__grid">
+          <dl>
+            <dt>Наименование</dt>
+            <dd>Индивидуальный предприниматель Хапова Лариса Аслануковна</dd>
+
+            <dt>Сокращённо</dt>
+            <dd>ИП Хапова Л. А.</dd>
+
+            <dt>ИНН</dt>
+            <dd>071510449657</dd>
+
+            <dt>ОГРНИП</dt>
+            <dd>326070000013802</dd>
+          </dl>
+
+          <dl>
+            <dt>Адрес</dt>
+            <dd>Кабардино-Балкарская Республика,<br />г. Нальчик, ул. Калинина, д. 76</dd>
+
+            <dt>Телефон</dt>
+            <dd>
+              <a href="tel:+79640306644">+7 964 030-66-44</a> — магазин
+            </dd>
+          </dl>
+        </div>
+      </details>
+    </div>
+  </footer>
+
+  <!-- Cookie banner -->
+  <div class="cookie" hidden>
+    <p>Мы используем cookie, чтобы сайт работал лучше. Продолжая использовать сайт, вы соглашаетесь с&nbsp;этим.</p>
+    <button class="btn btn--solid" type="button">Принять</button>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

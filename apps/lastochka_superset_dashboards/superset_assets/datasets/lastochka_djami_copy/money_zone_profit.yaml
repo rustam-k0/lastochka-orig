@@ -1,0 +1,46 @@
+# Вкладка «Деньги» (по магазину). Прибыль по зонам доставки, единственный
+# потребитель - чарт «Прибыль по зонам доставки» (dist_bar). СНЯТО с blocked
+# правилом 8: orders.zone_id теперь существует, JOIN больше НЕ price-matching хак
+# (z.price = o.delivery_price), а прямой JOIN по FK. Имя датасета verbatim из
+# BUILD_PLAN (тот же черновой SQL, полностью переписан JOIN).
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1 - WHERE o.status_id = 5 (прибыль считается по реализованным заказам).
+#   Правило 2 - WHERE o.parent_order_id IS NULL.
+#   Правило 8 - LEFT JOIN shop_zones z ON z.id = o.zone_id (НЕ z.price =
+#     o.delivery_price). На dev 25 из 28 доставленных заказов имеют zone_id.
+#   Правило 9 - shop_zones.deleted_at IS NULL (на dev 2 из 5 зон soft-deleted).
+#   Правило 10 - delivery_price ДОБАВЛЯЕТСЯ (+) к марже зоны в метрике чарта
+#     (часть выручки), НЕ вычитается как расход - формула метрики уже была
+#     правильно расставлена в BUILD_PLAN по знаку, изменений не потребовалось.
+# Наблюдение по схеме: shops.name НЕ существует (только shops.title).
+# Данные на dev: items_subtotal NULL у 25/28 доставленных заказов - метрика
+# «Прибыль по зонам» (SUM по items_subtotal) будет занижена/частична пока
+# items_subtotal не заполняется стабильно на всех заказах; o.amount (итог) всегда
+# заполнен. Зафиксировано как наблюдение по качеству данных, не как баг датасета.
+table_name: money_zone_profit
+main_dttm_col: order_date
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      o.id                                          AS order_id,
+      o.shop_id                                      AS shop_id,
+      sh.title                                        AS shop_name,
+      DATE(COALESCE(o.paid_at, o.finished_at))       AS order_date,
+      z.id                                            AS zone_id,
+      z.name                                          AS zone_name,
+      o.items_subtotal                                AS items_subtotal,
+      o.discount                                      AS discount,
+      o.bonus_spent                                   AS bonus_spent,
+      o.delivery_price                                AS delivery_price,
+      o.assembly_cost                                 AS assembly_cost,
+      o.amount                                        AS amount
+  FROM orders o
+  LEFT JOIN shops sh ON sh.id = o.shop_id
+  LEFT JOIN shop_zones z ON z.id = o.zone_id AND z.deleted_at IS NULL
+  WHERE o.parent_order_id IS NULL AND o.status_id = 5
+uuid: 47a52352-3c0f-4b3a-94b7-1406aad1746a
+columns: []
+metrics: []
+version: 1.0.0

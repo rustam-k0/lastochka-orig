@@ -1,0 +1,74 @@
+"Статус промокода"
+enum MerchantPromocodeStatus {
+  ACTIVE @enum(value: "active")
+  SCHEDULED @enum(value: "scheduled")
+  EXPIRED @enum(value: "expired")
+  INACTIVE @enum(value: "inactive")
+}
+
+enum MerchantPromocodeDiscountType {
+  PERCENT @enum(value: "percent")
+  FIXED @enum(value: "fixed")
+}
+
+enum MerchantPromocodeBindingType {
+  ALL @enum(value: "all")
+  PRODUCTS @enum(value: "products")
+  CATEGORIES @enum(value: "categories")
+}
+
+"Scope промокода — привязка к магазину vs платформе (маркетплейс)"
+enum MerchantPromocodeScope {
+  STORE @enum(value: "store")
+  PLATFORM @enum(value: "platform")
+}
+
+"Промокод мерчанта"
+type MerchantPromocode {
+  "ID"
+  id: Int!
+  "ID магазина (null для platform-wide)"
+  shop_id: Int
+  "Scope промокода: store (дефолт) или platform (на всю корзину)"
+  scope: String!
+  "Название промокода"
+  title: String!
+  "Код промокода"
+  code: String!
+  "Процент скидки (1-100)"
+  discount_percent: Int!
+  "Тип скидки: percent | fixed"
+  discount_type: String!
+  "Значение скидки"
+  discount_value: Int
+  "Тип привязки: all | products | categories"
+  binding_type: String!
+  "Привязанные товары"
+  products: [Product!]! @belongsToMany
+  "Привязанные категории"
+  categories: [Category!]! @belongsToMany
+  "Дата начала действия"
+  valid_from: Date!
+  "Дата окончания действия"
+  valid_to: Date!
+  "Активен ли промокод"
+  is_active: Boolean!
+  "Максимальное количество использований (всего). null = без ограничений"
+  max_uses: Int
+  "Максимальное количество использований на одного клиента. null = без ограничений"
+  max_uses_per_client: Int
+  "Сколько раз промокод уже использован"
+  used_count: Int!
+  "Дата создания"
+  created_at: DateTime
+  "Дата обновления"
+  updated_at: DateTime
+
+  "Магазин (null для platform-wide промокодов)"
+  shop: Shop @belongsTo
+
+  "Действует ли промокод сейчас (is_active + valid dates)"
+  is_valid: Boolean! @method(name: "getIsValidAttribute")
+  "Статус промокода: active | scheduled | expired | inactive"
+  status: String! @method(name: "getStatusAttribute")
+}

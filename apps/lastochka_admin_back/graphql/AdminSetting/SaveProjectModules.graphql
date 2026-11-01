@@ -1,0 +1,9 @@
+extend type Mutation {
+    saveProjectModules(
+        "JSON-конфигурация модулей проекта"
+        config: String!
+    ): AdminSetting!
+        @field(resolver: "AdminSetting\\SaveProjectModules")
+        @guard
+        @can(ability: "manageSettings", model: "Admin")
+}

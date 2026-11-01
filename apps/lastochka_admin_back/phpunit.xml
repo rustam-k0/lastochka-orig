@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory suffix="Test.php">./tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Feature</directory>
+        </testsuite>
+    </testsuites>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">./app</directory>
+        </include>
+    </coverage>
+    <php>
+        <server name="APP_ENV" value="testing"/>
+        <!-- Тесты никогда не шлют события в GlitchTip: пустой DSN отключает Sentry SDK -->
+        <server name="SENTRY_LARAVEL_DSN" value=""/>
+        <server name="SENTRY_DSN" value=""/>
+        <!-- Без переопределения тесты падают на UnableToCreateDirectory: локальный/CI .env
+             указывает на прод-путь вида /var/www/files, которого нет вне контейнера
+             (см. CategoryImageFallbackTest — тест fallback слотов фото категории). -->
+        <server name="PUBLIC_FILES_PATH" value="storage/framework/testing/public-files"/>
+        <server name="BCRYPT_ROUNDS" value="4"/>
+        <server name="CACHE_DRIVER" value="array"/>
+        <!-- Только локальная тестовая БД: создаётся в admin_back командой `php artisan testing:prepare-db`.
+             Прибита здесь, чтобы прогон не попал в рабочую БД из .env (RefreshDatabase снёс бы её). -->
+        <server name="DB_HOST" value="127.0.0.1"/>
+        <server name="DB_DATABASE" value="courier_test"/>
+        <!-- Тесты не должны зависеть от локальных .env/.env.testing: outbox-события пишутся всегда,
+             ключ шифрования есть даже без APP_KEY в .env (2FA-секреты, encrypted-касты) -->
+        <server name="RABBITMQ_EVENTS_ENABLED" value="true"/>
+        <server name="APP_KEY" value="base64:ln/2QKeTF/3y6VQai9p9FEcykBOFNVYthea1+DrPALY="/>
+        <server name="MAIL_MAILER" value="array"/>
+        <server name="QUEUE_CONNECTION" value="sync"/>
+        <server name="SESSION_DRIVER" value="array"/>
+        <server name="TELESCOPE_ENABLED" value="false"/>
+        <!-- Dev-вход по ссылке: роут регистрируется условно, в тестах флаг включён (tests/Feature/DevLoginTest) -->
+        <server name="DEV_LOGIN_ENABLED" value="true"/>
+    </php>
+</phpunit>

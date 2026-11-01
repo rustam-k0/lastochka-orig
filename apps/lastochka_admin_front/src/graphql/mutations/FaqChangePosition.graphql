@@ -1,0 +1,6 @@
+mutation FaqChangePosition($items: [FaqPositionInput!]!) {
+  FaqChangePosition(items: $items) {
+    code
+    message
+  }
+}

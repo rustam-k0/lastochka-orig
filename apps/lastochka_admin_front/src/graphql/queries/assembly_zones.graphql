@@ -1,0 +1,10 @@
+query {
+  assembly_zones {
+    id
+    title
+    color
+    is_active
+    description
+    position
+  }
+}

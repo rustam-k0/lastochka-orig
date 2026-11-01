@@ -1,0 +1,33 @@
+query (
+  $shop_id: Int!
+  $exclude_sale_id: Int
+  $search: String
+  $first: Int
+  $page: Int
+) {
+  shopProductsForSale(
+    shop_id: $shop_id
+    exclude_sale_id: $exclude_sale_id
+    search: $search
+    first: $first
+    page: $page
+  ) {
+    data {
+      id
+      title
+      default_price {
+        value
+      }
+      images {
+        id
+        path
+      }
+    }
+    paginatorInfo {
+      currentPage
+      lastPage
+      total
+      perPage
+    }
+  }
+}

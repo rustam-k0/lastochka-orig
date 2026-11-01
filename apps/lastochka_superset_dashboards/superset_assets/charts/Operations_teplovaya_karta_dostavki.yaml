@@ -1,0 +1,26 @@
+# Вкладка «Операции». Тепловая карта доставки: час создания заказа (X) x день
+# недели (Y), метрика по умолчанию - количество заказов. Статус: ready
+# (полностью покрывается courier_orders_core, o.created_at/o.finished_at
+# подтверждены реальной MySQL-схемой).
+slice_name: Тепловая карта доставки
+viz_type: heatmap_v2
+params:
+  viz_type: heatmap_v2
+  metric:
+    expressionType: SIMPLE
+    column:
+      column_name: order_id
+    aggregate: COUNT
+    label: Кол-во заказов
+    hasCustomLabel: true
+  x_axis: order_hour
+  groupby: order_dow
+  adhoc_filters: []
+  row_limit: 10000
+  normalize_across: heatmap
+  linear_color_scheme: blue_white_yellow
+  sort_x_axis: alpha_asc
+  sort_y_axis: alpha_asc
+dataset_uuid: 60d644ba-11b3-4618-868e-b9ab46707bf0
+uuid: 4b04f2c8-67ca-41c8-9a50-1e980ab72abb
+version: 1.0.0

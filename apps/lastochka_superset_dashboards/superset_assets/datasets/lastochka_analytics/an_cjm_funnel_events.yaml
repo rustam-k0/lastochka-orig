@@ -1,0 +1,85 @@
+# Вкладка «Спрос» (по магазину). События customer journey для воронки «Путь
+# клиента (CJM)». db3 Postgres.
+#
+# Конверсии применены (docs/conversion-rules.md, правило 6):
+#   ae.shop_id (не существует) -> ae.store_id (varchar, фактически shop_code:
+#     на dev 'default' у b2c-событий, 'djami_store' у order.created - это НЕ
+#     то же самое пространство, что orders.shop_id (числовой FK) - кросс-БД
+#     джойн невозможен, оставляем как есть).
+#   Список стадий ПЕРЕСМОТРЕН относительно BUILD_PLAN. BUILD_PLAN придумал 9
+#     стадий с префиксом 'b2c.' (СИЛЬНОЕ ДОПУЩЕНИЕ, сам документ это
+#     признаёт). Проверено на dev двумя источниками:
+#     1) whitelist storefront_back config/analytics.php 'allowed_events':
+#        app.opened, product.viewed, category.viewed, cart.item_added,
+#        cart.item_removed, search.performed, stock.intent_denied,
+#        checkout.started (БЕЗ префикса b2c., БЕЗ catalog.viewed, БЕЗ
+#        payment.completed, БЕЗ order.repeat_placed - таких событий в
+#        принципе не существует, приложение их не публикует).
+#     2) SELECT event_type, COUNT(*) FROM analytics_events GROUP BY 1 (46
+#        различных event_type на dev) - подтверждает ровно тот же список плюс
+#        общеплатформенные order.created/order.stage_changed/picking.*/
+#        delivery.*/shift.*.
+#   Итоговые 7 реальных стадий: app.opened -> category.viewed ->
+#     search.performed -> product.viewed -> cart.item_added ->
+#     checkout.started -> order.created (order.created - легитимная финальная
+#     стадия воронки, публикуется storefront при создании заказа, событие
+#     order-level, но session_id/client_id есть в тех же строках что и у
+#     b2c-стадий - подтверждено сопоставлением session_id на dev).
+#
+# FIX ROUND 1 (ревью, Important): funnel-чарт Superset сортирует строки по
+#   метрике по убыванию, а не по dimension - на разреженных данных порядок
+#   строк расходился с cjm_stage_no. cjm_stage_name теперь содержит числовой
+#   префикс ('1. Открытие приложения' ... '7. Заказ создан') - алфавитная
+#   сортировка строкового dimension совпадает с порядком стадий железно, при
+#   любом распределении метрики. cjm_stage_no остаётся отдельной числовой
+#   колонкой для случаев, когда порядок нужен явным ORDER BY.
+#
+# ПУСТО-ОЖИДАЕМО: b2c-поток единичный (мобилка не в проде). На dev по одному
+# событию app.opened/search.performed/product.viewed/cart.item_added/
+# checkout.started (все с session_id '0c0a1447-...'), 0 событий
+# category.viewed (стадия существует в whitelist, но ни разу не сработала -
+# в funnel-чарте эта стадия просто не появится строкой, это НЕ баг датасета).
+# order.created - 8 строк, из них только первая содержит тот же session_id
+# (7 остальных без session_id - атрибуция заказа к сессии не всегда
+# заполняется, см. analytics-collection-layer.md).
+table_name: an_cjm_funnel_events
+main_dttm_col: occurred_at
+database_uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+schema: null
+sql: |
+  SELECT
+      ae.event_type                              AS event_type,
+      ae.occurred_at                              AS occurred_at,
+      CAST(ae.occurred_at AS DATE)                 AS event_date,
+      ae.session_id                               AS session_id,
+      ae.client_id                                AS client_id,
+      ae.store_id                                 AS store_id,
+      ae.order_id                                 AS order_id,
+      ae.payload                                  AS payload,
+      CASE ae.event_type
+          WHEN 'app.opened'        THEN 1
+          WHEN 'category.viewed'   THEN 2
+          WHEN 'search.performed'  THEN 3
+          WHEN 'product.viewed'    THEN 4
+          WHEN 'cart.item_added'   THEN 5
+          WHEN 'checkout.started'  THEN 6
+          WHEN 'order.created'     THEN 7
+      END AS cjm_stage_no,
+      CASE ae.event_type
+          WHEN 'app.opened'        THEN '1. Открытие приложения'
+          WHEN 'category.viewed'   THEN '2. Просмотр категории'
+          WHEN 'search.performed'  THEN '3. Поиск'
+          WHEN 'product.viewed'    THEN '4. Просмотр товара'
+          WHEN 'cart.item_added'   THEN '5. Добавление в корзину'
+          WHEN 'checkout.started'  THEN '6. Начало оформления'
+          WHEN 'order.created'     THEN '7. Заказ создан'
+      END AS cjm_stage_name
+  FROM analytics_events ae
+  WHERE ae.event_type IN (
+      'app.opened', 'category.viewed', 'search.performed', 'product.viewed',
+      'cart.item_added', 'checkout.started', 'order.created'
+  )
+uuid: 83f4cdd0-bcbd-4972-ae6f-fc33e80f8377
+columns: []
+metrics: []
+version: 1.0.0

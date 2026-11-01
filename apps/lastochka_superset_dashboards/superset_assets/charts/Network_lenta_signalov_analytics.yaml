@@ -1,0 +1,26 @@
+# Вкладка «Обзор сети». ПЕРВАЯ панель «Лента сигналов по сети» - события
+# аналитики (db3, picking-задержки + опоздания доставки). См. companion
+# Network_lenta_signalov_courier (db1) - вторая панель, кросс-DB объединение
+# в одном чарте невозможно (BUILD_PLAN сам это отмечал).
+slice_name: 'Обзор сети: Лента сигналов по сети — события аналитики'
+viz_type: table
+params:
+  viz_type: table
+  query_mode: raw
+  all_columns:
+  - signal_time
+  - store_id
+  - severity
+  - rule_name
+  - what_happened
+  - recommended_action
+  - order_id
+  - order_local_id
+  - employee_id
+  adhoc_filters: []
+  row_limit: 100
+  order_desc: true
+  table_timestamp_format: smart_date
+dataset_uuid: 831fbfd2-a456-4e78-8d28-c4360a731ee5
+uuid: 851f161b-0a83-45a0-83c5-ea670e8f9fb5
+version: 1.0.0

@@ -1,0 +1,22 @@
+extend type Mutation {
+  "Создание отзыва на мерчанта"
+  createMerchantReview(input: CreateMerchantReviewInput! @spread): MerchantReview!
+    @field(resolver: "MerchantReview\\CreateMerchantReview")
+    @validator(class: "MerchantReview\\CreateMerchantReviewValidator")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "merchant-reviews")
+}
+
+input CreateMerchantReviewInput {
+  "ID магазина"
+  shop_id: Int!
+  "Оценка 1-5"
+  rating: Int!
+  "Текст отзыва"
+  description: String
+  "Опубликован"
+  is_published: Boolean
+  "Имя автора"
+  author_name: String
+  "Телефон автора"
+  author_phone: String
+}

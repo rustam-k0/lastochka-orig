@@ -1,0 +1,167 @@
+query($id: Int) {
+  admin_orders_item(id: $id) {
+    id
+    uuid
+    number
+    status_id
+    slot_end_date
+    slot_start_date
+    client_comment
+    type_id
+    created_at
+    payment_type_id
+    is_paid
+    paid_at
+    payment_status
+    items_subtotal
+    bonus_spent
+    bonus_earned
+    review {
+      id
+      comment
+      main_mark
+      delivery_mark
+      assembly_mark
+      created_at
+    }
+    shop {
+      id
+      title
+      address
+    }
+    pickup_ready_at
+    picked_up_at
+    picked_up_by {
+      id
+      name
+      surname
+    }
+    delivery_zone {
+      id
+      title
+    }
+    pickup_only_required
+    client_info {
+      name
+      surname
+      phone
+      email
+      address
+      first_order
+      entrance
+      intercom
+      floor
+      flat
+      object_data {
+        name
+        contactName
+        contactPhone
+        company
+        liftSize
+        hasLift
+        needsPass
+        canOversized
+        workingHoursFrom
+        workingHoursTo
+        is247
+        workingDays
+        isDaily
+        photos {
+          url
+          mime
+        }
+      }
+    }
+    items {
+      quantity
+    }
+    parent_order_id
+    sub_number
+    label
+    childOrders {
+      id
+      label
+      sub_number
+      assembly_zone_id
+      assemblyZone {
+        id
+        title
+        color
+      }
+      status_id
+      amount
+      items {
+        id
+        product {
+          id
+          articul
+          title
+          info_weight
+          info_weight_type_id
+          pickup_only
+        }
+        origin_product_id
+        origin_title
+        origin_price
+        origin_quantity
+        ordered_quantity
+        returned_quantity
+        actual_weight
+        price_old
+        price_tiers {
+          base_price
+          base_price_old
+          base_is_eligible
+          tiers {
+            min_quantity
+            price
+          }
+        }
+        is_supplemented
+        cancel_reason {
+          id
+          title
+        }
+        replace_reason {
+          id
+          title
+        }
+        supplements {
+          supplement {
+            id
+            title
+            type
+          }
+          values {
+            id
+            title
+            price
+          }
+        }
+        quantity
+        price
+        price_during_order
+        status_id
+      }
+    }
+    amount
+    total_weight
+    is_heavy
+    couriers {
+      id
+      name
+      surname
+      patronymic
+    }
+    is_weight_partial
+    delivery_price
+    assembly_cost
+    discount
+    promocode_code
+    yandex_claim_id
+    yandex_delivery_status
+    yandex_courier_name
+    yandex_courier_phone
+    yandex_delivery_price
+  }
+}

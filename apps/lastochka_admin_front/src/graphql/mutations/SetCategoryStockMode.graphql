@@ -1,0 +1,8 @@
+mutation SetCategoryStockMode($category_id: Int!, $stock_mode: String!, $fixed_stock_quantity: Int, $fixed_stock_unit_type_id: Int) {
+  SetCategoryStockMode(category_id: $category_id, stock_mode: $stock_mode, fixed_stock_quantity: $fixed_stock_quantity, fixed_stock_unit_type_id: $fixed_stock_unit_type_id) {
+    id
+    stock_mode
+    fixed_stock_quantity
+    fixed_stock_unit_type_id
+  }
+}

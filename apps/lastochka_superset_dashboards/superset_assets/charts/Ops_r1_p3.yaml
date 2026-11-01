@@ -1,0 +1,52 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Динамика потерь
+description: Оценка и подтверждённые потери · ₽
+viz_type: echarts_timeseries_line
+params:
+  viz_type: echarts_timeseries_line
+  x_axis: event_at
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(search_amount)
+    label: Оценка по событиям
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(price_delta_amount + refused_amount)
+    label: Подтверждённые потери
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: event_at
+  row_limit: 10000
+  seriesType: line
+  markerEnabled: true
+  markerSize: 6
+  show_value: false
+  show_legend: true
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: $,.0f
+  y_axis_bounds:
+  - null
+  - null
+  x_axis_sort_asc: true
+  zoomable: false
+  rich_tooltip: true
+  comparison_type: values
+  x_axis_time_format: '%d.%m'
+  x_axis_title: Дата
+  x_axis_title_margin: 30
+  y_axis_title: Потери, ₽
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  time_grain_sqla: P1D
+cache_timeout: null
+dataset_uuid: 1ee44de1-76c8-439c-bbe1-720914f5e3fc
+uuid: ca9091a2-9740-5799-8634-44b827073851
+version: 1.0.0

@@ -1,0 +1,46 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: ABC-анализ ассортимента
+description: Выручка и накопленная доля
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: product_name
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(revenue)
+    label: Выручка net, ₽
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: order_date
+  orientation: horizontal
+  row_limit: 10
+  show_value: true
+  show_legend: false
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: $,.0f
+  truncateYAxis: false
+  zoomable: false
+  rich_tooltip: true
+  stack: null
+  only_total: true
+  comparison_type: values
+  order_desc: true
+  x_axis_title: ''
+  x_axis_title_margin: 30
+  y_axis_title: Выручка, ₽
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  x_axis_sort: Выручка net, ₽
+  x_axis_sort_asc: false
+cache_timeout: null
+dataset_uuid: 0c964450-5adb-4c83-9968-c05efd2a5aed
+uuid: 4a599e22-69b1-5087-9956-cbd3b88cb168
+version: 1.0.0

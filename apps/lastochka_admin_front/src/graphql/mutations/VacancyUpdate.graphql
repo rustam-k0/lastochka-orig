@@ -1,0 +1,42 @@
+mutation (
+  $id: Int!
+  $title: String
+  $city: String
+  $work_format: VacancyWorkFormat
+  $employment_type: VacancyEmploymentType
+  $work_schedule: String
+  $salary: String
+  $short_description: String
+  $description: String
+  $responsibilities: String
+  $requirements: String
+  $conditions: String
+  $link_title: String
+  $link_url: String
+  $position: Int
+  $is_published: Boolean
+) {
+  VacancyUpdate(
+    id: $id
+    title: $title
+    city: $city
+    work_format: $work_format
+    employment_type: $employment_type
+    work_schedule: $work_schedule
+    salary: $salary
+    short_description: $short_description
+    description: $description
+    responsibilities: $responsibilities
+    requirements: $requirements
+    conditions: $conditions
+    link_title: $link_title
+    link_url: $link_url
+    position: $position
+    is_published: $is_published
+  ) {
+    id
+    title
+    is_published
+    published_at
+  }
+}

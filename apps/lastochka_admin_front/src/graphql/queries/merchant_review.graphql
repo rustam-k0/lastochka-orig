@@ -1,0 +1,17 @@
+query MerchantReview($id: Int!) {
+  merchantReview(id: $id) {
+    id
+    shop_id
+    rating
+    description
+    is_published
+    author_name
+    author_phone
+    created_at
+    updated_at
+    shop {
+      id
+      title
+    }
+  }
+}

@@ -1,0 +1,23 @@
+# Вкладка «Спрос». Упущенная выручка от отмен/замен по причине «Нет в
+# наличии» (точное название проверено в product_cancel_reasons на dev).
+# Фильтр причины встроен в CASE метрики (как Overview_zakazy_kol_vo делает
+# для status_id) - не адаптер adhoc_filters, единообразно с прежними
+# задачами репозитория.
+slice_name: 'Сигналы по ассортименту: упущенная выручка (оценка)'
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(CASE WHEN cancel_reason_name = 'Нет в наличии' THEN item_total_price
+      ELSE 0 END)
+    label: Упущенная выручка (оценка), ₽
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: 'отмены/замены сборщиком по причине "нет в наличии"'
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: 7ae780b2-d156-49c3-8031-21bb037bbccf
+uuid: 58d36943-154b-4254-a691-2b7295f6e681
+version: 1.0.0

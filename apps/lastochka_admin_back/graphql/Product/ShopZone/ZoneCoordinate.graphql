@@ -1,0 +1,8 @@
+type ZoneCoordinate {
+    "Широта"
+    latitude:String
+    "Долгота"
+    longitude:String
+    "Позиция в полигоне"
+    position:Int
+}

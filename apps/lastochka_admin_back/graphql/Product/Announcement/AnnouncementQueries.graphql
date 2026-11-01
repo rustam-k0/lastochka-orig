@@ -1,0 +1,16 @@
+extend type Query {
+  "Список уведомлений об акциях"
+  announcements(
+    "Фильтр активности"
+    is_active: Boolean
+    "Поиск по заголовку и описанию"
+    search: String
+    "Фильтр по промокоду"
+    promocode_id: Int
+    "Сортировка"
+    orderBy: _ @orderBy(columns: ["id", "title", "is_active", "created_at", "updated_at"])
+  ): [Announcement!]! @paginate(defaultCount: 10, scopes: ["filter", "sorter"]) @section(key: "announcements")
+
+  "Получить уведомление по ID"
+  announcement(id: Int! @eq): Announcement @find @section(key: "announcements")
+}

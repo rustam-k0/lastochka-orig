@@ -1,0 +1,26 @@
+mutation(
+  $name: String,
+  $surname: String,
+  $patronymic: String,
+  $phone: String,
+  $email: String
+  $role_id: Int,
+  $shops: [Int],
+  $password: String,
+  $password_confirmation: String
+) {
+  UserCreate(
+    name: $name
+    surname: $surname
+    patronymic: $patronymic
+    phone: $phone
+    email: $email
+    role_id: $role_id
+    shops: $shops
+    password: $password
+    password_confirmation: $password_confirmation
+  ) {
+    code
+    message
+  }
+}

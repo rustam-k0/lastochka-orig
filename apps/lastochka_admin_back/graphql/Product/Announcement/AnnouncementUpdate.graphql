@@ -1,0 +1,22 @@
+extend type Mutation {
+  "Обновление уведомления об акции"
+  announcementUpdate(
+    "ID уведомления"
+    id: Int!
+    "Заголовок уведомления"
+    title: String
+    "Краткое описание"
+    short_description: String
+    "Полное описание"
+    description: String
+    "ID промокода"
+    promocode_id: Int
+    "Активность"
+    is_active: Boolean
+    "Изображение уведомления"
+    image: ImgInput
+  ): Announcement!
+    @field(resolver: "Announcement\\AnnouncementUpdate")
+    @validator(class: "Announcement\\AnnouncementUpdateValidator")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "announcements")
+}

@@ -1,0 +1,11 @@
+extend type Mutation {
+  "Указать адрес на карте"
+  ReviewChangeStatus(
+    "Отзыв"
+    id:Int
+    "1 - На модерации, 2 - Опубликованный, 3 - Скрытый"
+    status_id:Int
+  ):DefaultResponse @field(resolver: "Review\\ReviewChangeStatus")
+  @validator(class: "Review\\ReviewChangeStatusValidator")
+  @guard(with: ["api"])
+}

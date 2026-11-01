@@ -1,0 +1,14 @@
+query ($id: Int!) {
+  admin_pages_item(id: $id) {
+    id
+    slug
+    title
+    content
+    meta_title
+    meta_description
+    position
+    is_published
+    is_system
+    published_at
+  }
+}

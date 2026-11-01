@@ -1,0 +1,7 @@
+extend type Query {
+  product_sets_paginate(
+    main:Boolean
+    "Поиск по названию"
+    title:String
+  ):[ProductSet] @paginate(scopes: ["filter"])
+}

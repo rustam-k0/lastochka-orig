@@ -1,0 +1,56 @@
+query (
+  $first: Int
+  $page: Int
+  $is_active: Boolean
+  $search: String
+  $ordering: [DefaultOrdering]
+) {
+  admin_stories_paginate (
+    first: $first
+    page: $page
+    is_active: $is_active
+    search: $search
+    ordering: $ordering
+  ) {
+    data {
+      id
+      title
+      expires_at
+      link_type
+      is_active
+      is_quick_category
+      position
+      external_url
+      thumbnailImage {
+        id
+        path
+        type
+        alt
+        size
+        origin_name
+      }
+      images {
+        id
+        path
+        type
+        alt
+        size
+        origin_name
+      }
+      product {
+        id
+        title
+      }
+      shop {
+        id
+        title
+      }
+    }
+    paginatorInfo {
+      currentPage
+      lastPage
+      total
+      perPage
+    }
+  }
+}

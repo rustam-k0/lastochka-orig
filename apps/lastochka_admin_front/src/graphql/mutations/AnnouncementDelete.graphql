@@ -1,0 +1,6 @@
+mutation AnnouncementDelete($id: Int!) {
+  announcementDelete(id: $id, table: "announcements") {
+    code
+    message
+  }
+}

@@ -1,0 +1,53 @@
+"Статичная страница витрины: политика конфиденциальности, оферта и прочие"
+type Page {
+  "ID"
+  id: Int!
+  "Код страницы, по которому её запрашивают сайт и мобильное приложение"
+  slug: String!
+  "Название страницы"
+  title: String!
+  "Содержимое страницы: EditorJS-документ в виде JSON-строки"
+  content: String!
+  "SEO-заголовок"
+  meta_title: String
+  "SEO-описание"
+  meta_description: String
+  "Порядок отображения"
+  position: Int
+  "Статус публикации"
+  is_published: Boolean!
+  "Дата первой публикации"
+  published_at: DateTime
+  "Системная страница: код неизменяем, удаление запрещено"
+  is_system: Boolean!
+  "Дата создания"
+  created_at: DateTime
+  "Дата обновления"
+  updated_at: DateTime
+}
+
+extend type Query {
+  "Список страниц с пагинацией"
+  admin_pages_paginate(
+    "Поиск по названию и коду страницы"
+    search: String
+    "Фильтр по статусу публикации"
+    is_published: Boolean
+    ordering: [DefaultOrdering]
+  ): [Page] @paginate(defaultCount: 25, scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "pages")
+
+  "Полный список страниц без пагинации"
+  admin_pages(
+    search: String
+    is_published: Boolean
+    ordering: [DefaultOrdering]
+  ): [Page!]! @all(scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "pages")
+
+  "Страница по ID"
+  admin_pages_item(
+    id: Int! @eq
+  ): Page @find
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "pages")
+}

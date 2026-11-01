@@ -1,0 +1,9 @@
+extend type Mutation {
+  "Служебная мутация списания оплаты (модуль collector_payment). Основной флоу встроен в AssemblyFinish; эта мутация — самостоятельная точка списания без завершения сборки (ретрай, служебные сценарии). Коды: 200 успех/наличные, 402 доплата не прошла, 500 временный сбой"
+  AssemblyChargePayment(
+    "ID сборки"
+    id: Int!
+  ): DefaultResponse @guard @field(resolver: "Assembly\\AssemblyChargePayment")
+  @validator(class: "Assembly\\AssemblyChargePaymentValidator")
+  @can(model: "Admin", ability: "onShift")
+}

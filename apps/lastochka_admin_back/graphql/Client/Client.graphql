@@ -1,0 +1,40 @@
+type Client {
+  "ID"
+  id:Int
+  "Авторизован ли пользователь"
+  is_authorized:Boolean
+  "Номер телефона"
+  phone:String
+  "Имя"
+  name:String
+  "Фамилия"
+  surname:String
+  "Отчество"
+  patronymic:String
+  "Почта"
+  email:String
+  "Дата рождения"
+  birthday:DateTime
+  "Дата создания"
+  created_at:DateTime
+  "Кол-во заказов"
+  orders_count:Int @count(relation: "orders")
+  "Кол-во привязанных карт"
+  cards_count:Int @count(relation: "cards")
+  "Общая сумма оплаченных заказов"
+  orders_amount:Int @method(name: "ordersAmount")
+  "Средняя сумма оплаченных заказов"
+  orders_avg:Int @method(name: "ordersAvg")
+  "Гендер 1- Мужчина, 2 - женщина"
+  gender_type_id:Int
+  "B2B-клиент"
+  is_b2b:Boolean
+  "Примечание администратора (видят только администраторы, не синхронизируется в storefront)"
+  admin_note:String
+  "Баланс баллов (зеркало storefront, локально не изменяется)"
+  bonus_balance:Int
+  "Баллы, зарезервированные под созданные заказы"
+  bonus_reserved:Int
+  "Доступно к списанию (баланс минус резерв)"
+  available_bonus_balance:Int
+}

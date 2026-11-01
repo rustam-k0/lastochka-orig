@@ -1,0 +1,14 @@
+mutation (
+  $video: Upload!,
+  $title: String
+) {
+  VideoUpload(
+    video: $video
+    title: $title
+  )  {
+    duration
+    origin_name
+    path
+    size
+  }
+}

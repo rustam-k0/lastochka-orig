@@ -1,0 +1,22 @@
+# Глобальное дерево категорий для пикера промокода при сетевом каталоге
+# (network_catalog): категории общие для сети, а pivot shops_categories у
+# якорного магазина пуст — shop_categories(shop_id) вернул бы [] (MID-240).
+# Тот же паттерн, что GLOBAL_CATEGORIES карточки товара.
+query {
+  parent_categories {
+    id
+    title
+    child_categories {
+      id
+      title
+      child_categories {
+        id
+        title
+        child_categories {
+          id
+          title
+        }
+      }
+    }
+  }
+}

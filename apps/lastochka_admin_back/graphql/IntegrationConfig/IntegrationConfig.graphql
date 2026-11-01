@@ -1,0 +1,51 @@
+type IntegrationConfig {
+  id: ID!
+  integration_type: String!
+  driver: String!
+  credentials: String
+  is_active: Boolean!
+  sync_categories_enabled: Boolean!
+  sync_images_enabled: Boolean!
+  deactivate_missing_enabled: Boolean!
+  tested_at: DateTime
+  test_error: String
+  shop_id: Int
+  shop: Shop
+}
+
+type IntegrationTypeDescriptor {
+  type: String!
+  label: String!
+  drivers: [DriverDescriptor!]!
+}
+
+type DriverDescriptor {
+  name: String!
+  label: String!
+  credentials_schema: [CredentialField!]!
+}
+
+type CredentialFieldOption {
+  value: String!
+  label: String!
+}
+
+type CredentialField {
+  field: String!
+  label: String!
+  type: String!
+  required: Boolean!
+  placeholder: String
+  options: [CredentialFieldOption]
+}
+
+type TestResult {
+  success: Boolean!
+  message: String
+}
+
+type CdekWebhookRegistration {
+  success: Boolean!
+  message: String!
+  url: String!
+}

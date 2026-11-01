@@ -1,0 +1,72 @@
+query CategoriesTree {
+  parent_categories {
+    id
+    title
+    link
+    position
+    important
+    is_cooking
+    is_perishable
+    without_blocking_price
+    is_active
+    stock_mode
+    tag_text
+    tag_color
+    child_categories {
+      id
+      title
+      link
+      position
+      important
+      is_cooking
+      is_perishable
+      without_blocking_price
+      is_active
+      stock_mode
+      tag_text
+      tag_color
+      child_categories {
+        id
+        title
+        link
+        position
+        important
+        is_cooking
+        is_perishable
+        without_blocking_price
+        is_active
+        stock_mode
+        tag_text
+        tag_color
+        child_categories {
+          id
+          title
+          link
+          position
+          important
+          is_cooking
+          is_perishable
+          without_blocking_price
+          is_active
+          stock_mode
+          tag_text
+          tag_color
+          child_categories {
+            id
+            title
+            link
+            position
+            important
+            is_cooking
+            is_perishable
+            without_blocking_price
+            is_active
+            stock_mode
+            tag_text
+            tag_color
+          }
+        }
+      }
+    }
+  }
+}

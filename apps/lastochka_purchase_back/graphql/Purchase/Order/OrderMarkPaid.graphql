@@ -1,0 +1,16 @@
+extend type Mutation {
+  """
+  Отметить наличный заказ оплаченным вручную (из карточки заказа в АП).
+  Только для payment_type_id = 2 (наличные) и не отменённых заказов.
+  Ставит paid/paid_at/payment_status='paid' на заказе и его подзаказах,
+  пишет запись payment_fixed в историю. Повторный вызов на уже оплаченном
+  заказе — 200 без изменений. Обратной операции нет: paid монотонен,
+  возврат денег фиксируется отдельным флоу (payment_status='refunded').
+  """
+  OrderMarkPaid(
+    "ID заказа"
+    id: ID!
+  ): DefaultResponse! @field(resolver: "Order\\OrderMarkPaid")
+  @guard(with: ["api"])
+  @orderAction(key: "mark_paid")
+}

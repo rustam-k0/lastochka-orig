@@ -1,0 +1,16 @@
+extend type Mutation {
+  "Обновление позиций категорий"
+  CategoryChangePosition(
+    items:[CategoryPosition]
+  ):DefaultResponse @field(resolver:"Category\\CategoryChangePosition")
+  @validator(class:"Category\\CategoryChangePositionValidator")
+  @guard @can(model: "Admin",ability: "onlyAdmin") @section(key: "categories")
+}
+
+
+input CategoryPosition {
+  "ID товарной группы"
+  id:Int!
+  "Позиция товарной группы"
+  position:Int
+}

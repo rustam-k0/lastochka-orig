@@ -1,0 +1,61 @@
+type Product
+{
+  "ID"
+  id:Int
+  "Артикул"
+  articul:String
+  "Название"
+  title:String
+  "Описание"
+  description:String
+  "Мета заголовок"
+  meta_title:String
+  "Маркетинговое описание"
+  meta_description:String
+  "Ключевые слова"
+  meta_keywords:String
+  "Бренд"
+  brand:Brand @belongsTo
+  "Производитель"
+  manufacturer:Manufacturer @belongsTo
+  "Страна"
+  country:Country @belongsTo
+  "Код кванта (грамм, шт...)"
+  unit_type_id:Int
+  "Цена"
+  price:Price @hasOne
+  "Остатки по каждому магазину"
+  remain:Remain @hasOne
+  "Категории товара"
+  categories:[Category] @belongsToMany
+  "Атрибуты со значениями"
+  attributes:[ProductAttribute] @hasMany
+  "Изображение"
+  img:Img @hasOne
+  "Дополнительные параметры"
+  parameters:[AdditionalParameter] @hasMany
+  "Слайдер изображений"
+  images:[Img] @hasMany
+  "Наборы, в которые входит товар"
+  sets:[ProductSet] @hasMany(relation: "productSets")
+  "Время готовности товара, если он принадлежит как категории кулинарии"
+  cook_time:CookTime @hasOne(relation: "cookTime")
+  "Информация: количество товара"
+  info_weight:Int
+  """""Информация: ед. измерения количества товара
+  1 -  шт
+  2 -  грамм
+  3 -  килограмм
+  4 -  литр
+  5 -  миллилитр
+  """
+  info_weight_type_id:Int
+  "ID магазина, которому принадлежит товар"
+  shop_id:Int
+  reviews:[ProductReview] @hasMany(scopes: ["withComment","published"])
+  reviews_count:Int @count(relation: "reviews")
+  reviews_avg_mark:Float @method(name: "reviewsAvgMark") @with(relation: "reviews")
+  my_review:ProductReview @hasOne(relation: "myReview")
+  "Добавки"
+  supplements:[Supplement] @hasMany
+}

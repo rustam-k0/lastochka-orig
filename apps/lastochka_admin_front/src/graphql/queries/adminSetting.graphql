@@ -1,0 +1,8 @@
+query AdminSetting($key: String!) {
+    adminSetting(key: $key) {
+        id
+        key
+        value
+        type
+    }
+}

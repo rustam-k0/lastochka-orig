@@ -1,0 +1,22 @@
+slice_name: Структура расходов
+viz_type: pie
+params:
+  viz_type: pie
+  metric:
+    expressionType: SIMPLE
+    column:
+      column_name: amount
+    aggregate: SUM
+    label: Расходы, ₽
+    hasCustomLabel: true
+  groupby:
+  - category
+  adhoc_filters: []
+  row_limit: 100
+  show_labels_threshold: 5
+  label_type: key_value_percent
+  number_format: SMART_NUMBER
+  donut: true
+dataset_uuid: b0c11bdf-ab2e-4f9d-885d-7d71c5a2e4fb
+uuid: 1441f570-6cc2-4ba8-a2f2-699232044770
+version: 1.0.0

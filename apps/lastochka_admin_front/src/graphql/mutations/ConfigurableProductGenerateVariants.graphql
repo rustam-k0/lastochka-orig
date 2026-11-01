@@ -1,0 +1,12 @@
+mutation ConfigurableProductGenerateVariants(
+  $parent_id: Int!
+  $matrix: [VariantMatrixInput!]!
+) {
+  ConfigurableProductGenerateVariants(
+    parent_id: $parent_id
+    matrix: $matrix
+  ) {
+    code
+    message
+  }
+}

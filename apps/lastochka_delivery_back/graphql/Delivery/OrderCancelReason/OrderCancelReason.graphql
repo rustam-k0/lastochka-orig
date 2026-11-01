@@ -1,0 +1,4 @@
+type OrderCancelReason {
+  id:Int
+  title:String
+}

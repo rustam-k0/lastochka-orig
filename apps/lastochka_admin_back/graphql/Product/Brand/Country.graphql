@@ -1,0 +1,13 @@
+"Страна из справочника ISO 3166-1"
+type Country {
+  "Код страны (ISO 3166-1 alpha-2)"
+  code: String!
+  "Название страны на русском"
+  title: String!
+}
+
+extend type Query {
+  "Справочник стран для полей бренда"
+  admin_countries: [Country!]! @field(resolver: "Country\\CountryList")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

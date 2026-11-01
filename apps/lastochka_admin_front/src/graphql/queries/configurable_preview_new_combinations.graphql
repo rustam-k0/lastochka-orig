@@ -1,0 +1,16 @@
+query configurableProductPreviewNewCombinations(
+  $parent_id: Int!
+  $attribute_id: Int!
+  $attribute_value_id: Int!
+) {
+  configurableProductPreviewNewCombinations(
+    parent_id: $parent_id
+    attribute_id: $attribute_id
+    attribute_value_id: $attribute_value_id
+  ) {
+    attribute_values {
+      attribute_id
+      attribute_value_id
+    }
+  }
+}

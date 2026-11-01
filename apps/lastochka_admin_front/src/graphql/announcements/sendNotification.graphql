@@ -1,0 +1,20 @@
+mutation SendAnnouncementNotification(
+  $announcementId: ID!
+  $target: NotificationTarget = ALL_USERS
+  $segmentCriteria: NotificationSegmentInput
+) {
+  sendAnnouncementNotification(
+    announcement_id: $announcementId
+    target: $target
+    segment_criteria: $segmentCriteria
+  ) {
+    success
+    message
+    target
+    announcement {
+      id
+      title
+      short_description
+    }
+  }
+}

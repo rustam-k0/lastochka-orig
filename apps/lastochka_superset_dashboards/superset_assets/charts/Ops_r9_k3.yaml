@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Компенсации
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: CAST(NULL AS DECIMAL(12, 2))
+    label: Компенсации
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: assembly_started_at
+  subheader: 'По атрибутированным: в системе нет'
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: $,.0f
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 7f64de2b-ba11-4e40-a875-f5f51593a14d
+uuid: ea8eb2c3-f1f0-50c9-ba77-9bf3dc0e397c
+version: 1.0.0

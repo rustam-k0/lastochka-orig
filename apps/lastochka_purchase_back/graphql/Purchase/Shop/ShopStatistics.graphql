@@ -1,0 +1,54 @@
+extend type Query {
+    "Статистика магазина: выручка, количество и активные заказы (раздел «Магазины», вкладка «Статистика»)"
+    shop_statistics(
+        shop_id: Int!
+        "Месяц для блока «За месяц», формат YYYY-MM (по умолчанию — текущий)"
+        month: String
+        "Начало произвольного периода, включительно (YYYY-MM-DD)"
+        period_from: Date
+        "Конец произвольного периода, включительно (YYYY-MM-DD)"
+        period_to: Date
+    ): ShopStatistics
+        @field(resolver: "App\\GraphQL\\Queries\\Shop\\ShopStatistics")
+        @guard(with: ["api"])
+}
+
+"Блок статистики: сумма выручки и количество заказов за интервал"
+type ShopStatBlock {
+    "Сумма выручки, ₽"
+    sum: Float!
+    "Количество заказов"
+    orders_count: Int!
+}
+
+"Активные заказы магазина, сгруппированные по этапу обработки"
+type ShopActiveOrders {
+    "Новые: статус 1, слот ещё не наступил (сборщику не виден)"
+    new: Int!
+    "Ожидают сборщика: статус 1, слот наступил или отсутствует"
+    waiting_collector: Int!
+    "В сборке (статус 2)"
+    assembling: Int!
+    "Готовы к доставке / собраны (статус 3)"
+    ready_for_delivery: Int!
+    "В доставке (статус 4)"
+    in_delivery: Int!
+}
+
+"Статистика магазина для вкладки «Статистика»"
+type ShopStatistics {
+    "Выручка за сегодня"
+    revenue_today: ShopStatBlock!
+    "Выручка за выбранный месяц (накопительно с 1 числа)"
+    revenue_month: ShopStatBlock!
+    "Выручка за произвольный период (null, если период не передан)"
+    revenue_period: ShopStatBlock
+    "Количество заказов за сегодня"
+    orders_today: Int!
+    "Количество заказов за выбранный месяц"
+    orders_month: Int!
+    "Количество заказов за произвольный период (null, если период не передан)"
+    orders_period: Int
+    "Активные заказы по этапам обработки"
+    active_orders: ShopActiveOrders!
+}

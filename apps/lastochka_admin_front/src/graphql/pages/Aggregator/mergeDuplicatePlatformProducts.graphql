@@ -1,0 +1,6 @@
+mutation ($ids: [Int!]!, $targetId: Int!) {
+  mergeDuplicatePlatformProducts(ids: $ids, targetId: $targetId) {
+    id
+    canonical_title
+  }
+}

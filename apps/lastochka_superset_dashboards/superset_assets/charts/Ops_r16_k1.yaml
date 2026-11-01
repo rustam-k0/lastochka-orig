@@ -1,0 +1,30 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Заказы на карте
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN has_coords = 1 AND is_delivered = 1 THEN order_id END)
+    label: Заказы на карте
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: ordered_at
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: point_type = 'Доставка'
+  subheader: С координатами
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',d'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 0ad2564e-be6f-53d8-a3ed-a4902d02ed88
+uuid: b92d7ab4-d3bb-5ca3-9a34-54eef3b7440c
+version: 1.0.0

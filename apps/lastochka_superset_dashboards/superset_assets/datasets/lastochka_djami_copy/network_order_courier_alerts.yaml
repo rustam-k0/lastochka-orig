@@ -1,0 +1,63 @@
+# Вкладка «Обзор сети». Реконструированные операционные алерты курьерки
+# (нарушение SLA слота, ошибка оплаты) - отдельной таблицы «алерты» в схеме
+# нет, это правило поверх orders. ВТОРАЯ панель виджета «Лента сигналов по
+# сети» (первая - network_signals_analytics, db3); одна лента из двух
+# источников невозможна (разные database/движки, кросс-DB JOIN запрещён) -
+# BUILD_PLAN сам рекомендовал 2 таблицы рядом на дашборде, так и сделано.
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 2 - WHERE o.parent_order_id IS NULL в обеих ветках UNION ALL.
+#   Правило 9 - shops.deleted_at IS NULL.
+#   ИСПРАВЛЕНИЕ допущения BUILD_PLAN (1): sla_breach ДОПОЛНИТЕЛЬНО фильтрует
+#     o.status_id NOT IN (5,6) - заказ должен быть ещё АКТИВЕН (не доставлен,
+#     не отменён), иначе finished_at IS NULL у отменённых заказов ложно
+#     считался бы «нарушением SLA». BUILD_PLAN такого фильтра не имел.
+#   ИСПРАВЛЕНИЕ допущения BUILD_PLAN (2): payment_issue. BUILD_PLAN предполагал
+#     payment_status NOT IN ('pending','cash_on_delivery') - эти значения на
+#     dev НЕ ВСТРЕЧАЮТСЯ. Проверено SELECT DISTINCT payment_status, paid,
+#     COUNT(*): реально встречаются только NULL (103 заказа, штатный процесс -
+#     нет онлайн-оплаты) и 'failed' (2 заказа, paid=0). Условие упрощено до
+#     payment_status = 'failed' - однозначный, подтверждённый на данных сигнал
+#     (BUILD_PLAN'овский список нейтральных значений был домыслом).
+#
+# Проверено на dev перед пушем: 9 строк (7 sla_breach со status_id=3 «Собран» +
+# 2 payment_issue) - партиальный (не пустой) результат.
+table_name: network_order_courier_alerts
+main_dttm_col: order_dttm
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      o.id                                     AS order_id,
+      o.shop_id                                AS shop_id,
+      sh.title                                 AS shop_name,
+      o.created_at                             AS order_dttm,
+      'sla_breach'                              AS signal_type,
+      'Заказ не доставлен к концу обещанного слота' AS signal_text,
+      'critical'                                AS severity
+  FROM orders o
+  LEFT JOIN shops sh ON sh.id = o.shop_id AND sh.deleted_at IS NULL
+  WHERE o.finished_at IS NULL
+    AND o.slot_end_date IS NOT NULL
+    AND o.slot_end_date < NOW()
+    AND o.status_id NOT IN (5, 6)
+    AND o.parent_order_id IS NULL
+
+  UNION ALL
+
+  SELECT
+      o.id,
+      o.shop_id,
+      sh.title,
+      o.created_at,
+      'payment_issue',
+      'Ошибка оплаты заказа (payment_status = failed)',
+      'warning'
+  FROM orders o
+  LEFT JOIN shops sh ON sh.id = o.shop_id AND sh.deleted_at IS NULL
+  WHERE o.payment_status = 'failed'
+    AND o.parent_order_id IS NULL
+uuid: 801d6ab9-b0e5-4ed6-b55d-7ca89781f3fe
+columns: []
+metrics: []
+version: 1.0.0

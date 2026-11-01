@@ -1,0 +1,51 @@
+# Вкладка «Деньги» (по магазину). Детализация списаний по причине для доната
+# «Списания по причинам» и как источник категории «Списания» в money_expense_breakdown.
+# Имя датасета verbatim из BUILD_PLAN. Статус: partial.
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 2 - order_items джойнится к orders напрямую (списание - позиционный
+#     признак, фильтр по родителю тут не требуется - датасет уже не order-level
+#     агрегат, а построчная детализация конкретных order_items).
+#   Правило 3 - item_amount = oi.price_during_order * oi.quantity. У oi.price
+#     СМЕШАННАЯ семантика (unit при создании, итог позиции после сборки) - нельзя
+#     ни SUM(price), ни SUM(price*quantity); price_during_order стабильно за единицу.
+#     Cancel-фильтр cancel_reason_id IS NULL НЕ применяется: датасет ПО ОПРЕДЕЛЕНИЮ
+#     отбирает списанные (cancel/return) позиции - фильтр был бы противоречив.
+# ИСПРАВЛЕНО против допущения BUILD_PLAN: таблиц cancel_reasons/return_reasons
+# в схеме НЕТ. Проверено по information_schema.KEY_COLUMN_USAGE на dev:
+# order_items.cancel_reason_id И order_items.return_reason_id ОБА ссылаются на
+# ОДНУ и ту же таблицу product_cancel_reasons (id, title, is_active, position,
+# deleted_at) - джойнится дважды с разными алиасами. Колонка - title, не name.
+# Реальные значения причин на dev: "Нет в наличии", "Брак товара", "Истёк срок
+# годности", "Повреждена упаковка", "Клиент отказался" - НЕ "Просрочка"/"Бой"/
+# "Недостача", как предполагал макет; в чарте reason_name используется как есть,
+# без CASE-маппинга на выдуманные 3 бакета.
+# Наблюдение по схеме: shops.name НЕ существует (только shops.title).
+table_name: money_writeoffs_reasons
+main_dttm_col: order_date
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      oi.id                                       AS order_item_id,
+      oi.order_id                                  AS order_id,
+      o.shop_id                                    AS shop_id,
+      sh.title                                      AS shop_name,
+      DATE(COALESCE(o.paid_at, o.finished_at))     AS order_date,
+      (oi.price_during_order * oi.quantity)        AS item_amount,
+      COALESCE(cr.title, rr.title, 'Не указана')   AS reason_name,
+      CASE
+          WHEN oi.cancel_reason_id IS NOT NULL THEN 'cancel'
+          WHEN oi.return_reason_id IS NOT NULL THEN 'return'
+          ELSE NULL
+      END                                            AS reason_type
+  FROM order_items oi
+  JOIN orders o ON o.id = oi.order_id
+  LEFT JOIN shops sh ON sh.id = o.shop_id
+  LEFT JOIN product_cancel_reasons cr ON cr.id = oi.cancel_reason_id
+  LEFT JOIN product_cancel_reasons rr ON rr.id = oi.return_reason_id
+  WHERE oi.cancel_reason_id IS NOT NULL OR oi.return_reason_id IS NOT NULL
+uuid: 8f513be5-3e1f-4b0c-8d9e-55e40eff35eb
+columns: []
+metrics: []
+version: 1.0.0

@@ -1,0 +1,24 @@
+extend type Mutation {
+  "Зафиксировать скан товара при сборке (телеметрия точности, #11600)"
+  ProductScan(
+    "ID сборки"
+    assembly_id:Int!
+
+    "ID товара (если распознан)"
+    product_id:Int
+
+    "AssemblyItem -> id (если скан по позиции)"
+    assembly_item_id:Int
+
+    "Отсканированный штрихкод"
+    barcode:String
+
+    "Способ: qr | manual"
+    method:String!
+
+    "Результат: ok | error"
+    result:String!
+  ):DefaultResponse @guard @field(resolver: "Assembly\\ProductScan")
+  @validator(class: "Assembly\\ProductScanValidator")
+  @can(model: "Admin",ability: "onShift")
+}

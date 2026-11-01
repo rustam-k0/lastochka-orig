@@ -1,0 +1,28 @@
+# Сгенерировано scripts/ops_datasets.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками: описание правил расчёта - в генераторе.
+table_name: ops_client_cohorts
+main_dttm_col: null
+database_uuid: 22c13af4-950d-4550-9f16-1617f4df8d2f
+schema: null
+sql: "WITH co AS (\n    SELECT c.*, MIN(c.ordered_at) OVER (PARTITION BY c.client_id) AS first_order_at\n    FROM (SELECT\n        o.id                                         AS order_id,\n        o.user_id                                    AS client_id,\n        o.created_at                                 AS ordered_at,\n        o.total                                      AS total,\n        st.name                                      AS shop_name\n    FROM orders o\n    LEFT JOIN stores st ON st.id = o.store_id\n    WHERE o.deleted_at IS NULL\n      AND o.status = 'delivered'\n      AND o.user_id IS NOT NULL\n      AND o.user_id NOT IN (21, 26, 27)) c\n),\ncohort AS (\n    SELECT client_id,\n           CAST(DATE_FORMAT(MIN(first_order_at), '%Y-%m-01') AS DATETIME) AS cohort_start,\n           SUBSTRING_INDEX(GROUP_CONCAT(shop_name ORDER BY ordered_at SEPARATOR '|'), '|', 1) AS shop_name\n    FROM co\n    GROUP BY client_id\n),\nactivity AS (\n    SELECT DISTINCT co.client_id,\n   \
+  \        TIMESTAMPDIFF(MONTH, ch.cohort_start, CAST(DATE_FORMAT(co.ordered_at, '%Y-%m-01') AS DATETIME)) AS life_month\n    FROM co\n    JOIN cohort ch ON ch.client_id = co.client_id\n),\nsizes AS (\n    SELECT cohort_start, shop_name, COUNT(*) AS cohort_size FROM cohort GROUP BY cohort_start, shop_name\n),\ngrid AS (\n    SELECT s.cohort_start, s.shop_name, s.cohort_size, m.n AS life_month\n    FROM sizes s\n    JOIN (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4\n          UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8\n          UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11) m\n    WHERE s.cohort_start + INTERVAL (m.n + 1) MONTH <= CAST(DATE_FORMAT(NOW(), '%Y-%m-01') AS DATETIME)\n)\nSELECT\n    g.cohort_start,\n    DATE_FORMAT(g.cohort_start, '%Y-%m')              AS cohort_month,\n    CONCAT('M', g.life_month)                         AS life_month,\n    g.shop_name,\n    g.cohort_size,\n    (SELECT\
+  \ COUNT(*) FROM activity a JOIN cohort ch ON ch.client_id = a.client_id\n      WHERE ch.cohort_start = g.cohort_start AND ch.shop_name = g.shop_name\n        AND a.life_month = g.life_month)              AS active_clients\nFROM grid g\n"
+uuid: 9b41a351-6e12-5f16-be3d-27e20c0e8b51
+columns:
+- column_name: cohort_month
+  is_dttm: false
+  verbose_name: Когорта
+  groupby: true
+  filterable: true
+- column_name: life_month
+  is_dttm: false
+  verbose_name: Месяц жизни
+  groupby: true
+  filterable: true
+- column_name: shop_name
+  is_dttm: false
+  verbose_name: Магазин
+  groupby: true
+  filterable: true
+metrics: []
+version: 1.0.0

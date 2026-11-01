@@ -1,0 +1,144 @@
+"Справочник 1С-категорий, синхронизируемый из 1c_parser через RabbitMQ"
+type Category1c {
+  "ID"
+  id: Int!
+  "Магазин"
+  shop: Shop @belongsTo
+  shop_id: Int!
+  "Внешний ID из 1С"
+  external_id: String!
+  "Родительская 1С-категория"
+  parent: Category1c @belongsTo
+  parent_id: Int
+  "Дочерние 1С-категории"
+  children: [Category1c!]! @hasMany
+  "Название"
+  name: String!
+  "Позиция"
+  position: Int!
+  "Активна в 1С"
+  is_active: Boolean!
+  "Связанные витринные категории (M:N через pivot category_1c_category)"
+  showcase_categories: [Category!]! @belongsToMany(relation: "showcaseCategories")
+  "Когда привязана к витринной"
+  linked_at: DateTime
+  "Время последнего sync'а"
+  last_synced_at: DateTime
+  "Время прихода последнего события из 1С"
+  synced_from_1c_at: DateTime
+  "Количество товаров с category_1c_id"
+  products_count: Int! @count(relation: "products")
+  "Новая (созд. < 30 дней назад) и не привязана"
+  is_new: Boolean!
+  "Привязана ли к витринной"
+  is_linked: Boolean!
+  "Удалена в 1С (soft-deleted)"
+  is_source_deleted: Boolean!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+extend type Category {
+  "Привязанные 1С-категории магазина"
+  category_1c_mappings(shop_id: Int!): [Category1c!]!
+    @field(resolver: "App\\GraphQL\\Queries\\Category1cQueries\\GetMappings")
+  "Количество привязанных 1С-категорий"
+  category_1c_mappings_count(shop_id: Int!): Int!
+    @field(resolver: "App\\GraphQL\\Queries\\Category1cQueries\\GetMappingsCount")
+  "Есть ли привязанные 1С-категории, удалённые в источнике"
+  has_orphan_1c_sources(shop_id: Int!): Boolean!
+    @field(resolver: "App\\GraphQL\\Queries\\Category1cQueries\\HasOrphanSources")
+}
+
+extend type Product {
+  "Связанная 1С-категория"
+  category_1c: Category1c @belongsTo(relation: "category1c")
+  category_1c_id: Int
+}
+
+"Прогресс batch-синхронизации Category1c"
+type Category1cSyncBatch {
+  id: Int!
+  shop: Shop @belongsTo
+  shop_id: Int!
+  status: Category1cSyncStatus!
+  progress_total: Int!
+  progress_done: Int!
+  started_at: DateTime!
+  completed_at: DateTime
+  error: String
+}
+
+extend type Query {
+  "Список 1С-категорий магазина с фильтрами"
+  categories_1c(
+    shop_id: Int!
+    linked_status: Category1cLinkedFilter = ALL
+    search: String
+    parent_id: Int
+    only_leaves: Boolean = false
+    include_deleted: Boolean = false
+    is_active: Boolean
+  ): [Category1c!]!
+    @paginate(
+      builder: "App\\GraphQL\\Queries\\Category1cQueries\\PaginatedList@builder"
+      defaultCount: 50
+      maxCount: 200
+    )
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  """
+  Полное дерево 1С-категорий магазина одной JSON-строкой (без пагинации;
+  для раздела «Категории 1С»). JSON-массив объектов
+  {id, name, parent_id, is_active, is_linked, is_new, is_source_deleted,
+  showcase_categories: [{id, title}]}. String вместо [Category1c!]! —
+  по-полевой резолвинг 6206 строк стоил секунды, см. PHPDoc TreeList.
+  """
+  categories_1c_tree(
+    shop_id: Int!
+    include_deleted: Boolean = false
+  ): String!
+    @field(resolver: "Category1cQueries\\TreeList")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Количество новых (не привязанных, < 30 дней) 1С-категорий"
+  categories_1c_new_count(shop_id: Int!): Int!
+    @field(resolver: "Category1cQueries\\NewCount")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Текущий или последний batch синхронизации для магазина"
+  category_1c_sync_batch(shop_id: Int!): Category1cSyncBatch
+    @field(resolver: "Category1cQueries\\GetCurrentBatch")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+}
+
+extend type Mutation {
+  "Привязать массив 1С-категорий к массиву витринных (аддитивно)"
+  link_categories_1c_to_showcase(
+    category_1c_ids: [Int!]!
+    showcase_category_ids: [Int!]!
+  ): [Category1c!]!
+    @field(resolver: "Category1cMutations\\LinkToShowcase")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Отвязать 1С-категории от витринной (массовая, полная очистка pivot)"
+  unlink_categories_1c(
+    category_1c_ids: [Int!]!
+  ): [Category1c!]!
+    @field(resolver: "Category1cMutations\\UnlinkFromShowcase")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Отвязать одну витринную категорию от одной 1С-категории (точечно)"
+  unlink_category_1c_from_showcase(
+    category_1c_id: Int!
+    showcase_category_id: Int!
+  ): Category1c!
+    @field(resolver: "Category1cMutations\\UnlinkOneFromShowcase")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Запустить синхронизацию 1С-категорий по магазину (idempotent)"
+  sync_categories_1c(shop_id: Int!): Category1cSyncBatch!
+    @field(resolver: "Category1cMutations\\StartSync")
+    @guard @can(ability: "onlyAdmin", model: "Admin")
+}

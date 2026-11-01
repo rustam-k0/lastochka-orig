@@ -1,0 +1,19 @@
+slice_name: Прибыль по зонам доставки
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(items_subtotal - discount - bonus_spent + delivery_price -
+      assembly_cost)
+    label: Прибыль по зоне, ₽
+    hasCustomLabel: true
+  groupby:
+  - zone_name
+  adhoc_filters: []
+  row_limit: 10000
+  y_axis_format: SMART_NUMBER
+  x_axis: zone_name
+dataset_uuid: 47a52352-3c0f-4b3a-94b7-1406aad1746a
+uuid: d23e7472-3aad-4a42-a14f-7e685ae13a43
+version: 1.0.0

@@ -1,0 +1,11 @@
+mutation ($ids: [Int!]!, $targetId: Int!) {
+  previewMergePlatformProducts(ids: $ids, targetId: $targetId) {
+    offersCount
+    stocksSum
+    conflicts {
+      offerId
+      shopId
+      message
+    }
+  }
+}

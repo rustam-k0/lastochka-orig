@@ -1,0 +1,25 @@
+# Вкладка «Маркетинг / CRM». Переименован из BUILD_PLAN'овского «Источник
+# добавления в корзину» (home/category/search/product_card - НЕ существует в
+# реальном payload) в «Канал добавления в корзину» (storefront web vs
+# мобильное приложение) - см. notes датасета analytics_cart_add_events.yaml.
+# dist_bar - категориальное распределение, без временной оси.
+slice_name: Канал добавления в корзину (прокси, не позиция на странице)
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      column_name: event_id
+    aggregate: COUNT
+    label: Добавлений в корзину
+    hasCustomLabel: true
+  groupby:
+  - event_source
+  x_axis: event_source
+  adhoc_filters: []
+  row_limit: 10000
+  y_axis_format: SMART_NUMBER
+dataset_uuid: e40e1266-7fd3-44df-8230-2f2554774806
+uuid: 1dfe4a3e-1394-4244-a0bc-e05191bc9926
+version: 1.0.0

@@ -1,0 +1,17 @@
+extend type Query {
+
+  brands(
+    "На страницу категорий"
+    categories_page:Boolean
+    ordering:[DefaultOrdering]
+  ):[Brand] @all(scopes: ["sorter","filter",])
+
+  brands_paginate(
+    "На страницу категорий"
+    categories_page:Boolean
+    "Популярный бренд"
+    is_popular: Boolean
+    ordering:[DefaultOrdering]
+  ):[Brand] @paginate(scopes: ["sorter","filter",])
+
+}

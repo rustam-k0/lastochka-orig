@@ -1,0 +1,10 @@
+extend type Mutation {
+  "Изменение позиции истории"
+  StoryChangePosition(
+    "ID истории"
+    id: Int!
+    "Новая позиция"
+    position: Int!
+  ): Story! @field(resolver: "Story\\StoryChangePosition")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "stories")
+}

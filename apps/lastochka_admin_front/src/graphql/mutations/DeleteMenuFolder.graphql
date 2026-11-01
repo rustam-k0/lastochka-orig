@@ -1,0 +1,3 @@
+mutation DeleteMenuFolder($name: String!) {
+    deleteMenuFolder(name: $name)
+}

@@ -1,0 +1,11 @@
+type ShopReview @model(class: "Review")
+{
+  id:Int
+  shop:Shop @hasOne(relation: "reviewable")
+  main_mark:Int
+  comment:String
+  "1 - На модерации, 2 - Опубликованный, 3 - Скрытый"
+  status_id:Int
+  client:Client @hasOne
+  created_at:DateTime
+}

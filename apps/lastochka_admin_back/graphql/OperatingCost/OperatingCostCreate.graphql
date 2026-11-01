@@ -1,0 +1,22 @@
+extend type Mutation {
+  OperatingCostCreate(
+    "ID магазина (null = вся сеть)"
+    shop_id: Int
+    "Категория расхода"
+    category: String!
+    "Тип правила"
+    rule_type: String!
+    "Сумма ₽ либо доля %"
+    value: Float!
+    "Начало действия"
+    period_start: Date!
+    "Конец действия"
+    period_end: Date
+    "Комментарий"
+    comment: String
+    "Активно"
+    is_active: Boolean
+  ): DefaultResponse @field(resolver: "OperatingCost\\OperatingCostCreate")
+  @validator(class: "OperatingCost\\OperatingCostCreateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

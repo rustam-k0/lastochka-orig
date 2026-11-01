@@ -1,0 +1,32 @@
+# Вкладка «Спрос». Таблица отмен/замен товара сборщиком, разбивка по всем
+# причинам (cancel_reason_name как измерение, а не жёсткий фильтр) - shop_id/
+# order_date остаются нативными фильтрами дашборда.
+slice_name: 'Дефициты: отмены/замены товара сборщиком по причине ''нет в наличии'''
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - product_name
+  - product_id
+  - shop_id
+  - cancel_reason_name
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      column_name: order_id
+    aggregate: COUNT
+    label: Событий отмены/замены
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(item_total_price)
+    label: Упущенная выручка (оценка), ₽
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 7ae780b2-d156-49c3-8031-21bb037bbccf
+uuid: 6dcf0e32-0597-4c81-9488-03df67e39101
+version: 1.0.0

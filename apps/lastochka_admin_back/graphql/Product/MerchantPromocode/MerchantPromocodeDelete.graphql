@@ -1,0 +1,9 @@
+extend type Mutation {
+  "Удаление промокода мерчанта (soft delete)"
+  deleteMerchantPromocode(
+    "ID промокода"
+    id: Int!
+  ): DefaultResponse!
+    @field(resolver: "MerchantPromocode\\DeleteMerchantPromocode")
+    @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-promocodes")
+}

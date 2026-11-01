@@ -1,0 +1,24 @@
+slice_name: Отчёт о прибыли (P&L)
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - line_order
+  - line_item
+  - shop_name
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      column_name: amount
+    aggregate: SUM
+    label: Сумма, ₽
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: false
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 528d6736-07ba-45cf-89f3-bdbaa8bd31db
+uuid: 772dcc7e-55c2-4d85-b958-1ba61d24d986
+version: 1.0.0

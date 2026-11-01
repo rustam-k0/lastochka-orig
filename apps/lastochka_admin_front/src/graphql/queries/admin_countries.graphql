@@ -1,0 +1,6 @@
+query {
+  admin_countries {
+    code
+    title
+  }
+}

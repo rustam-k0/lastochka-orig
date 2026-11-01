@@ -1,0 +1,14 @@
+mutation CreateMerchantReview($input: CreateMerchantReviewInput!) {
+  createMerchantReview(input: $input) {
+    id
+    rating
+    description
+    is_published
+    author_name
+    author_phone
+    shop {
+      id
+      title
+    }
+  }
+}

@@ -1,0 +1,38 @@
+# Вкладка «Операции». Прогноз нагрузки на смену: НАИВНЫЙ baseline (среднее
+# число заказов по слоту "день недели x час" за прошлые недели), не
+# ML-прогноз (в схеме нет модели). required_assemblers/required_couriers -
+# adhoc SQL-метрики с ЗАФИКСИРОВАННЫМИ константами пропускной способности
+# (15 позиций/час на сборщика, 3 заказа/час на курьера) - ДОПУЩЕНИЯ,
+# требующие согласования с заказчиком (см. BUILD_PLAN-примечание к этому
+# виджету); в идеале брать динамически из медиан "Рейтинг сборщиков"/
+# "Метрики курьеров", но там сейчас слишком мало db3-данных для устойчивой
+# медианы (см. assembler_performance.yaml/courier_performance.yaml).
+slice_name: Прогноз нагрузки на смену
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - order_dow
+  - order_hour
+  metrics:
+  - expressionType: SQL
+    sqlExpression: AVG(avg_orders_expected)
+    label: Ожидаемо заказов
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: CEIL(AVG(avg_orders_expected) / 15.0)
+    label: Нужно сборщиков (константа 15 позиций/час, допущение)
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: CEIL(AVG(avg_orders_expected) / 3.0)
+    label: Нужно курьеров (константа 3 заказа/час, допущение)
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: false
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 38b16e0a-76c9-4228-a23c-3b142e010a23
+uuid: 6b097ecd-dca6-4e5c-b341-c01e95ad32a0
+version: 1.0.0

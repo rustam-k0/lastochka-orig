@@ -1,0 +1,10 @@
+extend type Mutation {
+    updateMenuItem(
+        name: String!
+        title: String
+        is_visible: Boolean
+    ): MenuItem!
+        @field(resolver: "MenuItem\\UpdateMenuItem")
+        @guard
+        @can(ability: "manageSettings", model: "Admin")
+}

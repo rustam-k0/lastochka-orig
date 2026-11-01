@@ -1,0 +1,48 @@
+# Вкладка «Спрос» (по магазину). Предагрегированная воронка по товару:
+# добавления/удаления из корзины. db3 Postgres. Единственный потребитель -
+# таблица «Воронка товара: добавил в корзину -> удалил -> купил».
+#
+# Конверсии применены (docs/conversion-rules.md, правило 6):
+#   event_type 'b2c.cart.item_added'/'b2c.cart.item_removed' (не существуют)
+#     -> 'cart.item_added'/'cart.item_removed' (whitelist
+#     config/analytics.php + фактическая строка cart.item_added на dev).
+#   ae.shop_id -> ae.store_id.
+#
+# ШАГ 'ПОКУПКА' ИСКЛЮЧЁН ИЗ ДАТАСЕТА (сознательно, не просто допущение).
+# BUILD_PLAN сам это предвидел: "если item-level событие покупки в
+# реальности нет - шаг 'purchased' блокирован". Проверено на dev ДВУМЯ
+# независимыми способами:
+#   1) whitelist storefront_back config/analytics.php 'allowed_events' НЕ
+#      содержит cart.item_purchased/product.purchased/etc - такое событие
+#      приложение в принципе не публикует. Полный список 46 различных
+#      event_type на dev (SELECT DISTINCT) его тоже не содержит.
+#   2) Даже order.created (order-level, единственное событие с данными по
+#      купленным товарам - payload.items[].product_id) НЕ подходит для join:
+#      product_id в payload.items - это UUID (напр.
+#      '94665591-7cd0-11ed-a36e-d85ed320714a', 1С external_id), а
+#      product_id в cart.item_added - целое число (напр. 10, ID из
+#      сторфронт-каталога). Разные пространства идентификаторов -
+#      сопоставление product_id между 'добавил' и 'купил' дало бы 0 совпадений
+#      молча (силовой баг), поэтому не реализуется вообще, а не
+#      реализуется неверно.
+# Метрики датасета: added_count/removed_count. Чарт использует их для
+# add_to_remove_rate_pct - это НЕ то же самое, что "покупка", а сигнал
+# "отказа от товара после добавления в корзину".
+table_name: an_product_cart_funnel
+main_dttm_col: event_date
+database_uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+schema: null
+sql: |
+  SELECT
+      (ae.payload->>'product_id')::bigint          AS product_id,
+      ae.store_id                                   AS store_id,
+      CAST(ae.occurred_at AS DATE)                  AS event_date,
+      COUNT(DISTINCT ae.session_id) FILTER (WHERE ae.event_type = 'cart.item_added')   AS added_count,
+      COUNT(DISTINCT ae.session_id) FILTER (WHERE ae.event_type = 'cart.item_removed') AS removed_count
+  FROM analytics_events ae
+  WHERE ae.event_type IN ('cart.item_added', 'cart.item_removed')
+  GROUP BY 1, 2, 3
+uuid: d1e8c1b8-16f8-433a-99fc-07d92bd0136d
+columns: []
+metrics: []
+version: 1.0.0

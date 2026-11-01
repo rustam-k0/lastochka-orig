@@ -1,0 +1,6 @@
+mutation ($id: Int!) {
+  VacancyDelete(id: $id) {
+    code
+    message
+  }
+}

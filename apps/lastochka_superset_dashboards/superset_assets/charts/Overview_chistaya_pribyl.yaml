@@ -1,0 +1,22 @@
+slice_name: Чистая прибыль
+viz_type: big_number
+params:
+  viz_type: big_number
+  metric:
+    expressionType: SQL
+    sqlExpression: (SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END) - SUM(CASE
+      WHEN status_id = 5 THEN order_cogs END)) - SUM(CASE WHEN status_id = 5 THEN
+      order_opex_pct_share ELSE 0 END) - MAX(shop_fixed_opex_current)
+    label: Чистая прибыль, ₽
+    hasCustomLabel: true
+  granularity_sqla: order_created_at
+  time_grain_sqla: P1D
+  adhoc_filters: []
+  compare_lag: ''
+  compare_suffix: ''
+  show_trend_line: true
+  start_y_axis_at_zero: true
+  y_axis_format: SMART_NUMBER
+dataset_uuid: d991fd22-7a5f-4c1f-977b-866968e97b0c
+uuid: fcf7dab8-0ce0-473c-86c4-d94cc9192225
+version: 1.0.0

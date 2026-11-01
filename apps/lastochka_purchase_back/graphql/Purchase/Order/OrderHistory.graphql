@@ -1,0 +1,27 @@
+type OrderHistoryEntry {
+    "ID записи истории"
+    id: ID!
+    "ID заказа/подзаказа, к которому относится запись"
+    order_id: Int!
+    "Тип действия: created|status_changed|collector_assigned|courier_assigned|canceled|item_replaced|payment_fixed|delivery_completed"
+    action: String!
+    "Кто выполнил действие: staff|client|system"
+    actor_type: String!
+    "Отображаемое имя исполнителя (снэпшот на момент действия)"
+    actor_name: String
+    "Старое значение (человекочитаемая строка)"
+    old_value: String
+    "Новое значение (человекочитаемая строка)"
+    new_value: String
+    "Комментарий или причина, если есть"
+    comment: String
+    "Дата и время события"
+    created_at: DateTime!
+}
+
+extend type Query {
+    "История изменений заказа (Platrum MEN-IN-DEV-11270)"
+    admin_order_history(order_id: Int!): [OrderHistoryEntry!]!
+        @field(resolver: "App\\GraphQL\\Queries\\OrderHistoryQuery")
+        @guard(with: ["api"])
+}

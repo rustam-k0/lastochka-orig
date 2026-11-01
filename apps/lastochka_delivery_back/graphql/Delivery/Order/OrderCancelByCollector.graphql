@@ -1,0 +1,13 @@
+extend type Mutation {
+  "Сборщик отменяет заказ целиком (клиент недоступен/отказался и т.п.) — в отличие от ProductCancel, не требует отмены каждого товара по отдельности"
+  OrderCancelByCollector(
+    "ID сборки (Assembly), которую собирает текущий сборщик"
+    assembly_id: Int!
+    "ID причины из справочника order_cancel_reasons (опционально, если указан custom_reason)"
+    reason_id: Int
+    "Свободный текст причины — для варианта «Другое» или когда reason_id не передан"
+    custom_reason: String
+  ): DefaultResponse @guard @field(resolver: "Order\\OrderCancelByCollector")
+  @validator(class: "Order\\OrderCancelByCollectorValidator")
+  @can(model: "Admin", ability: "collectorOnShift")
+}

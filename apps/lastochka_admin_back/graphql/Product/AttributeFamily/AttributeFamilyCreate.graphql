@@ -1,0 +1,14 @@
+extend type Mutation {
+  AttributeFamilyCreate(
+    "Название"
+    title: String!
+    "Код"
+    code: String
+    "Позиция"
+    position: Int
+    "Атрибуты"
+    attributes: [FamilyAttributeInput]
+  ): DefaultResponse @field(resolver: "AttributeFamily\\AttributeFamilyCreate")
+  @validator(class: "AttributeFamily\\AttributeFamilyCreateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

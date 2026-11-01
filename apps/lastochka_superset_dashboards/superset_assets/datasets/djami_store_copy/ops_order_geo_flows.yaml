@@ -1,0 +1,26 @@
+# Сгенерировано scripts/ops_datasets.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками: описание правил расчёта - в генераторе.
+table_name: ops_order_geo_flows
+main_dttm_col: ordered_at
+database_uuid: 22c13af4-950d-4550-9f16-1617f4df8d2f
+schema: null
+sql: "{% set period = get_time_filter('ordered_at', remove_filter=True, target_type='DATETIME') %}\nSELECT\n    MAX(g.ordered_at)                                AS ordered_at,\n    g.shop_name,\n    g.district,\n    MAX(g.store_lat)                                 AS source_lat,\n    MAX(g.store_lon)                                 AS source_lon,\n    AVG(g.dest_lat)                                  AS target_lat,\n    AVG(g.dest_lon)                                  AS target_lon,\n    COUNT(*)                                         AS orders,\n    AVG(g.delivery_minutes)                          AS avg_delivery_minutes\nFROM (SELECT\n        so.id                                        AS order_id,\n        so.created_at                                AS ordered_at,\n        st.name                                      AS shop_name,\n        st.latitude                                  AS store_lat,\n        st.longitude                                 AS store_lon,\n        ROUND(a.latitude,\
+  \ 3)                         AS dest_lat,\n        ROUND(a.longitude, 3)                        AS dest_lon,\n        COALESCE(z.name, 'Зона не определена')       AS district,\n        CASE WHEN a.latitude IS NOT NULL AND st.latitude IS NOT NULL\n             THEN ST_Distance_Sphere(POINT(st.longitude, st.latitude), POINT(a.longitude, a.latitude)) / 1000\n        END                                          AS distance_km,\n        CASE WHEN so.status = 'delivered' AND TIMESTAMPDIFF(SECOND, d.created_at, d.finished_at) >= 60\n             THEN TIMESTAMPDIFF(SECOND, d.created_at, d.finished_at) / 60 END AS delivery_minutes,\n        so.total                                     AS total,\n        CASE WHEN so.status = 'delivered' THEN 1 ELSE 0 END AS is_delivered,\n        CASE WHEN so.status = 'cancelled' THEN 1 ELSE 0 END AS is_cancelled,\n        CASE WHEN a.latitude IS NOT NULL AND a.latitude <> 0 THEN 1 ELSE 0 END AS has_coords\n    FROM orders so\n    LEFT JOIN stores st ON st.id =\
+  \ so.store_id\n    LEFT JOIN order_addresses a ON a.id = (\n        SELECT MAX(a2.id) FROM order_addresses a2 WHERE a2.order_id = so.id\n    )\n    LEFT JOIN lastochka_djami_copy.orders co\n           ON co.uuid = CAST(so.id AS CHAR) COLLATE utf8mb4_unicode_ci AND co.parent_order_id IS NULL\n    LEFT JOIN lastochka_djami_copy.shop_zones z ON z.id = co.zone_id\n    LEFT JOIN lastochka_djami_copy.delivery_orders d ON d.id = (\n        SELECT MAX(d2.id) FROM lastochka_djami_copy.delivery_orders d2\n        WHERE d2.order_id = co.id AND d2.deleted_at IS NULL\n    )\n    WHERE so.deleted_at IS NULL\n      AND so.shipping_method = 'courier'\n      AND so.status IN ('delivered', 'cancelled')\n      AND COALESCE(so.user_id, 0) NOT IN (21, 26, 27)) g\nWHERE g.is_delivered = 1\n  AND g.has_coords = 1\n  {% if period.from_expr %}AND g.ordered_at >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND g.ordered_at < {{ period.to_expr }}{% endif %}\nGROUP BY g.shop_name, g.district\n\
+  ORDER BY orders DESC\nLIMIT 200\n"
+uuid: 68b40391-0a6e-5245-986b-8b32c2ff4487
+columns:
+- column_name: ordered_at
+  is_dttm: true
+- column_name: shop_name
+  is_dttm: false
+  verbose_name: Магазин
+  groupby: true
+  filterable: true
+- column_name: district
+  is_dttm: false
+  verbose_name: Район / зона
+  groupby: true
+  filterable: true
+metrics: []
+version: 1.0.0

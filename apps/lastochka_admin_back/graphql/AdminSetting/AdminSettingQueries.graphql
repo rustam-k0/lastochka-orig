@@ -1,0 +1,25 @@
+extend type Query {
+    adminSettings: [AdminSetting!]!
+        @field(resolver: "AdminSetting\\AdminSettingQueries@all")
+        @guard
+
+    adminSetting(key: String!): AdminSetting
+        @field(resolver: "AdminSetting\\AdminSettingQueries@byKey")
+        @guard
+
+    publicSetting(key: String!): AdminSetting
+        @field(resolver: "AdminSetting\\AdminSettingQueries@publicByKey")
+
+    entityCheckboxes: String!
+        @field(resolver: "AdminSetting\\AdminSettingQueries@entityCheckboxes")
+        @guard
+
+    entityFields: String!
+        @field(resolver: "AdminSetting\\AdminSettingQueries@entityFields")
+        @guard
+
+    "Состав и порядок колонок таблиц админки (JSON: таблица -> список колонок)"
+    tableColumns: String!
+        @field(resolver: "AdminSetting\\AdminSettingQueries@tableColumns")
+        @guard
+}

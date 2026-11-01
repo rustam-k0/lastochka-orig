@@ -1,0 +1,41 @@
+extend type Mutation {
+  "Создать кастомную роль с набором разделов"
+  createRole(
+    name_ru: String!
+    "global | shop"
+    scope_type: String!
+    section_keys: [String!]!
+  ): Role!
+    @field(resolver: "Role\\CreateRole")
+    @guard @can(ability: "manageRoles", model: "Admin")
+
+  "Обновить название/scope роли (системные — только не is_system)"
+  updateRole(
+    id: Int!
+    name_ru: String
+    scope_type: String
+  ): Role!
+    @field(resolver: "Role\\UpdateRole")
+    @guard @can(ability: "manageRoles", model: "Admin")
+
+  "Удалить кастомную роль (нельзя системную или с привязанными пользователями)"
+  deleteRole(id: Int!): DefaultResponse!
+    @field(resolver: "Role\\DeleteRole")
+    @guard @can(ability: "manageRoles", model: "Admin")
+
+  "Перезаписать набор разделов роли (бэкенд матрицы)"
+  syncRoleSections(
+    role_id: Int!
+    section_keys: [String!]!
+  ): Role!
+    @field(resolver: "Role\\SyncRoleSections")
+    @guard @can(ability: "manageRoles", model: "Admin")
+
+  "Перезаписать набор действий с заказами роли (action-level матрицы)"
+  syncRoleOrderActions(
+    role_id: Int!
+    action_keys: [String!]!
+  ): Role!
+    @field(resolver: "Role\\SyncRoleOrderActions")
+    @guard @can(ability: "manageRoles", model: "Admin")
+}

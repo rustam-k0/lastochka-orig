@@ -1,0 +1,23 @@
+# Вкладка «Стратегия». Hero-KPI на агрегате без временной оси ->
+# big_number_total (урок Task 6). Смысл: клиенты, которых компания знает
+# напрямую (регистрация в собственном сайте/приложении), не через
+# агрегатор.
+slice_name: 'Hero-KPI: Клиенты в собственной базе'
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SIMPLE
+    column:
+      column_name: user_id
+    aggregate: COUNT
+    label: Клиентов в собственной базе
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: 'регистрация в собственном сайте/приложении (не агрегатор)'
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: 56007c07-7755-49d0-a46c-16b7b3b28d97
+uuid: 0aa3e4e6-b6e1-4fcb-8570-5f9ebcf93acb
+version: 1.0.0

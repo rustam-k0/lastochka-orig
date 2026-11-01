@@ -1,0 +1,30 @@
+mutation(
+  $id: Int,
+  $name: String,
+  $surname: String,
+  $patronymic: String,
+  $img: ImgInput,
+  $role: Int,
+  $birthday: DateTime,
+  $phone: String,
+  $services: [Int],
+  $pin_code: String,
+  $email: String
+) {
+  UserUpdate(
+    id: $id
+    name: $name
+    surname: $surname
+    patronymic: $patronymic
+    img: $img
+    role: $role
+    birthday: $birthday
+    phone: $phone
+    services: $services
+    pin_code: $pin_code
+    email: $email
+  ) {
+    code
+    message
+  }
+}

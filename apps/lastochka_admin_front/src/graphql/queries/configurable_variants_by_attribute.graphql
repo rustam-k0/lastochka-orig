@@ -1,0 +1,14 @@
+query configurableProductVariantsByAttribute(
+  $parent_id: Int!
+  $attribute_id: Int!
+  $attribute_value_id: Int!
+) {
+  configurableProductVariantsByAttribute(
+    parent_id: $parent_id
+    attribute_id: $attribute_id
+    attribute_value_id: $attribute_value_id
+  ) {
+    variant_ids
+    blocked_by_orders
+  }
+}

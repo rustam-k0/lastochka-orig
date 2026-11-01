@@ -1,0 +1,6 @@
+mutation ($id: Int!) {
+  PageUnpublish(id: $id) {
+    id
+    is_published
+  }
+}

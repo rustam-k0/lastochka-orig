@@ -1,0 +1,23 @@
+type OneCExchangeStatus {
+  exchange_url: String
+  data_types: [OneCDataTypeStatus!]!
+}
+
+type OneCDataTypeStatus {
+  data_type: String!
+  last_exchange_at: String
+  success: Boolean
+  error: String
+  records_count: Int!
+  duration_seconds: Int
+  counters: String
+  warnings: String
+  status_label: String!
+  stale_threshold_hours: Int!
+}
+
+extend type Query {
+  oneCExchangeStatus(shop_id: Int!): OneCExchangeStatus!
+    @field(resolver: "App\\GraphQL\\Queries\\IntegrationConfig\\OneCExchangeStatusQuery")
+    @guard
+}

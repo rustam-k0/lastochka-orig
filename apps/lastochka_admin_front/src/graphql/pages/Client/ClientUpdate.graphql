@@ -1,0 +1,24 @@
+mutation (
+  $id: Int!
+  $name: String
+  $surname: String
+  $patronymic: String
+  $email: String
+  $birthday: DateTime
+  $gender_type_id: Int
+  $admin_note: String
+) {
+  ClientUpdate(
+    id: $id
+    name: $name
+    surname: $surname
+    patronymic: $patronymic
+    email: $email
+    birthday: $birthday
+    gender_type_id: $gender_type_id
+    admin_note: $admin_note
+  ) {
+    code
+    message
+  }
+}

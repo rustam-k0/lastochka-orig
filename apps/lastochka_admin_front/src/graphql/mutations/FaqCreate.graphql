@@ -1,0 +1,6 @@
+mutation ($question: String!, $answer: String!, $is_active: Boolean) {
+  FaqCreate(question: $question, answer: $answer, is_active: $is_active) {
+    code
+    message
+  }
+}

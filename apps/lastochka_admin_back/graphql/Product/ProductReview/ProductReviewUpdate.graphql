@@ -1,0 +1,22 @@
+extend type Mutation {
+  "Обновление отзыва на товар"
+  updateProductReview(input: UpdateProductReviewInput! @spread): ProductReview!
+    @field(resolver: "ProductReview\\UpdateProductReview")
+    @validator(class: "ProductReview\\UpdateProductReviewValidator")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "product-reviews")
+}
+
+input UpdateProductReviewInput {
+  "ID отзыва"
+  id: Int!
+  "Оценка 1-5"
+  rating: Int
+  "Текст отзыва"
+  description: String
+  "Опубликован"
+  is_published: Boolean
+  "Имя автора"
+  author_name: String
+  "Телефон автора"
+  author_phone: String
+}

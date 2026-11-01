@@ -1,0 +1,9 @@
+query {
+  allFaqs {
+    id
+    question
+    answer
+    is_active
+    position
+  }
+}

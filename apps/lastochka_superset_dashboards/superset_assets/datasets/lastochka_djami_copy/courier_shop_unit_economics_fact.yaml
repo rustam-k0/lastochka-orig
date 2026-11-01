@@ -1,0 +1,76 @@
+# Вкладка «Стратегия» (по магазину). Марка 'магазин x месяц': выручка, число
+# заказов и текущая численность операционного персонала магазина - для
+# расчёта выручки на сотрудника (прокси прибыли на сотрудника, COGS в схеме
+# нет). Имя датасета verbatim из BUILD_PLAN. Потребитель - «Удельные метрики:
+# выручка на сотрудника». Источник: lastochka_djami_copy (db1, MySQL).
+#
+# ИСПРАВЛЕНО против допущений BUILD_PLAN (docs/conversion-rules.md):
+#   Правило 1 - revenue_total/orders_cnt считались BUILD_PLAN как SUM(amount)/
+#     COUNT(id) без фильтра статуса -> заменено на SUM(CASE WHEN status_id=5
+#     ...)/COUNT(DISTINCT CASE WHEN status_id=5...) (реализованные заказы,
+#     та же формула что revenue/orders_count в docs/metric-keys.md).
+#   Правило 2 - добавлен WHERE o.parent_order_id IS NULL (BUILD_PLAN не имел
+#     этого фильтра - без него amount задваивается дочерними заказами
+#     сплита).
+#   Правило 7 - DATE_TRUNC('month', o.created_at) (Postgres, BUILD_PLAN сам
+#     пометил риск "если движок MySQL, заменить на DATE_FORMAT") -> заменено
+#     на DATE(DATE_SUB(o.created_at, INTERVAL (DAYOFMONTH(o.created_at) - 1)
+#     DAY)) - первый день месяца КАК DATE, не строка DATE_FORMAT (тот же
+#     приём, что и courier_monthly_shop_channel_revenue.yaml - main_dttm_col
+#     распознаётся Superset корректно только у настоящего DATE-типа).
+#   СХЕМА (главная ошибка BUILD_PLAN) - ДОПУЩЕНИЕ "users имеет поле role и
+#     поле shop_id" НЕ ПОДТВЕРДИЛОСЬ: реальная таблица users в
+#     lastochka_djami_copy (курьерская система) НЕ содержит ни role, ни
+#     shop_id. Принадлежность сотрудника магазину и роль - через Spatie
+#     permission: pivot-таблица `user_shops` (shop_id, user_id, deleted_at -
+#     SoftDeletes) и полиморфная `model_has_roles` (role_id, model_type=
+#     'App\Models\User', model_id) -> `roles` (name: admin/api/collector/
+#     courier/superadmin). "Операционный персонал" магазина = сотрудники с
+#     ролью courier ИЛИ collector (роли admin/superadmin - управленческий
+#     персонал, не операционный, исключены из знаменателя выручки на
+#     сотрудника). employee_cnt - снимок ТЕКУЩЕЙ численности (нет истории
+#     найма/увольнения - то же ограничение, что признавал сам BUILD_PLAN).
+#
+# ВАЖНО для чарта: employee_cnt - ОДИНАКОВОЕ значение на каждой строке месяца
+# одного магазина (текущий снимок, не помесячная история) - в чарте
+# использовать MAX(employee_cnt), НЕ SUM() при агрегации по нескольким
+# месяцам (тот же паттерн, что shop_fixed_opex_current в djami_orders_core.yaml
+# - SUM() задвоил бы штат на число выбранных месяцев).
+#
+# Проверено на dev (SELECT-прогон перед записью YAML): 1 магазин (shop_id=4),
+# 3 месяца (2026-05..2026-07), employee_cnt=12 (8 collector + 4 courier),
+# revenue_total реальный и разный по месяцам (2600 / 19784.24 / 1724.60) -
+# НЕ пусто.
+table_name: courier_shop_unit_economics_fact
+main_dttm_col: order_month
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      shop_orders.shop_id,
+      shop_orders.order_month,
+      shop_orders.revenue_total,
+      shop_orders.orders_cnt,
+      shop_staff.employee_cnt
+  FROM (
+      SELECT
+          o.shop_id,
+          DATE(DATE_SUB(o.created_at, INTERVAL (DAYOFMONTH(o.created_at) - 1) DAY)) AS order_month,
+          SUM(CASE WHEN o.status_id = 5 THEN o.amount ELSE 0 END)                    AS revenue_total,
+          COUNT(DISTINCT CASE WHEN o.status_id = 5 THEN o.id END)                    AS orders_cnt
+      FROM orders o
+      WHERE o.parent_order_id IS NULL
+      GROUP BY o.shop_id, DATE(DATE_SUB(o.created_at, INTERVAL (DAYOFMONTH(o.created_at) - 1) DAY))
+  ) shop_orders
+  LEFT JOIN (
+      SELECT us.shop_id, COUNT(DISTINCT us.user_id) AS employee_cnt
+      FROM user_shops us
+      JOIN model_has_roles mhr ON mhr.model_id = us.user_id AND mhr.model_type LIKE '%User'
+      JOIN roles r ON r.id = mhr.role_id AND r.name IN ('courier', 'collector')
+      WHERE us.deleted_at IS NULL
+      GROUP BY us.shop_id
+  ) shop_staff ON shop_staff.shop_id = shop_orders.shop_id
+uuid: 6afbd3c1-0d1d-4db2-9883-e163eb2e0fab
+columns: []
+metrics: []
+version: 1.0.0

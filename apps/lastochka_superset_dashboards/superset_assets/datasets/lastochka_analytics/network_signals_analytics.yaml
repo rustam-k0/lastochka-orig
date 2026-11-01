@@ -1,0 +1,101 @@
+# Вкладка «Обзор сети». db3 Postgres. ПЕРВАЯ панель виджета «Лента сигналов по
+# сети» (см. companion network_order_courier_alerts, db1, для второй панели -
+# кросс-DB объединение невозможно).
+#
+# ПОЛНОСТЬЮ ПЕРЕСТРОЕНО относительно BUILD_PLAN: исходный SQL использовал
+# event_type ('delivery.delayed', 'picking.delayed', 'shift.absence') и ключи
+# payload (delay_minutes, message), которых НЕТ в реальном каталоге событий
+# (правило 6 - проверено SELECT DISTINCT event_type на dev: таких event_type
+# не существует вовсе). Вместо домысленных event_type используется РЕАЛЬНАЯ,
+# уже опробованная в Task 5 (assembler_performance.yaml/courier_performance.yaml)
+# корреляция:
+#   - «Долгая сборка» - picking.started -> picking.finished по
+#     payload->>'assembly_id' (подтверждённый ключ, есть в обоих event_type),
+#     сигнал при длительности > 40 минут (порог - явное бизнес-допущение, как
+#     и в исходном BUILD_PLAN, т.к. отдельной таблицы порогов сборки в схеме
+#     нет).
+#   - «Опоздание курьера» - delivery.finished, payload->>'slot_end_date'
+#     (ПОДТВЕРЖДЁННЫЙ ключ - проверено на dev, есть НЕ у всех событий, т.к.
+#     поле добавлено бэкендом 2026-07-15, см. courier_performance.yaml)
+#     сравнивается с occurred_at; сигнал, если фактическое завершение позже
+#     слота. Это ТОЧНЕЕ BUILD_PLAN'овского payload->>'eta_at' (неподтверждённый
+#     ключ, в реальном payload отсутствует).
+# Правило 6 - store_id (НЕ shop_id - колонки нет), payload->>'...' извлечение
+# из jsonb, EXTRACT(EPOCH FROM ...) - Postgres-диалект (правило 7 здесь не
+# нужен, db3 остаётся Postgres).
+#
+# ПУСТО-ОЖИДАЕМО: проверено на dev перед пушем - 0 строк (все 4
+# picking.started/finished пары укладываются в 0.65-15 мин, порог 40 мин не
+# нарушен; единственный delivery.finished со slot_end_date пришёл РАНЬШЕ слота
+# - не опоздание). Малый объём B2E-событий (см. analytics-collection-layer.md)
+# - это текущее состояние данных, не баг датасета.
+table_name: network_signals_analytics
+main_dttm_col: signal_time
+database_uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+schema: null
+sql: |
+  WITH picking_pairs AS (
+      SELECT
+          (started.payload ->> 'assembly_id')::bigint  AS assembly_id,
+          started.order_id                              AS order_id,
+          (started.payload ->> 'order_local_id')::bigint AS order_local_id,
+          started.store_id                               AS store_id,
+          started.employee_id                            AS employee_id,
+          started.occurred_at                            AS picking_started_at,
+          finished.occurred_at                           AS picking_finished_at,
+          EXTRACT(EPOCH FROM (finished.occurred_at - started.occurred_at)) AS picking_seconds
+      FROM analytics_events started
+      JOIN analytics_events finished
+        ON (finished.payload ->> 'assembly_id')::bigint = (started.payload ->> 'assembly_id')::bigint
+       AND finished.event_type = 'picking.finished'
+      WHERE started.event_type = 'picking.started'
+  ),
+  delivery_pairs AS (
+      SELECT
+          (f.payload ->> 'delivery_id')::bigint         AS delivery_id,
+          f.order_id                                     AS order_id,
+          (f.payload ->> 'order_local_id')::bigint       AS order_local_id,
+          f.store_id                                     AS store_id,
+          f.employee_id                                  AS employee_id,
+          f.occurred_at                                   AS delivery_finished_at,
+          NULLIF(f.payload ->> 'slot_end_date', '')::timestamptz AS slot_end_date
+      FROM analytics_events f
+      WHERE f.event_type = 'delivery.finished'
+  )
+  SELECT
+      'assembly_delay'                                    AS signal_type,
+      'critical'                                           AS severity,
+      'Долгая сборка заказа'                               AS rule_name,
+      picking_finished_at                                  AS signal_time,
+      store_id                                             AS store_id,
+      employee_id                                          AS employee_id,
+      order_id                                             AS order_id,
+      order_local_id                                       AS order_local_id,
+      round(picking_seconds / 60.0, 1)                     AS metric_minutes,
+      40                                                     AS threshold_minutes,
+      format('Заказ #%s собирался %s мин (порог 40)', order_local_id, round(picking_seconds/60.0)) AS what_happened,
+      'Проверить загрузку сборщиков магазина, перераспределить заказ на другого сборщика' AS recommended_action
+  FROM picking_pairs
+  WHERE picking_seconds > 40 * 60
+
+  UNION ALL
+
+  SELECT
+      'delivery_delay'                                     AS signal_type,
+      'warning'                                             AS severity,
+      'Опоздание курьера при доставке'                     AS rule_name,
+      delivery_finished_at                                  AS signal_time,
+      store_id, employee_id, order_id, order_local_id,
+      round(EXTRACT(EPOCH FROM (delivery_finished_at - slot_end_date)) / 60.0, 1) AS metric_minutes,
+      0                                                       AS threshold_minutes,
+      format('Заказ #%s доставлен на %s мин позже обещанного слота', order_local_id,
+             round(EXTRACT(EPOCH FROM (delivery_finished_at - slot_end_date)) / 60.0)) AS what_happened,
+      'Связаться с курьером, уведомить клиента о задержке' AS recommended_action
+  FROM delivery_pairs
+  WHERE slot_end_date IS NOT NULL AND delivery_finished_at > slot_end_date
+
+  ORDER BY signal_time DESC
+uuid: 831fbfd2-a456-4e78-8d28-c4360a731ee5
+columns: []
+metrics: []
+version: 1.0.0

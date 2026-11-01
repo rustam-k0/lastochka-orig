@@ -1,0 +1,85 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Товары по объёму потерь
+description: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - product_name
+  metrics:
+  - &id001
+    expressionType: SQL
+    sqlExpression: SUM(loss_amount)
+    label: Всего потерь, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(is_search_unavailable)
+    label: Не найдено, запросов
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(price_delta_amount)
+    label: Разница цены, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(is_refused)
+    label: Отказы, позиций
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(is_replaced) / NULLIF(SUM(is_position), 0)
+    label: Доля замен
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(loss_amount) / NULLIF(SUM(SUM(loss_amount)) OVER (), 0)
+    label: Доля потерь
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COALESCE(MAX(margin_lost), 'Нет данных')
+    label: Упущенная маржа
+    hasCustomLabel: true
+  percent_metrics: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: event_at
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: product_name IS NOT NULL
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: false
+  show_totals: false
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  order_desc: true
+  column_config:
+    Всего потерь, ₽:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    Не найдено, запросов:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    Разница цены, ₽:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    Отказы, позиций:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    Доля замен:
+      d3NumberFormat: .1%
+      horizontalAlign: right
+    Доля потерь:
+      d3NumberFormat: .1%
+      horizontalAlign: right
+  timeseries_limit_metric: *id001
+cache_timeout: null
+dataset_uuid: 1ee44de1-76c8-439c-bbe1-720914f5e3fc
+uuid: 9d78107a-c220-5529-a74f-b1f949a3d490
+version: 1.0.0

@@ -1,0 +1,21 @@
+type ProductAttribute {
+  "ID"
+  id:Int
+  "ID атрибута"
+  attribute_id:Int
+  "Атрибут"
+  attribute:Attribute @hasOne
+  "Строковое значение"
+  string_value:String
+  "Текстовое значение"
+  text_value:String
+  "Целочисленное значение"
+  int_value:Int
+  "Дробное значение"
+  float_value:Float
+  "ID варианта атрибута"
+  attribute_value_id:Int
+  "Выбранный вариант атрибута"
+  attribute_value:AttributeValue @hasOne(relation: "attributeValue")
+
+}

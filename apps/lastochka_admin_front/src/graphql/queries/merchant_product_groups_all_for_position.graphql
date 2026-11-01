@@ -1,0 +1,11 @@
+query MerchantProductGroupsAllForPosition($shop_id: Int) {
+  merchantProductGroupsAll(shop_id: $shop_id, ordering: [{ orderColumn: "sort_order", orderBy: "ASC" }]) {
+    id
+    title
+    sort_order
+    image {
+      id
+      path
+    }
+  }
+}

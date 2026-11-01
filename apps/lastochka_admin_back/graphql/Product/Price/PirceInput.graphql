@@ -1,0 +1,4 @@
+input PriceInput {
+  shop_id:Int
+  value:Int
+}

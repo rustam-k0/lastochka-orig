@@ -1,0 +1,5 @@
+type CookTime {
+  id:Int
+  start_time:String
+  end_time:String
+}

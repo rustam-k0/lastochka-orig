@@ -1,0 +1,8 @@
+query {
+  attribute_families {
+    id
+    title
+    code
+    is_system
+  }
+}

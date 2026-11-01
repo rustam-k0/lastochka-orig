@@ -1,0 +1,40 @@
+# Вкладка «Стратегия». [Временная замена] Динамика заказов и выручки
+# собственного канала (сайт/приложение) по месяцам - показывает только
+# половину картины виджета из макета (доля к общему объёму, включая
+# маркетплейсы, не считается - см. blocked Hero-KPI «Доля собственного
+# канала продаж» в отчёте: нет признака канала ни в courier, ни в store
+# заказах, кросс-database невозможен).
+#
+# ИСПРАВЛЕНО (финальная fix-волна, db2 статус-фильтр): SUM(total) суммировал
+# ВСЕ активные заказы (любой status), не только реализованные - переведено на
+# SUM(delivered_total) (новая колонка store_orders_fact.yaml, CASE WHEN
+# status='delivered', та же семантика, что store_monthly_revenue.yaml).
+# COUNT(order_id) ("Заказов") намеренно НЕ отфильтрован - считает все активные
+# заказы канала, это отдельная метрика.
+slice_name: 'Динамика заказов и выручки собственного канала (сайт/приложение) по месяцам'
+viz_type: echarts_timeseries_line
+params:
+  viz_type: echarts_timeseries_line
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      column_name: order_id
+    aggregate: COUNT
+    label: Заказов (собственный канал)
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(delivered_total)
+    label: Выручка (собственный канал), ₽
+    hasCustomLabel: true
+  groupby:
+  - store_id
+  x_axis: order_created_at
+  time_grain_sqla: P1M
+  adhoc_filters: []
+  row_limit: 10000
+  comparison_type: values
+  x_axis_sort_asc: true
+  y_axis_format: SMART_NUMBER
+dataset_uuid: d333eb4f-09f4-4e19-8f2c-11ee93b65365
+uuid: 07896b6a-b6e5-43f4-8944-88cafc703d43
+version: 1.0.0

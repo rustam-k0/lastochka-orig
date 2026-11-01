@@ -1,0 +1,47 @@
+# Вкладка «Операции». BUILD_PLAN статус: blocked ("Матрица выбора транспорта
+# (вес x дальность, 3x3)" - тот же дефицит данных, что и в "Профиль вес x
+# дальность": нет дальности доставки и нет фактического транспорта курьера в
+# схеме).
+#
+# ВРЕМЕННАЯ ЗАМЕНА (предложена в самом BUILD_PLAN): 2-мерная pivot-таблица
+# "весовой бакет x способ доставки" с долей заказов в ячейке - НЕ
+# рекомендация транспорта, а распределение по способу доставки. Явно
+# подписана как приближение в заголовке.
+#
+# ПРОВЕРЕНО на dev: total_weight заполнен только у 12/115 родительских
+# заказов (остальные попадут в бакет "Не указан" - weight_bucket датасета уже
+# обрабатывает NULL явно, см. courier_orders_core.yaml) и shipping_method на
+# 100% = 'own_courier' - матрица на dev фактически будет "1 столбец x 5
+# строк", это честная картина текущих данных, не ошибка SQL.
+slice_name: Матрица «весовой бакет x способ доставки» (приближение)
+viz_type: pivot_table_v2
+params:
+  viz_type: pivot_table_v2
+  groupbyRows:
+  - weight_bucket
+  groupbyColumns:
+  - shipping_method
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      column_name: order_id
+    aggregate: COUNT_DISTINCT
+    label: Заказов
+    hasCustomLabel: true
+  metricsLayout: COLUMNS
+  aggregateFunction: Sum
+  combineMetric: false
+  rowOrder: key_a_to_z
+  colOrder: key_a_to_z
+  colTotals: true
+  colSubTotals: true
+  rowTotals: true
+  rowSubTotals: true
+  transposePivot: false
+  valueFormat: SMART_NUMBER
+  date_format: smart_date
+  adhoc_filters: []
+  row_limit: 10000
+dataset_uuid: 60d644ba-11b3-4618-868e-b9ab46707bf0
+uuid: 91f7441b-9657-4dd6-a70d-f6ebc2f67de0
+version: 1.0.0

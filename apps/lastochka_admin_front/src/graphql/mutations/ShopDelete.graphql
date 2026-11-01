@@ -1,0 +1,10 @@
+mutation(
+  $id: Int
+) {
+  ShopDelete(
+    id: $id
+  ) {
+    message
+    code
+  }
+}

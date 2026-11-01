@@ -1,0 +1,13 @@
+type OrderReview @model(class: "Review")
+{
+  id:Int
+  order:Order @hasOne(relation: "reviewable")
+  main_mark:Int
+  "Оценка за доставку ( от 1 до 5 )"
+  delivery_mark:Int
+  "Оценка за сборку ( от 1 до 5 )"
+  assembly_mark:Int
+  comment:String
+  client:Client @hasOne
+  created_at:DateTime
+}

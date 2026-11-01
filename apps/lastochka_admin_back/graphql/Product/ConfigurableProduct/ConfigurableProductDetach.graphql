@@ -1,0 +1,7 @@
+extend type Mutation {
+  ConfigurableProductDetach(
+    id: Int!
+  ): DefaultResponse
+    @field(resolver: "ConfigurableProduct\\ConfigurableProductDetach")
+    @guard @can(model: "Admin", ability: "onlyShop")
+}

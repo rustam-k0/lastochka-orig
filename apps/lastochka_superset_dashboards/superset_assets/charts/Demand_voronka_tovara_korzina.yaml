@@ -1,0 +1,34 @@
+# Вкладка «Спрос». Воронка товара: добавил в корзину -> удалил. Шаг «купил»
+# ИСКЛЮЧЁН - см. подробное обоснование в комментарии датасета
+# an_product_cart_funnel (нет item-level события покупки в whitelist
+# storefront, и product_id в order.created имеет другое пространство
+# идентификаторов, чем в cart-событиях - join дал бы 0 молча).
+slice_name: 'Воронка товара: добавил в корзину -> удалил (купил - недоступно, см. примечание)'
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - product_id
+  - store_id
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(added_count)
+    label: Добавлено в корзину
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(removed_count)
+    label: Удалено из корзины
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(removed_count) * 100.0 / NULLIF(SUM(added_count), 0)
+    label: 'Доля удаления после добавления, %'
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: d1e8c1b8-16f8-433a-99fc-07d92bd0136d
+uuid: 40541714-84ce-4062-8f0c-ab66004e25e0
+version: 1.0.0

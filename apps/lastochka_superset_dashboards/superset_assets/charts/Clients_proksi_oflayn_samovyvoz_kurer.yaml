@@ -1,0 +1,31 @@
+# Прокси "Офлайн" (см. notes датасета courier_monthly_shop_channel_revenue -
+# самовывоз всё равно оформлен онлайн в системе, это НЕ настоящая
+# офлайн-касса, только временная иллюстрация до появления реального
+# источника ККТ).
+slice_name: 'Прокси ''Офлайн'': самовывоз vs курьерская доставка по месяцам'
+viz_type: echarts_timeseries_line
+params:
+  viz_type: echarts_timeseries_line
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(amount)
+    label: Выручка по каналу, ₽
+    hasCustomLabel: true
+  - expressionType: SIMPLE
+    column:
+      column_name: order_id
+    aggregate: COUNT
+    label: Заказов
+    hasCustomLabel: true
+  groupby:
+  - channel_proxy
+  x_axis: order_month
+  time_grain_sqla: P1M
+  adhoc_filters: []
+  row_limit: 10000
+  comparison_type: values
+  x_axis_sort_asc: true
+  y_axis_format: SMART_NUMBER
+dataset_uuid: 440db63f-7a7e-4f4c-aebf-a5c513b736ab
+uuid: 5eb056a4-638f-41d7-8769-8ef8a1692eaa
+version: 1.0.0

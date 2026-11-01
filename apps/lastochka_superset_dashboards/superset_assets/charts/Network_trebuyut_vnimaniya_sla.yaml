@@ -1,0 +1,29 @@
+slice_name: 'Обзор сети: Требуют внимания — нижние 3 по SLA'
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - shop_id
+  - shop_name
+  metrics:
+  - expressionType: SQL
+    sqlExpression: AVG(is_on_time) * 100.0
+    label: SLA, %
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN status_id = 5 THEN order_id END)
+    label: Заказы, шт
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END)
+    label: GMV, ₽
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 3
+  order_desc: false
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 920e6c66-08db-49d0-9518-3e0ffd86598c
+uuid: a4239e1a-821e-4c4d-84c5-fc1a97afb00c
+version: 1.0.0

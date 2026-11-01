@@ -1,0 +1,14 @@
+extend type Mutation {
+  ExplainReasonUpdate(
+    "ID причины"
+    id: Int!
+    "Причина уточнения"
+    title: String
+    "Активна"
+    is_active: Boolean
+    "Позиция сортировки"
+    position: Int
+  ): DefaultResponse @field(resolver: "ExplainReason\\ExplainReasonUpdate")
+  @validator(class: "ExplainReason\\ExplainReasonUpdateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

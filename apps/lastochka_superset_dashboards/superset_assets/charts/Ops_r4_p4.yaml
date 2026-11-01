@@ -1,0 +1,46 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Из чего складывается доставка
+description: Среднее время завершённых заказов
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: stage_name
+  metrics:
+  - expressionType: SQL
+    sqlExpression: AVG(stage_minutes)
+    label: Минут
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: accepted_at
+  orientation: horizontal
+  row_limit: 1000
+  show_value: true
+  show_legend: false
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: ',.1f'
+  truncateYAxis: false
+  zoomable: false
+  rich_tooltip: true
+  stack: null
+  only_total: true
+  comparison_type: values
+  order_desc: true
+  x_axis_title: ''
+  x_axis_title_margin: 30
+  y_axis_title: Минут
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  x_axis_sort: stage_name
+  x_axis_sort_asc: true
+cache_timeout: null
+dataset_uuid: d5fbc039-0870-59a7-8e7d-509d1976505c
+uuid: 68ff004d-5413-5ac5-92f6-ef4cb7591819
+version: 1.0.0

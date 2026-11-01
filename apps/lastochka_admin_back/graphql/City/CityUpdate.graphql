@@ -1,0 +1,18 @@
+extend type Mutation {
+  CityUpdate(
+    "ID города"
+    id: Int!
+    "Название города"
+    name: String
+    "Широта центра города"
+    latitude: Float
+    "Долгота центра города"
+    longitude: Float
+    "Активен"
+    is_active: Boolean
+    "Город по умолчанию"
+    is_default: Boolean
+  ): DefaultResponse @field(resolver: "City\\CityUpdate")
+  @validator(class: "City\\CityUpdateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

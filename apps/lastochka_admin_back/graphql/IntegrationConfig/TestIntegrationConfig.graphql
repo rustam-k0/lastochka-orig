@@ -1,0 +1,11 @@
+extend type Mutation {
+  testIntegrationConfig(
+    integration_type: String!
+    driver: String!
+    credentials: String!
+    test_params: String
+    shop_id: Int
+  ): TestResult!
+    @field(resolver: "App\\GraphQL\\Mutations\\IntegrationConfig\\TestIntegrationConfig")
+    @guard
+}

@@ -1,0 +1,24 @@
+type ProductCancelReason {
+  "ID"
+  id: Int
+  "Причина отмены"
+  title: String
+  "Активна"
+  is_active: Boolean
+  "Позиция сортировки"
+  position: Int
+}
+
+extend type Query {
+  "Список активных причин отмены товара"
+  productCancelReasons: [ProductCancelReason!]! @all(scopes: ["active"])
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Все причины отмены (включая неактивные)"
+  allProductCancelReasons: [ProductCancelReason!]! @all
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Причина отмены по ID"
+  productCancelReason(id: Int! @eq): ProductCancelReason @find
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+}

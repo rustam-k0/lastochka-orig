@@ -1,0 +1,52 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Динамика клиентской базы
+description: Уникальные покупатели и активные на конец интервала
+viz_type: echarts_timeseries_line
+params:
+  viz_type: echarts_timeseries_line
+  x_axis: period_label
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(buyers)
+    label: Покупатели в интервале
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(active_end)
+    label: Активные на конец (≤ 30 дней)
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: period_start
+  row_limit: 10000
+  seriesType: line
+  markerEnabled: true
+  markerSize: 6
+  show_value: false
+  show_legend: true
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: ',d'
+  y_axis_bounds:
+  - null
+  - null
+  x_axis_sort_asc: true
+  zoomable: false
+  rich_tooltip: true
+  comparison_type: values
+  x_axis_time_format: '%d.%m'
+  x_axis_title: Интервал
+  x_axis_title_margin: 30
+  y_axis_title: Клиентов
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  x_axis_sort: period_label
+cache_timeout: null
+dataset_uuid: 6267cc2a-b9c5-5319-934e-a0123cf13731
+uuid: f604dbb2-c6a5-58a6-8a07-6f36767714eb
+version: 1.0.0

@@ -1,0 +1,33 @@
+extend type Mutation {
+
+    "Назначить/обновить зону сборки сотруднику в магазине. assembly_zone_id = null снимает привязку."
+    UserAssemblyZoneAssign(
+        "ID сотрудника"
+        user_id: Int!
+        "ID магазина"
+        shop_id: Int!
+        "ID зоны сборки (null — снять привязку)"
+        assembly_zone_id: Int
+        "Дата привязки (null — постоянная)"
+        date: Date
+    ): DefaultResponse
+        @field(resolver: "User\\AssemblyZone\\UserAssemblyZoneAssign")
+        @validator(class: "User\\AssemblyZone\\UserAssemblyZoneAssignValidator")
+        @guard @can(model: "Admin", ability: "onlyShop")
+
+    "Массовая привязка нескольких сотрудников к одной зоне в магазине. assembly_zone_id = null снимает привязки."
+    UserAssemblyZoneBulkAssign(
+        "ID сотрудников"
+        user_ids: [Int!]!
+        "ID магазина"
+        shop_id: Int!
+        "ID зоны сборки (null — снять привязки)"
+        assembly_zone_id: Int
+        "Дата привязки (null — постоянная)"
+        date: Date
+    ): DefaultResponse
+        @field(resolver: "User\\AssemblyZone\\UserAssemblyZoneBulkAssign")
+        @validator(class: "User\\AssemblyZone\\UserAssemblyZoneBulkAssignValidator")
+        @guard @can(model: "Admin", ability: "onlyShop")
+
+}

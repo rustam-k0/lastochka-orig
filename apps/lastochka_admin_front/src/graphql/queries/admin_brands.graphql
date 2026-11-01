@@ -1,0 +1,6 @@
+query ($is_active: Boolean) {
+  admin_brands(is_active: $is_active) {
+    id
+    title
+  }
+}

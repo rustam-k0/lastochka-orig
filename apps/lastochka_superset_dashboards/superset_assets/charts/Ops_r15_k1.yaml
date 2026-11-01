@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Средняя оценка
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: AVG(rating)
+    label: Средняя оценка
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: reviewed_at
+  subheader: Шкала 1–5, без неоценённых
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',.2f'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 061549f5-8d56-5036-baed-944599899194
+uuid: a06cfc5d-32fb-5ea6-9e54-28414fc2b196
+version: 1.0.0

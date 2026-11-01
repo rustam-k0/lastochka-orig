@@ -1,0 +1,20 @@
+mutation (
+  $id: Int!
+  $name: String
+  $latitude: Float
+  $longitude: Float
+  $is_active: Boolean
+  $is_default: Boolean
+) {
+  CityUpdate(
+    id: $id
+    name: $name
+    latitude: $latitude
+    longitude: $longitude
+    is_active: $is_active
+    is_default: $is_default
+  ) {
+    message
+    code
+  }
+}

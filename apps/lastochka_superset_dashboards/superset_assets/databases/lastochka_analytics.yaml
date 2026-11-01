@@ -1,0 +1,17 @@
+# Подключение db3 - журнал событий analytics_events (PostgreSQL). УЖЕ существует (uuid-match).
+database_name: Lastochka Analytics (события)
+uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+sqlalchemy_uri: postgresql+psycopg2://superset_ro:XXXXXXXXXX@127.0.0.1:5432/lastochka_analytics
+cache_timeout: null
+expose_in_sqllab: true
+allow_run_async: false
+allow_ctas: false
+allow_cvas: false
+allow_dml: false
+allow_file_upload: false
+extra:
+  metadata_params: {}
+  engine_params: {}
+  metadata_cache_timeout: {}
+  schemas_allowed_for_file_upload: []
+version: 1.0.0

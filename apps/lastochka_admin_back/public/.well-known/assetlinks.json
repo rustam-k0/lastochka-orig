@@ -1,0 +1,11 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.greenApple.appClient",
+      "sha256_cert_fingerprints":
+      ["D0:32:7B:2C:59:0F:09:AE:04:63:F9:20:B5:39:AD:9D:A4:9F:E2:46:FA:4B:3C:33:DC:0A:DD:79:1D:19:7D:C5"]
+    }
+  }
+]

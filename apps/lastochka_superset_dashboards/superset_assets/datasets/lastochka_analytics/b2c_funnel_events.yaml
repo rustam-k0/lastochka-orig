@@ -1,0 +1,70 @@
+# Вкладка «Клиенты» (по магазину). События узкой воронки ПОКУПКИ (просмотр
+# товара -> корзина -> оформление -> заказ создан) из журнала analytics_events,
+# db3 Postgres. Единственный потребитель - funnel «Воронка B2C». Имя датасета
+# verbatim из BUILD_PLAN.
+#
+# Конверсии применены (docs/conversion-rules.md, правило 6):
+#   ae.shop_id (не существует) -> ae.store_id (varchar).
+#   event_type IN ('b2c.session_start','b2c.product_view','b2c.cart_add',
+#     'b2c.checkout_started','b2c.order_paid') - фантазийные 5 стадий
+#     BUILD_PLAN (сам документ помечает это ДОПУЩЕНИЕМ) -> реальные значения:
+#     'product.viewed', 'cart.item_added', 'checkout.started', 'order.created'
+#     (проверено SELECT DISTINCT event_type на dev - событий с префиксом
+#     'b2c.' и 'order_paid'/'session_start'/'cart_add' в принципе не
+#     существует; whitelist storefront_back config/analytics.php
+#     'allowed_events' подтверждает те же имена).
+#
+# ОТЛИЧИЕ от an_cjm_funnel_events (вкладка «Спрос», Task 4): та воронка -
+# полный customer journey из 7 стадий (открытие приложения -> ... -> заказ),
+# эта - узкая воронка ИМЕННО покупки (4 стадии, начиная с просмотра товара),
+# что семантически ближе к теме вкладки «Клиенты» (покупательское поведение,
+# а не весь путь открытия приложения). Оба датасета читают одну и ту же
+# таблицу analytics_events, но с разным набором event_type и разным stage_order -
+# раздельные virtual-датасеты по правилу проекта "1 датасет = 1 источник
+# конкретного виджета", дублирования SQL-логики не образуется (разный WHERE).
+#
+# FIX (по аналогии с an_cjm_funnel_events, ревью round 1 Task 4): funnel-чарт
+# Superset сортирует строки по МЕТРИКЕ по убыванию, а не по dimension - на
+# разреженных данных порядок стадий расходится с stage_order. Фикс - числовой
+# префикс в stage_name ('1. Просмотр товара' ... '4. Заказ создан') так, чтобы
+# алфавитная сортировка строкового dimension совпадала с порядком стадий при
+# любом распределении метрики (в чарте дополнительно sort_by_metric: false).
+#
+# Проверено на dev (SELECT-прогон перед записью YAML, 2026-07-17): 11 строк -
+# 1x product.viewed, 1x cart.item_added, 1x checkout.started (все три с одной
+# session_id '0c0a1447-...'), 8x order.created (одна с той же session_id,
+# 7 без - атрибуция заказа к сессии не всегда заполняется). Данные растут по
+# мере накопления событий с момента написания OPEN_QUESTIONS_ANSWERS.md (тогда
+# было "по одному события каждого типа") - воронка строится, но на разреженной
+# выборке (единичные сессии) - это НОРМА для текущего состояния b2c-потока
+# (мобилка/сайт не в полной эксплуатации), не баг датасета.
+table_name: b2c_funnel_events
+main_dttm_col: occurred_at
+database_uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+schema: null
+sql: |
+  SELECT
+      ae.store_id      AS store_id,
+      ae.session_id    AS session_id,
+      ae.client_id     AS client_id,
+      ae.order_id      AS order_id,
+      ae.event_type    AS event_type,
+      ae.occurred_at   AS occurred_at,
+      CASE ae.event_type
+          WHEN 'product.viewed'    THEN 1
+          WHEN 'cart.item_added'   THEN 2
+          WHEN 'checkout.started'  THEN 3
+          WHEN 'order.created'     THEN 4
+      END AS stage_order,
+      CASE ae.event_type
+          WHEN 'product.viewed'    THEN '1. Просмотр товара'
+          WHEN 'cart.item_added'   THEN '2. Добавление в корзину'
+          WHEN 'checkout.started'  THEN '3. Начало оформления'
+          WHEN 'order.created'     THEN '4. Заказ создан'
+      END AS stage_name
+  FROM analytics_events ae
+  WHERE ae.event_type IN ('product.viewed', 'cart.item_added', 'checkout.started', 'order.created')
+uuid: e2e68f53-6ea4-4faf-853b-215ca04cee3e
+columns: []
+metrics: []
+version: 1.0.0

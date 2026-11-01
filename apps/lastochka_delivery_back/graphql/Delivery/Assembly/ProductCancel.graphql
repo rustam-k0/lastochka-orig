@@ -1,0 +1,11 @@
+extend type Mutation{
+  "Отменить товар в заказе"
+  ProductCancel(
+    "AssemblyItem -> id"
+    id:Int
+    "ID причины отмены (опционально, из справочника product_cancel_reasons)"
+    cancel_reason_id:Int
+  ):DefaultResponse @guard @field(resolver: "Assembly\\ProductCancel")
+  @validator(class: "Assembly\\ProductCancelValidator")
+  @can(model: "Admin",ability: "onShift")
+}

@@ -1,0 +1,55 @@
+variables:
+  BACKEND_DIR: "/home/admin/apps/multi_vendor_reatail_bridge"
+
+.deploy_template: &deploy
+  stage: deploy
+  script:
+    - cd $BACKEND_DIR
+    - git pull
+    - php8.2 /usr/local/bin/composer install
+    - php8.2 artisan migrate --force
+    - sudo supervisorctl restart all
+  only:
+    - master
+
+deploy_aladdin:
+  <<: *deploy
+  tags:
+    - aladdin
+
+deploy_lastochka:
+  <<: *deploy
+  tags:
+    - lastochka
+
+deploy_foodlink:
+  <<: *deploy
+  tags:
+    - foodlink
+
+deploy_lastochka_prod:
+  stage: deploy
+  tags:
+    - lastochka-prod
+  script:
+    - cd $BACKEND_DIR
+    - git pull
+    - php8.2 /usr/local/bin/composer install
+    - php8.2 artisan migrate --force
+    - (sudo supervisorctl status multi_vendor_bridge:* || true) | awk '/RUNNING/{print $1}' | xargs -r sudo supervisorctl restart
+  only:
+    - master
+
+deploy_aladdin_prod:
+  stage: deploy
+  tags:
+    - portalstore
+  script:
+    - git config --global --add safe.directory $BACKEND_DIR
+    - cd $BACKEND_DIR
+    - git pull
+    - php8.2 /usr/local/bin/composer install
+    - php8.2 artisan migrate --force
+    - (sudo supervisorctl status multi_vendor_bridge:* || true) | awk '/RUNNING/{print $1}' | xargs -r sudo supervisorctl restart
+  only:
+    - master

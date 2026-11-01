@@ -1,0 +1,6 @@
+type Category {
+  "ID"
+  id:Int
+  "Название"
+  title:String
+}

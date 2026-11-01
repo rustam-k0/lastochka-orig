@@ -1,0 +1,6 @@
+extend type Mutation {
+  "Публикация/снятие с публикации отзыва"
+  publishMerchantReview(id: Int!, is_published: Boolean!): MerchantReview!
+    @field(resolver: "MerchantReview\\PublishMerchantReview")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "merchant-reviews")
+}

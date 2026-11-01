@@ -1,0 +1,16 @@
+query ($first: Int, $page: Int, $search: String, $shopId: Int, $hasOffersInShop: Int) {
+  platformProducts(first: $first, page: $page, search: $search, shopId: $shopId, hasOffersInShop: $hasOffersInShop) {
+    data {
+      id
+      canonical_title
+      canonical_image
+      offers_count
+      is_curated
+      is_active
+      created_at
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}

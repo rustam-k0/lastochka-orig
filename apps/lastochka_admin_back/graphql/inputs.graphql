@@ -1,0 +1,48 @@
+input DefaultOrdering {
+  orderColumn: String!
+  orderBy: String! @rules(apply: ["in:asc,desc,ASC,DESC"])
+}
+
+input AttributeInput {
+  id:Int
+  attribute_id:Int
+  string_value:String
+  text_value:String
+  int_value:Int
+  float_value:Float
+  attribute_value_id:Int
+}
+
+input ImgInput {
+  id: Int
+  "Путь к изображению"
+  path: String!
+  "Название изображения"
+  origin_name: String!
+  "Текст при неуспешной загрузке изображения"
+  alt: String
+  "Размер изображения (1.3 Мб)"
+  size: String
+  "Тип изображения"
+  type: String
+}
+
+input FamilyAttributeInput {
+  attribute_id: Int!
+  position: Int
+  is_required: Boolean
+  is_configurable: Boolean
+}
+
+input VariantMatrixInput {
+  attribute_values: [VariantAttributeValueInput!]!
+  title: String
+  sku: String
+  price: Float
+  stock: Int
+}
+
+input VariantAttributeValueInput {
+  attribute_id: Int!
+  attribute_value_id: Int!
+}

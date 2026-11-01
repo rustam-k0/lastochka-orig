@@ -1,0 +1,29 @@
+extend type Query {
+  "Получение всех историй"
+  admin_stories(
+    is_active: Boolean
+    search: String
+    ordering: [DefaultOrdering]
+  ): [Story] @all(scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "stories")
+
+  "Получение списка историй с пагинацией"
+  admin_stories_paginate(
+    is_active: Boolean
+    search: String
+    ordering: [DefaultOrdering]
+  ): [Story] @paginate(defaultCount: 10, scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "stories")
+
+  "Получение одной истории по ID"
+  admin_stories_item(
+    id: Int @eq
+    ordering: [DefaultOrdering]
+  ): Story @find(scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "stories")
+
+  "Получение активных историй (для публичного API)"
+  active_stories(
+    ordering: [DefaultOrdering]
+  ): [Story] @paginate(defaultCount: 10, scopes: ["active", "sorter"])
+}

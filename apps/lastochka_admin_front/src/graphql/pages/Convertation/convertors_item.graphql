@@ -1,0 +1,16 @@
+query ($id: Int) {
+  convertors_item (id: $id) {
+    id
+    step
+    type_id
+    title
+    products {
+      id
+      title
+    }
+    categories {
+      id
+      title
+    }
+  }
+}

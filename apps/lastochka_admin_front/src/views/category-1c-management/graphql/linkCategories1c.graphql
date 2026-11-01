@@ -1,0 +1,16 @@
+mutation LinkCategories1c(
+  $category_1c_ids: [Int!]!
+  $showcase_category_ids: [Int!]!
+) {
+  link_categories_1c_to_showcase(
+    category_1c_ids: $category_1c_ids
+    showcase_category_ids: $showcase_category_ids
+  ) {
+    id
+    showcase_categories {
+      id
+      title
+    }
+    linked_at
+  }
+}

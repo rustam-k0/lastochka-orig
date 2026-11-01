@@ -1,0 +1,25 @@
+extend type Query {
+  "Список отзывов на заказы с пагинацией"
+  orderReviews(
+    order_id: Int
+    rating: Int
+    rating_min: Int
+    rating_max: Int
+    search: String
+    "Тип ошибки сборки (код)"
+    error_type: String
+    ordering: [DefaultOrdering]
+  ): [OrderReview] @paginate(defaultCount: 10, scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyShop")
+
+  "Получение отзыва на заказ по ID"
+  orderReview(
+    id: Int @eq
+  ): OrderReview @find
+  @guard @can(model: "Admin", ability: "onlyShop")
+
+  "Справочник типов ошибок сборки для отзыва на заказ"
+  orderReviewErrorTypes: [OrderReviewErrorTypeOption!]!
+  @field(resolver: "OrderReview\\OrderReviewErrorTypes")
+  @guard @can(model: "Admin", ability: "onlyShop")
+}

@@ -1,0 +1,16 @@
+query($type_id: Int, $page: Int, $first: Int = 15, $title: String, $ids: [Int]) {
+  shops_paginate(type_id: $type_id, page: $page, first: $first, title: $title, ids: $ids) {
+    data {
+      id
+      title
+      logo_img {
+        id
+        path
+      }
+      schedule
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}

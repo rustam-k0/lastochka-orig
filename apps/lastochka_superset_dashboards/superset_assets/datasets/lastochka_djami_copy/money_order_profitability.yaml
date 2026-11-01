@@ -1,0 +1,78 @@
+# Вкладка «Деньги» (по магазину). Экономика промо: order-level маржа заказа,
+# единственный источник для двух big_number_total чартов - «Доля убыточных
+# заказов %» и «Порог безубыточности скидки %». СНЯТО с blocked правилом 8
+# (products.cost_price). Имя датасета новое (BUILD_PLAN плейсхолдер был
+# order_profitability_margin_NOT_AVAILABLE для полностью заблокированного виджета).
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1 - WHERE o.status_id = 5.
+#   Правило 2 - WHERE o.parent_order_id IS NULL.
+#   Правило 8 - COGS заказа через CTE order_cogs (SUM(oi.quantity*p.cost_price)
+#     по order_items). NULL-safe в ДВУХ смыслах: (а) если у заказа ЕСТЬ хотя бы
+#     одна позиция с product.cost_price IS NULL (unknown_cost_items > 0),
+#     order_margin/is_unprofitable/gross_margin_pct для ЭТОГО заказа = NULL, а не
+#     считается по частично известной себестоимости (было бы вводящим в
+#     заблуждение занижением/завышением); (б) AVG() в чартах игнорирует NULL
+#     автоматически - доля/порог считаются ТОЛЬКО по заказам с полностью
+#     известной себестоимостью. На dev cost_price пуст у ВСЕХ 13042 товаров ->
+#     оба чарта вернут NULL - пусто-ожидаемо до 1С (см. отчёт).
+#   order_margin = items_subtotal - COGS - discount - bonus_spent - assembly_cost
+#     (доля убыточных: COUNT(order_margin < 0) / COUNT(заказов с известной COGS)).
+#   gross_margin_pct = (items_subtotal - COGS) / items_subtotal * 100 (порог
+#     безубыточности скидки = средняя валовая маржа % - сколько скидки можно дать
+#     не уходя в минус).
+# ИСПРАВЛЕНО (финальная fix-волна): order_cogs CTE теперь фильтруется тем же
+# AND oi.status_id <> 3, что и канонический фильтр реализованных позиций
+# (правило 3, "Симметрия revenue/COGS обязательна" - conversion-rules.md).
+# Раньше COGS считался по ВСЕМ позициям заказа (включая собранно-отменённые),
+# было замаскировано NULL (cost_price ещё пуст на dev). Примечание: o.items_subtotal
+# - готовая колонка заказа (не пересчитывается здесь из order_items), поэтому
+# полной построчной симметрии с фильтром позиций тут нет по конструкции - COGS
+# теперь хотя бы не включает отменённые позиции, которых в выручке уже нет.
+#
+# Наблюдение по схеме: shops.name НЕ существует (только shops.title).
+# Данные на dev: items_subtotal NULL у 25/28 доставленных заказов - для этих
+# заказов order_margin/gross_margin_pct тоже NULL независимо от cost_price.
+table_name: money_order_profitability
+main_dttm_col: order_date
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  WITH order_cogs AS (
+      SELECT
+          oi.order_id,
+          SUM(oi.quantity * p.cost_price)                       AS cogs_amount,
+          SUM(CASE WHEN p.cost_price IS NULL THEN 1 ELSE 0 END) AS unknown_cost_items
+      FROM order_items oi
+      LEFT JOIN products p ON p.id = oi.product_id
+      WHERE oi.status_id <> 3
+      GROUP BY oi.order_id
+  )
+  SELECT
+      o.id                                             AS order_id,
+      o.shop_id                                          AS shop_id,
+      sh.title                                            AS shop_name,
+      DATE(COALESCE(o.paid_at, o.finished_at))           AS order_date,
+      o.items_subtotal                                    AS items_subtotal,
+      o.discount                                          AS discount,
+      o.bonus_spent                                       AS bonus_spent,
+      o.assembly_cost                                     AS assembly_cost,
+      oc.cogs_amount                                      AS cogs_amount,
+      CASE WHEN oc.unknown_cost_items > 0 OR oc.cogs_amount IS NULL THEN NULL
+           ELSE (o.items_subtotal - oc.cogs_amount - o.discount - o.bonus_spent - o.assembly_cost)
+      END                                                  AS order_margin,
+      CASE WHEN oc.unknown_cost_items > 0 OR oc.cogs_amount IS NULL THEN NULL
+           WHEN (o.items_subtotal - oc.cogs_amount - o.discount - o.bonus_spent - o.assembly_cost) < 0 THEN 1
+           ELSE 0
+      END                                                  AS is_unprofitable,
+      CASE WHEN oc.unknown_cost_items > 0 OR oc.cogs_amount IS NULL OR o.items_subtotal = 0 THEN NULL
+           ELSE (o.items_subtotal - oc.cogs_amount) * 100.0 / o.items_subtotal
+      END                                                  AS gross_margin_pct
+  FROM orders o
+  LEFT JOIN shops sh ON sh.id = o.shop_id
+  LEFT JOIN order_cogs oc ON oc.order_id = o.id
+  WHERE o.parent_order_id IS NULL AND o.status_id = 5
+uuid: c61130d0-4791-4c5f-a212-76931716eaba
+columns: []
+metrics: []
+version: 1.0.0

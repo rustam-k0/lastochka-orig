@@ -1,0 +1,14 @@
+extend type Query {
+
+    "Список зон сборки"
+    assembly_zones: [AssemblyZone]
+        @all(model: "AssemblyZone")
+        @orderBy(column: "position", direction: ASC)
+        @guard @can(model: "Admin", ability: "onlyAdmin")
+
+    "Зона сборки по ID"
+    assembly_zone(id: Int! @eq): AssemblyZone
+        @find(model: "AssemblyZone")
+        @guard @can(model: "Admin", ability: "onlyAdmin")
+
+}

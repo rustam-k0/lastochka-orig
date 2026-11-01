@@ -1,0 +1,23 @@
+# Вкладка «Спрос». Лидеры по оплате - доля товара в выручке. label_type
+# key_value_percent (унаследовано из шаблона pie()) уже показывает % без
+# отдельного Contribution post-processing.
+slice_name: Лидеры по оплате (доля в выручке)
+viz_type: pie
+params:
+  viz_type: pie
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(item_total_price)
+    label: Выручка, ₽
+    hasCustomLabel: true
+  groupby:
+  - product_name
+  adhoc_filters: []
+  row_limit: 20
+  show_labels_threshold: 5
+  label_type: key_value_percent
+  number_format: SMART_NUMBER
+  donut: false
+dataset_uuid: f08db08d-b059-48be-b710-1e40caeca495
+uuid: 1b3ddcf7-4ef1-47c7-9eee-8d39c354bc15
+version: 1.0.0

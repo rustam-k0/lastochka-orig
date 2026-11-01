@@ -1,0 +1,16 @@
+extend type Mutation {
+  CityCreate(
+    "Название города"
+    name: String!
+    "Широта центра города"
+    latitude: Float
+    "Долгота центра города"
+    longitude: Float
+    "Активен"
+    is_active: Boolean
+    "Город по умолчанию"
+    is_default: Boolean
+  ): DefaultResponse @field(resolver: "City\\CityCreate")
+  @validator(class: "City\\CityCreateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

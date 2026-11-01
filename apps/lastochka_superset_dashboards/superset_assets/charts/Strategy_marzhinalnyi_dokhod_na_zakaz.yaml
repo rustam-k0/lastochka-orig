@@ -1,0 +1,37 @@
+# Вкладка «Стратегия». Удельные метрики: маржинальный доход на заказ (прокси
+# 'прибыль на заказ' - нет COGS в схеме). Правило 1 - метрика фильтрует
+# status_id = 5 (доставленные) ВНУТРИ CASE, датасет остаётся нефильтрованным
+# по статусу (тот же паттерн, что djami_orders_core -> Overview-чарты).
+#
+# ИСПРАВЛЕНО (финальная fix-волна, правило 10): убран вычет delivery_price -
+# это цена доставки для ПОКУПАТЕЛЯ, часть выручки, а не расход бизнеса
+# (conversion-rules.md правило 10). Формула была задвоена с реальным вычетом
+# логистического расхода, которого в БД нет (кроме yandex_delivery_price).
+# Образец фикса того же паттерна: Overview_vyruchka_i_pribyl_po_dnyam
+# (коммит 28ab135).
+slice_name: 'Удельные метрики: маржинальный доход на заказ (прокси прибыли на заказ)'
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - shop_id
+  metrics:
+  - expressionType: SQL
+    sqlExpression: AVG(CASE WHEN status_id = 5 THEN items_subtotal - discount - assembly_cost END)
+    label: Маржинальный доход на заказ (прокси), ₽
+    hasCustomLabel: true
+  - expressionType: SIMPLE
+    column:
+      column_name: order_id
+    aggregate: COUNT_DISTINCT
+    label: Заказов (всего)
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 5f9862d0-ea63-44a6-b6ec-c4a466539a3a
+uuid: 6b16e41e-de9c-449b-9a53-e19a0d0e2370
+version: 1.0.0

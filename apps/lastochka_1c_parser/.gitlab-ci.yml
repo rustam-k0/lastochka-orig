@@ -1,0 +1,31 @@
+variables:
+  BACKEND_DIR: "/home/admin/apps/lastochka_1c_parser"
+
+deploy_dev:
+  stage: deploy
+  tags:
+    - lastochka
+  script:
+    - git config --global --add safe.directory $BACKEND_DIR
+    - cd $BACKEND_DIR
+    - git pull
+    - php8.2 /usr/local/bin/composer install
+    - php8.2 artisan migrate --force
+    - sudo supervisorctl restart all
+  only:
+    - main
+
+deploy_prod:
+  stage: deploy
+  tags:
+    - lastochka-prod
+  script:
+    - git config --global --add safe.directory $BACKEND_DIR
+    - cd $BACKEND_DIR
+    - git pull
+    - php8.2 /usr/local/bin/composer install
+    - php8.2 artisan migrate --force
+    - php8.2 artisan route:clear
+    - sudo supervisorctl restart lastochka_1c_parser-queue:* lastochka_1c_parser_rabbitmq:*
+  only:
+    - main

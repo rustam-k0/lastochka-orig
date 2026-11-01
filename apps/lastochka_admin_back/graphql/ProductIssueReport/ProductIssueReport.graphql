@@ -1,0 +1,14 @@
+type ProductIssueReport {
+  id: Int!
+  client_id: Int
+  product_id: Int
+  shop_id: Int
+  client: Client @belongsTo
+  product: Product @belongsTo
+  shop: Shop @belongsTo
+  email: String!
+  type: String!
+  message: String!
+  created_at: DateTime
+  updated_at: DateTime
+}

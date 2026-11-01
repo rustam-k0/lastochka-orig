@@ -1,0 +1,49 @@
+# Вкладка «Стратегия» (по магазину). Заказ x площадь магазина - для метрики
+# 'выручка на м² площади магазина'. Имя датасета - НОВОЕ (не было в
+# BUILD_PLAN, т.к. виджет был blocked на момент написания BUILD_PLAN
+# "в shops нет поля площади магазина"). Потребитель - «Удельные метрики:
+# выручка на м² площади магазина».  Источник: lastochka_djami_copy (db1,
+# MySQL).
+#
+# РАЗБЛОКИРОВАНО правилом 8 conversion-rules.md: shops.area_sqm теперь
+# СУЩЕСТВУЕТ (decimal(8,2), добавлено бэкендом, эпик feat/analytics-data-
+# requirements) - тот же source-факт, что даёт готовую формулу metric_key
+# #9 `revenue_per_sqm` в docs/metric-keys.md. SQL этого датасета - order-level
+# грануляр (не помесячный), чтобы период фильтровался нативным фильтром
+# дашборда, а не был зашит в SQL.
+#
+# Конверсии применены:
+#   Правило 1 - "выручка" НЕ фильтруется в датасете (status_id оставлен
+#     колонкой), фильтр `status_id = 5` применяется в METRИКЕ чарта (см.
+#     Стратегия_vyruchka_na_sqm.yaml) - тот же паттерн, что djami_orders_core.
+#   Правило 2 - WHERE o.parent_order_id IS NULL (без него amount задваивается
+#     дочерними заказами сплита).
+#   Правило 8 - NULL-safe: JOIN на sh.deleted_at IS NULL, метрика в чарте
+#     делит на NULLIF(area_sqm, 0) - у магазинов без area_sqm результат NULL,
+#     не 0/деление на ноль.
+#   Правило 9 - sh.deleted_at IS NULL (shops поддерживает SoftDeletes).
+#
+# Проверено на dev (SELECT-прогон перед записью YAML): 115 родительских
+# заказов, 1 магазин (Ласточка Джами, area_sqm=120.50). Метрика
+# SUM(CASE WHEN status_id=5 THEN amount ELSE 0 END) / NULLIF(area_sqm,0) =
+# 200.07 ₽/м² - РЕАЛЬНОЕ ненулевое значение, не пусто.
+table_name: courier_shop_revenue_per_sqm
+main_dttm_col: order_created_at
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      o.id                                     AS order_id,
+      o.shop_id                                AS shop_id,
+      sh.title                                 AS shop_title,
+      sh.area_sqm                              AS area_sqm,
+      o.created_at                             AS order_created_at,
+      o.status_id                              AS status_id,
+      o.amount                                 AS amount
+  FROM orders o
+  JOIN shops sh ON sh.id = o.shop_id AND sh.deleted_at IS NULL
+  WHERE o.parent_order_id IS NULL
+uuid: d8bb6cd4-3580-407d-97c6-9ad1ea4c9202
+columns: []
+metrics: []
+version: 1.0.0

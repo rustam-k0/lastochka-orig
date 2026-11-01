@@ -1,0 +1,18 @@
+type UserFcmToken {
+  id: Int
+  token: String
+  device_type: String
+}
+
+extend type Mutation {
+  "Сохранить FCM-токен устройства"
+  saveFcmToken(
+    token: String! @rules(apply: ["required", "string", "max:255"])
+    device_type: String @rules(apply: ["nullable", "string", "in:ios,android"])
+  ): UserFcmToken @guard @field(resolver: "Fcm\\SaveFcmToken")
+
+  "Удалить FCM-токен устройства"
+  removeFcmToken(
+    token: String! @rules(apply: ["required", "string"])
+  ): DefaultResponse @guard @field(resolver: "Fcm\\RemoveFcmToken")
+}

@@ -1,0 +1,6 @@
+type DeliveryOrder {
+  id:Int
+  order:Order @hasOne
+  priority:Int
+  status_id:Int
+}

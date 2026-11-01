@@ -1,0 +1,131 @@
+type Product
+{
+  "ID"
+  id:Int
+  "Штрихкод (первый из barcodes, для обратной совместимости)"
+  barcode:String
+  "Все штрихкоды товара"
+  barcodes:[String]
+  "Артикул"
+  articul:String
+  "Код товара из 1С"
+  code:String
+  "PLU-код товара из 1С"
+  plu:String
+  "Название"
+  title:String
+  "Описание"
+  description:String
+  "Дополнительная информация (произвольный текст)"
+  additional_info:String
+  "Мета заголовок"
+  meta_title:String
+  "Маркетинговое описание"
+  meta_description:String
+  "Ключевые слова"
+  meta_keywords:String
+  "Код кванта (грамм, шт...)"
+  unit_type_id:Int
+  "Цена по умолчанию"
+  default_price:Price @hasOne(relation: "defaultPrice")
+  "Значение базовой цены (по магазину или первой строке) — лёгкое поле для списков вместо default_price"
+  default_price_value(shop_id: Int): Float @field(resolver: "App\\GraphQL\\Queries\\Product\\ProductDefaultPriceValue")
+  "Суммарный остаток (по магазину или всей сети) — лёгкое поле для списков вместо remains"
+  remains_sum(shop_id: Int): Float! @field(resolver: "App\\GraphQL\\Queries\\Product\\ProductRemainsSum")
+  "Цены по каждому магазину (сетевой каталог) — для таблицы «Цены и остатки по магазинам»"
+  prices:[Price] @hasMany
+  "Остатки по каждому магазину"
+  remains:[Remain] @hasMany
+  "Ступени «цены от количества» по всем магазинам (MID-308); при выключенном модуле пустой список"
+  price_tiers:[PriceTier!]! @field(resolver: "App\\GraphQL\\Queries\\Product\\ProductFields@priceTiers")
+  "Категории товара"
+  categories:[Category] @belongsToMany
+  "Атрибуты со значениями"
+  attributes:[ProductAttribute] @hasMany
+  "Изображение"
+  img:Img @hasOne
+  "Слайдер изображений"
+  images:[Img] @hasMany
+  "Процент заполнения"
+  fill_percent:Int
+  "Статус"
+  status_id:Int
+  "Вес товара (Необходимо только в случае если товар штучный)"
+  weight:Int
+  "Время готовности товара, если он принадлежит как категории кулинарии"
+  cook_time:CookTime @hasOne(relation: "cookTime")
+  "Время готовности товара, ежедневное (null = не задано)"
+  ready_fixed_time:String
+  "Информация: количество товара"
+  info_weight:Int
+  """""Информация: ед. измерения количества товара
+  1 -  шт
+  2 -  грамм
+  3 -  килограмм
+  4 -  литр
+  5 -  миллилитр
+  """
+  info_weight_type_id:Int
+  "Сырая единица товара из 1С (2=грамм, 3=кг, 4=литр, 5=мл, 1=шт), не перетирается квантом"
+  base_unit_type_id:Int
+  "Шаг кванта витринной категории (read-only). Не null → квант задан категорией, ручной ввод недоступен"
+  category_quantum_step:Int @field(resolver: "App\\GraphQL\\Queries\\Product\\ProductFields@categoryQuantumStep")
+  "Единица кванта витринной категории (2=грамм, 5=мл, 1=шт), read-only"
+  category_quantum_unit_type_id:Int @field(resolver: "App\\GraphQL\\Queries\\Product\\ProductFields@categoryQuantumUnitTypeId")
+  "Шаг ручного кванта товара (fallback, когда категория квант не задаёт)"
+  manual_quantum_step:Int
+  "Единица ручного кванта (2=грамм, 5=мл, 1=шт)"
+  manual_quantum_unit_type_id:Int
+  "Бренд"
+  brand:Brand @belongsTo
+  "ID бренда"
+  brand_id:Int
+  "Путь к видео товара"
+  video_path:String
+  "Документы товара"
+  documents:[ProductDocument] @hasMany
+  "Добавки"
+  supplements:[Supplement] @hasMany
+  "Признак кулинарного товара"
+  is_culinary:Boolean!
+  "Динамические чекбоксы (JSON-строка map field => bool)"
+  custom_checkboxes:String
+  "Товар без сахара"
+  sugar_free:Boolean!
+  "Показывать на странице поиска"
+  on_search_page:Boolean!
+  "Подаётся тёплым"
+  served_warm:Boolean!
+  "Товар доступен только для самовывоза — ограничивает способы доставки заказа"
+  pickup_only:Boolean!
+  "Товар 18+ — продажа только совершеннолетним"
+  adult_only:Boolean!
+  "Маркируемый товар (Честный знак): при сборке требуется скан кода маркировки"
+  is_marked:Boolean!
+  "Новинка (наполняет автоматическую товарную группу «Новинки»)"
+  is_new:Boolean!
+  "Успей купить (наполняет автоматическую товарную группу «Успей купить»)"
+  is_hurry_up:Boolean!
+  "Ставка НДС ЮKassa (1-6, 11 — 22%, 12 — 22/122; null = не задан)"
+  vat_code: Int
+  "Количество в группе (из pivot, заполняется при загрузке через товарную группу)"
+  pivot_quantity: Int @method(name: "getPivotQuantityAttribute")
+  "ID родительского товара (для вариантов)"
+  parent_id: Int
+  "Признак вариативного товара"
+  is_configurable: Boolean!
+  "Родительский товар"
+  parent: Product @belongsTo
+  "Варианты (дочерние товары)"
+  children: [Product] @hasMany
+  "Собственный режим остатков товара: ignore/fixed (пусто = по категории) (LASTOCHKI-JAMI-11207)"
+  stock_mode: String
+  "Собственный лимит fixed-режима (в единице fixed_stock_unit_type_id)"
+  fixed_stock_quantity: Int
+  "Единица собственного лимита fixed-режима (2=грамм, 1=шт)"
+  fixed_stock_unit_type_id: Int
+  "Эффективный режим остатков (материализованный из товара/категории/магазина)"
+  effective_stock_mode: String
+  "Эффективный fixed-лимит в базовой единице остатка (г/шт)"
+  effective_fixed_stock: Int
+}

@@ -1,0 +1,24 @@
+extend type Mutation {
+  ShopAlertRuleUpdate(
+    "ID правила"
+    id: Int!
+    "Название правила"
+    name: String
+    "Ключ метрики"
+    metric_key: String
+    "Сравнение: lt | lte | gt | gte"
+    comparison: String
+    "Порог срабатывания"
+    threshold_value: Float
+    "Рекомендуемое действие"
+    recommended_action_text: String
+    "ID магазина (null = все магазины)"
+    shop_id: Int
+    "Активно"
+    is_active: Boolean
+    "Позиция сортировки"
+    position: Int
+  ): DefaultResponse @field(resolver: "ShopAlertRule\\ShopAlertRuleUpdate")
+  @validator(class: "ShopAlertRule\\ShopAlertRuleUpdateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

@@ -1,0 +1,36 @@
+query ($id: Int!) {
+  merchantSale(id: $id) {
+    id
+    title
+    description
+    shop_id
+    discount_percent
+    starts_at
+    ends_at
+    is_active
+    custom_checkboxes
+    image {
+      id
+      path
+      type
+      alt
+      size
+      origin_name
+    }
+    shop {
+      id
+      title
+    }
+    products {
+      id
+      title
+      default_price {
+        value
+      }
+      images {
+        id
+        path
+      }
+    }
+  }
+}

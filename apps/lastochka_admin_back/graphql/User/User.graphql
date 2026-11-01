@@ -1,0 +1,27 @@
+type User {
+  id: Int
+  "Имя"
+  name: String
+  "Фамилия"
+  surname: String
+  "Отчество"
+  patronymic: String
+  "Почта"
+  email: String
+  "Телефонный номер"
+  phone:String
+  "Магазины, в которых работает юзер"
+  shops:[UserShop] @hasMany
+  "Роли"
+  roles:[Role] @hasMany
+  "Подключена ли двухфакторная аутентификация"
+  two_factor_enabled: Boolean
+  "Ключи разделов, доступных пользователю (для меню/гварда)"
+  section_keys: [String!]! @field(resolver: "App\\GraphQL\\Queries\\User\\UserFields@sectionKeys")
+  "Ключи действий с заказами, доступных пользователю (для гейтинга кнопок)"
+  order_action_keys: [String!]! @field(resolver: "App\\GraphQL\\Queries\\User\\UserFields@orderActionKeys")
+  "Включён ли фича-флаг матрицы доступов"
+  role_matrix_enabled: Boolean! @field(resolver: "App\\GraphQL\\Queries\\User\\UserFields@roleMatrixEnabled")
+  "Супер-администратор (доступ к разделу Настройки; роль выдаётся только через БД)"
+  is_super_admin: Boolean! @field(resolver: "App\\GraphQL\\Queries\\User\\UserFields@isSuperAdmin")
+}

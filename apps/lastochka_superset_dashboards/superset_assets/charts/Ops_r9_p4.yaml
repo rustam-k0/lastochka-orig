@@ -1,0 +1,49 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Типы ошибок
+description: Жалобы с ответственностью сборщика
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: error_type_name
+  metrics:
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT order_id)
+    label: Жалоб
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: assembly_started_at
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: has_error = 1
+  orientation: horizontal
+  row_limit: 1000
+  show_value: true
+  show_legend: false
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: ',d'
+  truncateYAxis: false
+  zoomable: false
+  rich_tooltip: true
+  stack: null
+  only_total: true
+  comparison_type: values
+  order_desc: true
+  x_axis_title: ''
+  x_axis_title_margin: 30
+  y_axis_title: Жалоб
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  x_axis_sort: Жалоб
+  x_axis_sort_asc: true
+cache_timeout: null
+dataset_uuid: 7f64de2b-ba11-4e40-a875-f5f51593a14d
+uuid: de3cfd59-dc70-5cf7-8e8f-9f1d2b81837a
+version: 1.0.0

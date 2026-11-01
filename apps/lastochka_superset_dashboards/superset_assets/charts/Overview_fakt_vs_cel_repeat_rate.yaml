@@ -1,0 +1,21 @@
+slice_name: 'Факт vs цель: Repeat rate %'
+viz_type: gauge_chart
+params:
+  viz_type: gauge_chart
+  metric:
+    expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN client_order_seq > 1 THEN client_id END)
+      * 100.0 / NULLIF(COUNT(DISTINCT client_id), 0)
+    label: Repeat rate, %
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters: []
+  row_limit: 10
+  start_angle: 225
+  end_angle: -45
+  min_val: 0
+  max_val: 100
+  value_formatter: '{value}'
+dataset_uuid: d991fd22-7a5f-4c1f-977b-866968e97b0c
+uuid: 32599ee4-2919-4bf5-b2e0-fee77b1369fd
+version: 1.0.0

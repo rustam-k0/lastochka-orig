@@ -1,0 +1,75 @@
+query($id: Int!) {
+  admin_configurable_product_item(id: $id) {
+    id
+    title
+    articul
+    description
+    meta_title
+    meta_description
+    meta_keywords
+    categories {
+      id
+      title
+    }
+    img {
+      id
+      path
+      origin_name
+    }
+    images {
+      id
+      path
+      origin_name
+    }
+    status_id
+    is_configurable
+    brand {
+      id
+      title
+    }
+    brand_id
+    video_path
+    configurable_attributes {
+      id
+      attribute_id
+      is_configurable
+      attribute {
+        id
+        title
+        code
+        type_id
+        values {
+          id
+          title
+          code
+        }
+      }
+    }
+    children {
+      id
+      title
+      articul
+      barcode
+      status_id
+      default_price {
+        value
+      }
+      remains {
+        quantity
+        shop_id
+      }
+      img {
+        id
+        path
+      }
+      attributes {
+        attribute_id
+        attribute_value_id
+        string_value
+      }
+    }
+    computed_price_min
+    computed_price_max
+    computed_quantity
+  }
+}

@@ -1,0 +1,10 @@
+query {
+  allCities {
+    id
+    name
+    latitude
+    longitude
+    is_active
+    is_default
+  }
+}

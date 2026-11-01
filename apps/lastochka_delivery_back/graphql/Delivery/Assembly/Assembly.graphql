@@ -1,0 +1,61 @@
+type Assembly {
+  id:Int
+  cooking_started_at:DateTime
+  "Процент собранных товаров"
+  percent_assembled:Int @method(name: "getAssemblyItemsCollectedPercent") @with(relation: "assemblyItems")
+  "Сумма собранных товаров"
+  total_assembled:Float @method(name: "getAssemblyItemsCollectedSum") @with(relation: "assemblyItems")
+  "Сумма всех товаров"
+  total:Float @method(name: "getAssemblyItemsSum") @with(relation: "assemblyItems")
+}
+
+type AssemblyItem {
+  id:Int
+  "Количество собранного товара"
+  quantity:Int
+  "Фактический вес в граммах (для весовых товаров)"
+  actual_weight:Int
+  "Цена собранного товара"
+  price:Float
+  "Товар в заказе"
+  order_item:OrderItem @hasOne(relation: "orderItem")
+  "Товары выбранные на замену"
+  replacements:[ReplacementProduct] @hasMany
+  "Причина, по которой товар отправили на статус уточнить"
+  explain_reason:ExplainReason @hasOne(relation: "explainReason")
+  "Причина отмены товара (для отменённых позиций, status_id = 4)"
+  cancel_reason:ProductCancelReason @hasOne(relation: "cancelReason")
+  "Коды маркировки (Честный знак), отсканированные для позиции (модуль honest_sign)"
+  marking_codes:[MarkingCode] @hasMany(relation: "markingCodes")
+  "Сколько кодов маркировки требуется для подтверждения позиции: quantity для штучного, 1 для весового; 0 — товар не маркируемый или модуль выключен"
+  marking_codes_required:Int @method(name: "getMarkingCodesRequired")
+  """
+  Тип сборочного товара
+  1 - У товара нет никаких проблем
+  2 - Товар отсутствует
+  3 - Уточнить детали у клиента
+  """
+  type_id:Int
+  """
+  Статус сборки товара
+  1 - Собрать
+  2 - Товар собран
+  3 - Уточнить
+  4 - Товар отменен
+  """
+  status_id:Int
+}
+
+type AssemblyPackage {
+  id:Int
+  """
+  Пакеты
+  Типы:
+  1 - Шкаф
+  2 - Холодильник
+  3 - Морозильник
+  """
+  type_id:Int
+  "Количество"
+  quantity:Int
+}

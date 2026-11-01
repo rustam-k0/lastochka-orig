@@ -1,0 +1,9 @@
+type Sphere {
+  id: Int
+  "Название"
+  title: String
+  shops:[Shop] @hasMany(scopes: ["onlyActive","auth"])
+  img: Img @hasOne(relation:"img")
+  created_at:DateTime
+  updated_at:DateTime
+}

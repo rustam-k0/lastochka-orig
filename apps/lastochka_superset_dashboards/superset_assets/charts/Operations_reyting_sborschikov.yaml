@@ -1,0 +1,40 @@
+# Вкладка «Операции». Рейтинг сборщиков: позиций/час и точность сборки, на
+# датасете assembler_performance (db3, picking.started/finished - см.
+# комментарий в датасете почему перестроено с db1 assemblies на db3).
+# employee_id показан в СЫРОМ виде (числовой id сборщика) - имя из db1 users
+# недостижимо без кросс-database JOIN. Итоговая оценка A/B/C - через
+# Conditional Formatting по accuracy_pct/positions_per_hour (пороги
+# согласовать с заказчиком, тот же приём, что в BUILD_PLAN).
+#
+# ПУСТО/СКУДНО-ОЖИДАЕМО: на dev 4 picking.finished события (см. датасет) -
+# таблица даст 3-4 строки.
+slice_name: Рейтинг сборщиков
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - employee_id
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(assembled_items) / NULLIF(SUM(picking_seconds) / 3600.0, 0)
+    label: Позиций в час
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: 100.0 * (1 - SUM(replaced_items + cancelled_items) / NULLIF(SUM(ordered_items), 0))
+    label: Точность сборки, %
+    hasCustomLabel: true
+  - expressionType: SIMPLE
+    column:
+      column_name: assembly_id
+    aggregate: COUNT
+    label: Сборок
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 21331a2c-89a5-4841-ae8c-337d38a43cb7
+uuid: b7273bde-0254-4e1e-b8b6-9d236ee1773b
+version: 1.0.0

@@ -1,0 +1,30 @@
+query (
+  $shop_id: Int!
+  $type: String!
+  $page: Int
+  $first: Int
+) {
+  shop_stop_list_products(
+    shop_id: $shop_id
+    type: $type
+    page: $page
+    first: $first
+  ) {
+    data {
+      id
+      articul
+      title
+      categories {
+        title
+      }
+      hidden_at
+      pickup_only_at
+    }
+    paginatorInfo {
+      total
+      currentPage
+      lastPage
+      perPage
+    }
+  }
+}

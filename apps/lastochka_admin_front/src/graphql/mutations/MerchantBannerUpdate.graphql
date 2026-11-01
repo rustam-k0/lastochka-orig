@@ -1,0 +1,30 @@
+mutation (
+  $id: Int!
+  $title: String
+  $link_type: MerchantBannerLinkType
+  $product_id: Int
+  $category_id: Int
+  $display_category_id: Int
+  $position: Int
+  $is_active: Boolean
+  $image: ImgInput
+  $custom_checkboxes: String
+) {
+  merchantBannerUpdate(
+    id: $id
+    input: {
+      title: $title
+      link_type: $link_type
+      product_id: $product_id
+      category_id: $category_id
+      display_category_id: $display_category_id
+      position: $position
+      is_active: $is_active
+      image: $image
+      custom_checkboxes: $custom_checkboxes
+    }
+  ) {
+    id
+    title
+  }
+}

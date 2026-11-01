@@ -1,0 +1,62 @@
+<template>
+  <main class="page--main replace-reason-create-page">
+    <BreadcrumbsComponent :breadcrumbs="breadcrumbs" />
+    <div class="replace-reason-create-page__header">
+      <h2>Создание причины замены</h2>
+    </div>
+
+    <div class="replace-reason-create-page__content">
+      <ReplaceReasonForm @success="handleSuccess" @cancel="handleCancel" />
+    </div>
+  </main>
+</template>
+
+<script>
+import BreadcrumbsComponent from "@/components/BreadcrumbsComponent.vue";
+import ReplaceReasonForm from "./components/ReplaceReasonForm.vue";
+
+export default {
+  name: "ReplaceReasonCreatePage",
+  components: {
+    BreadcrumbsComponent,
+    ReplaceReasonForm,
+  },
+  data() {
+    return {
+      breadcrumbs: [
+        { to: { name: "replace-reasons" }, title: "Причины замены" },
+        { title: "Создание" },
+      ],
+    };
+  },
+  methods: {
+    handleSuccess() {
+      this.$router.push({ name: "replace-reasons" });
+    },
+    handleCancel() {
+      this.$router.push({ name: "replace-reasons" });
+    },
+  },
+};
+</script>
+
+<style lang="stylus">
+.replace-reason-create-page {
+  &__header {
+    margin-bottom 24px
+
+    h2 {
+      font-size 1.5rem
+      font-weight 600
+      color var(--dark)
+    }
+  }
+
+  &__content {
+    background var(--white)
+    border-radius 12px
+    border 1px solid var(--gray-dark)
+    padding 32px
+  }
+}
+</style>

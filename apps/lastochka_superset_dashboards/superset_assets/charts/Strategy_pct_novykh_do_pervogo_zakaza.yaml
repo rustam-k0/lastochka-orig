@@ -1,0 +1,32 @@
+# Вкладка «Стратегия». Технические health-метрики: % новых пользователей,
+# дошедших до первого заказа (по когорте месяца регистрации). Линия по
+# времени - echarts_timeseries_line (не путать с KPI-карточкой без оси).
+#
+# ИСПРАВЛЕНО (ревью-находка): groupby по first_order_store_id убран. Разрез
+# по магазину физически невырожен - у НЕ конвертнувшихся пользователей
+# (orders_cnt=0) магазина первого заказа нет вообще (LEFT JOIN даёт NULL), а
+# у конвертнувшихся он всегда есть. Поэтому группа "магазин X" всегда
+# показывала бы 100% (в ней только конвертнувшиеся), а группа NULL - всегда
+# 0% (в ней только неконвертнувшиеся): не честная per-store конверсия, а
+# артефакт группировки. Метрика оставлена только по когорте месяца
+# регистрации (без разреза по магазину).
+slice_name: '% новых пользователей, дошедших до первого заказа (по когорте регистрации)'
+viz_type: echarts_timeseries_line
+params:
+  viz_type: echarts_timeseries_line
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(CASE WHEN orders_cnt > 0 THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(user_id), 0)
+    label: '% дошедших до первого заказа'
+    hasCustomLabel: true
+  groupby: []
+  x_axis: registered_at
+  time_grain_sqla: P1M
+  adhoc_filters: []
+  row_limit: 10000
+  comparison_type: values
+  x_axis_sort_asc: true
+  y_axis_format: SMART_NUMBER
+dataset_uuid: 56007c07-7755-49d0-a46c-16b7b3b28d97
+uuid: 52910b87-6322-4d4d-9792-2ad5ff5876b7
+version: 1.0.0

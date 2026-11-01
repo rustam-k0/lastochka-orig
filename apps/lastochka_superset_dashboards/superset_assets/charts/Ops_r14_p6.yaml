@@ -1,0 +1,48 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Клиенты и изменение RFM
+description: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: raw
+  all_columns:
+  - client_id
+  - a_segment
+  - segment
+  - transition_kind
+  - a_rfm_scores
+  - rfm_scores
+  - a_monetary_365
+  - monetary_365
+  - last_order_at
+  - shop_name
+  - segment_action
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: last_order_at
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: false
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  column_config:
+    a_monetary_365:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    monetary_365:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+  order_by_cols:
+  - '["monetary_365", false]'
+cache_timeout: null
+dataset_uuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+uuid: e68b0b64-8c6d-58d3-821c-ea57c9628277
+version: 1.0.0

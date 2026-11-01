@@ -1,0 +1,6 @@
+mutation OrderPickupConfirm($id: ID!) {
+    OrderPickupConfirm(id: $id) {
+        code
+        message
+    }
+}

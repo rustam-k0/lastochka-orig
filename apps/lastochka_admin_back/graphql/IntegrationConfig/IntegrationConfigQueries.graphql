@@ -1,0 +1,13 @@
+extend type Query {
+  integrationConfigs(shop_id: Int): [IntegrationConfig!]!
+    @field(resolver: "App\\GraphQL\\Queries\\IntegrationConfig\\IntegrationConfigQueries@configs")
+    @guard
+
+  integrationConfig(type: String!, shop_id: Int): IntegrationConfig
+    @field(resolver: "App\\GraphQL\\Queries\\IntegrationConfig\\IntegrationConfigQueries@config")
+    @guard
+
+  integrationRegistry: [IntegrationTypeDescriptor!]!
+    @field(resolver: "App\\GraphQL\\Queries\\IntegrationConfig\\IntegrationConfigQueries@registry")
+    @guard
+}

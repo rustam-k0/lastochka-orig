@@ -1,0 +1,14 @@
+extend type Mutation {
+  OrderGoToNextStep(
+    "ID заказа"
+    id:Int
+    "ID сборщика (нужно, отправлять если текущий статус - новый)"
+    collector_id:Int
+    "ID курьера (нужно, отправлять если текущий статус - собран)"
+    courier_id:Int
+  ):DefaultResponse @field(resolver: "Order\\OrderGoToNextStep")
+  @validator(class: "Order\\OrderGoToNextStepValidator")
+  @guard(with: ["api"])
+  @orderAction(key: "change_status")
+}
+

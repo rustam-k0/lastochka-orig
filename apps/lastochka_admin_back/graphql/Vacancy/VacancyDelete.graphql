@@ -1,0 +1,8 @@
+extend type Mutation {
+  "Удаление вакансии (soft delete). Опубликованную вакансию можно удалить сразу."
+  VacancyDelete(
+    "ID вакансии"
+    id: Int!
+  ): DefaultResponse @field(resolver: "Vacancy\\VacancyDelete")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "vacancies")
+}

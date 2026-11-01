@@ -1,0 +1,1 @@
+.faq-form{display:flex;flex-direction:column;gap:20px;max-width:640px}.faq-form__loading{display:flex;justify-content:center;padding:32px}.faq-form__checkbox{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:.875rem;color:var(--dark)}.faq-form__checkbox input{width:18px;height:18px;cursor:pointer}.faq-form__actions{display:flex;gap:12px;margin-top:8px}

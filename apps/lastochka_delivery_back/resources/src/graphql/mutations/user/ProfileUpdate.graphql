@@ -1,0 +1,12 @@
+mutation  (
+$name: String
+$email: String
+) {
+UserProfileEdit(
+name: $name
+email: $email
+) {
+code message
+ }
+
+ }

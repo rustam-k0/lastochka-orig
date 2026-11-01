@@ -1,0 +1,28 @@
+type OperatingCost {
+  "ID"
+  id: Int
+  "ID магазина (null = вся сеть)"
+  shop_id: Int
+  "Магазин"
+  shop: Shop @belongsTo
+  "Категория расхода: rent | payroll | marketing | other"
+  category: String
+  "Тип правила: fixed_amount | pct_of_revenue"
+  rule_type: String
+  "Сумма ₽ либо доля % (по rule_type)"
+  value: Float
+  "Начало действия"
+  period_start: Date
+  "Конец действия (null = бессрочно)"
+  period_end: Date
+  "Комментарий"
+  comment: String
+  "Активно"
+  is_active: Boolean
+}
+
+extend type Query {
+  "Правила операционных расходов (для аналитики и CRUD-страницы)"
+  admin_operating_costs(shop_id: Int @eq): [OperatingCost!]!
+    @all(scopes: ["ordered"]) @guard @can(ability: "onlyAdmin", model: "Admin")
+}

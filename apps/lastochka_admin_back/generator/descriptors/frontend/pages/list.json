@@ -1,0 +1,86 @@
+{
+  "type": "list",
+  "name": "Test",
+  "title": "Тест",
+  "pagination": true,
+  "action": {
+    "type": "modal",
+    "modalName": "HomeModal",
+    "title": "Показать модалку"
+  },
+  "changeStatus": [
+    "delete", "hide"
+  ],
+  "initialSorting": {
+    "column": "updated_at",
+    "by": "DESC"
+  },
+  "graphql": {
+    "get": {
+      "name": "join_data",
+      "type": "query",
+      "variables": [
+        {
+          "name": "first",
+          "type": "Int!"
+        },
+        {
+          "name": "page",
+          "type": "Int!"
+        },
+        {
+          "name": "ordering",
+          "type": "[DefaultOrdering]"
+        }
+      ],
+      "body": {
+        "data": {
+          "id": true,
+          "title": true,
+          "updated_at": true,
+          "status": {
+            "id": true,
+            "name": true,
+            "code": true,
+            "table_name": true
+          }
+        },
+        "paginatorInfo": {
+          "total": true
+        }
+      }
+    }
+  },
+  "columns": [
+    {
+      "label": "Заголовок",
+      "field": "title",
+      "type": "string"
+    },
+    {
+      "label": "Тип",
+      "field": "type",
+      "type": "join",
+      "joinName": "status",
+      "joinField": "name"
+    },
+    {
+      "label": "Статус",
+      "field": "status",
+      "type": "join",
+      "joinName": "status",
+      "joinField": "name"
+    },
+    {
+      "label": "Дата",
+      "type": "date",
+      "field": "updated_at"
+    },
+    {
+      "width": "200px",
+      "sortable": false,
+      "type": "actions",
+      "field": "actions"
+    }
+  ]
+}

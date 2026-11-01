@@ -1,0 +1,6 @@
+mutation AttributeUpdate($id: Int!, $title: String!, $code: String!, $description: String, $type_id: Int, $category_type_id: Int, $is_default: Boolean, $values: [AttributeValueInput]) {
+  AttributeUpdate(id: $id, title: $title, code: $code, description: $description, type_id: $type_id, category_type_id: $category_type_id, is_default: $is_default, values: $values) {
+    code
+    message
+  }
+}

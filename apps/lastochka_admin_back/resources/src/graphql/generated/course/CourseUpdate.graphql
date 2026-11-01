@@ -1,0 +1,9 @@
+mutation (
+  $first: Int!, $page: Int, $ordering: [DefaultOrdering], 
+) {
+  CourseUpdate(
+    first: $first, page: $page, ordering: $ordering, 
+  ) {
+    code message 
+  }
+}

@@ -1,0 +1,23 @@
+query AttributeFamiliesPaginate($first: Int, $page: Int) {
+  attribute_families_paginate(first: $first, page: $page) {
+    data {
+      id
+      title
+      code
+      is_system
+      position
+      attributes {
+        id
+        attribute {
+          id
+          title
+        }
+      }
+    }
+    paginatorInfo {
+      currentPage
+      lastPage
+      total
+    }
+  }
+}

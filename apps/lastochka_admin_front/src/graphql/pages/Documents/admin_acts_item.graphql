@@ -1,0 +1,19 @@
+query (
+  $id: Int,
+  $footer: Boolean,
+  $header: Boolean,
+  $for_customers: Boolean,
+  $company: Boolean,
+  $partners: Boolean
+) {
+  admin_acts_item(header: $header, footer: $footer, id: $id, company: $company, for_customers: $for_customers, partners: $partners) {
+    id
+    title
+    header
+    footer
+    description
+    for_customers
+    company
+    partners
+  }
+}

@@ -1,0 +1,22 @@
+slice_name: 'Факт vs цель: Конверсия корзина -> заказ %'
+viz_type: gauge_chart
+params:
+  viz_type: gauge_chart
+  metric:
+    expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN event_type = 'order.created' THEN session_id
+      END) * 100.0 / NULLIF(COUNT(DISTINCT CASE WHEN event_type = 'cart.item_added'
+      THEN session_id END), 0)
+    label: Конверсия, %
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters: []
+  row_limit: 10
+  start_angle: 225
+  end_angle: -45
+  min_val: 0
+  max_val: 100
+  value_formatter: '{value}'
+dataset_uuid: 162bb79b-22a4-4bf5-878a-e0e2908e62b8
+uuid: 8b481f94-80c5-4526-aae5-623be3f046dc
+version: 1.0.0

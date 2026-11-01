@@ -1,0 +1,23 @@
+extend type Mutation {
+  "Обновление страницы"
+  PageUpdate(
+    "ID страницы"
+    id: Int!
+    "Код страницы. У системной страницы изменению не подлежит"
+    slug: String
+    "Название страницы"
+    title: String
+    "Содержимое: EditorJS-документ в виде JSON-строки"
+    content: String
+    "SEO-заголовок"
+    meta_title: String
+    "SEO-описание"
+    meta_description: String
+    "Порядок отображения"
+    position: Int
+    "Статус публикации"
+    is_published: Boolean
+  ): Page! @field(resolver: "Page\\PageUpdate")
+  @validator(class: "Page\\PageUpdateValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "pages")
+}

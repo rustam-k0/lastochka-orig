@@ -1,0 +1,69 @@
+# Вкладка «Стратегия» (по магазину). Клиентский датасет на грануляре 'один
+# пользователь = одна строка': дата регистрации, магазин/витрина первого
+# заказа, дата первого заказа, число заказов. Имя датасета verbatim из
+# BUILD_PLAN. Потребители: «Hero-KPI: Клиенты в собственной базе», «Технические
+# health-метрики: % новых пользователей, дошедших до первого заказа».
+# Источник: djami_store_copy (db2, MySQL).
+#
+# ИСПРАВЛЕНО против допущений BUILD_PLAN (docs/conversion-rules.md):
+#   Правило 7 - BUILD_PLAN использовал `LEFT JOIN LATERAL (...) ON TRUE`
+#     (синтаксис PostgreSQL) -> переписано на ROW_NUMBER() OVER (PARTITION BY
+#     user_id ORDER BY created_at ASC) + WHERE rn = 1 (MySQL 8, тот же приём,
+#     что и в store_client_base_reach.yaml).
+#   Правило 9 - добавлен u.deleted_at IS NULL и deleted_at IS NULL в
+#     подзапросах orders (SoftDeletes подтверждены в обеих таблицах).
+#
+# ДОПУЩЕНИЯ BUILD_PLAN (не опровергнуты схемой): (1) users.created_at = дата
+# регистрации; (2) у users нет собственного store_id, 'магазин клиента' =
+# магазин его первого заказа (приближение для мультистор-покупателей, тот же
+# компромисс что в store_client_base_reach.yaml).
+#
+# Проверено на dev (SELECT-прогон перед записью YAML): 36 активных
+# пользователей, orders_cnt от 0 (нет заказов) до 7, первый заказ проставлен
+# не всем - НЕ пусто. Активация по когортам (registered_at по месяцам):
+# 2026-02 2/2, 2026-03 3/7, 2026-04 3/7, 2026-05 1/2, 2026-06 1/13,
+# 2026-07 0/5 - РЕАЛЬНЫЕ, разные по месяцам значения (не константа).
+#
+# ВАЖНО (ревью-находка, зафиксировано в фиксе чарта): разрез по магазину
+# (first_order_store_id) невозможен для метрики "% дошедших до первого
+# заказа" - у незаказавших пользователей (orders_cnt=0) магазина первого
+# заказа нет вообще (fo.store_id всегда NULL после LEFT JOIN), значение
+# проставлено только конвертнувшимся. Group by first_order_store_id
+# вырождает метрику: группа с магазином = 100% (там только конвертнувшиеся),
+# NULL-группа = 0% (там только неконвертнувшиеся) - не честная per-store
+# конверсия, а артефакт. Колонка first_order_store_id пригодна для других
+# срезов (например "клиенты в собственной базе по магазину"), но НЕ для
+# конверсии в первый заказ.
+table_name: store_customers_fact
+main_dttm_col: registered_at
+database_uuid: 22c13af4-950d-4550-9f16-1617f4df8d2f
+schema: null
+sql: |
+  SELECT
+      u.id                                       AS user_id,
+      u.created_at                                AS registered_at,
+      fo.store_id                                 AS first_order_store_id,
+      fo.order_created_at                         AS first_order_at,
+      COALESCE(oc.orders_cnt, 0)                  AS orders_cnt
+  FROM users u
+  LEFT JOIN (
+      SELECT store_id, user_id, order_created_at
+      FROM (
+          SELECT o.store_id, o.user_id, o.created_at AS order_created_at,
+                 ROW_NUMBER() OVER (PARTITION BY o.user_id ORDER BY o.created_at ASC) AS rn
+          FROM orders o
+          WHERE o.deleted_at IS NULL
+      ) ranked
+      WHERE rn = 1
+  ) fo ON fo.user_id = u.id
+  LEFT JOIN (
+      SELECT user_id, COUNT(*) AS orders_cnt
+      FROM orders
+      WHERE deleted_at IS NULL
+      GROUP BY user_id
+  ) oc ON oc.user_id = u.id
+  WHERE u.deleted_at IS NULL
+uuid: 56007c07-7755-49d0-a46c-16b7b3b28d97
+columns: []
+metrics: []
+version: 1.0.0

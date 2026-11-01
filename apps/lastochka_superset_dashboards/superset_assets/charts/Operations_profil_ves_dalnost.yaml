@@ -1,0 +1,46 @@
+# Вкладка «Операции». BUILD_PLAN статус: blocked ("Профиль «вес x дальность»
+# (по фактическому виду транспорта)" - в схеме нет расстояния доставки на
+# заказ и нет фактического транспорта курьера, orders.shipping_method - это
+# способ доставки own_courier/cdek/russian_post, не транспорт).
+#
+# ВРЕМЕННАЯ ЗАМЕНА (предложена в самом BUILD_PLAN, секция "Заблокированные
+# виджеты"): bubble-чарт по shipping_method вместо дальности/транспорта,
+# явно подписан "приближение" в заголовке. viz_type "bubble" - легаси
+# NVD3-чарт Superset (deprecated с 3.0, но функционален в 6.1.0, других
+# builtin-скаттеров с произвольными X/Y-метриками без time-axis нет).
+# Требует 3 РАЗНЫЕ метрики (валидация Superset: x/y/size).
+#
+# ПРОВЕРЕНО на dev: shipping_method на 100% orders = 'own_courier' (115/115
+# родительских заказов) - cdek/russian_post ни разу не встретились. Чарт
+# построен корректно, но даст ОДНУ точку (bubble) на dev - это честная
+# картина текущих данных проекта (ещё не используются альтернативные способы
+# доставки), не ошибка SQL/конфигурации.
+slice_name: Профиль «вес x способ доставки» (приближение, не дальность)
+viz_type: bubble
+params:
+  viz_type: bubble
+  entity: shipping_method
+  x:
+    expressionType: SQL
+    sqlExpression: AVG(total_weight)
+    label: Средний вес заказа, г
+    hasCustomLabel: true
+  y:
+    expressionType: SIMPLE
+    column:
+      column_name: order_id
+    aggregate: COUNT_DISTINCT
+    label: Кол-во заказов
+    hasCustomLabel: true
+  size:
+    expressionType: SQL
+    sqlExpression: AVG(delivery_minutes)
+    label: Среднее время доставки, мин
+    hasCustomLabel: true
+  adhoc_filters: []
+  limit: 100
+  show_legend: true
+  y_axis_format: SMART_NUMBER
+dataset_uuid: 60d644ba-11b3-4618-868e-b9ab46707bf0
+uuid: 4a4eb853-37a2-4a03-92d8-ad1c50e26aea
+version: 1.0.0

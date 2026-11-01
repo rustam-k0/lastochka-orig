@@ -1,0 +1,17 @@
+type Preorder {
+  id: Int!
+  client_id: Int
+  product_id: Int
+  shop_id: Int
+  client: Client @belongsTo
+  product: Product @belongsTo
+  shop: Shop @belongsTo
+  full_name: String!
+  phone: String!
+  email: String
+  quantity: Int!
+  comment: String
+  status: String!
+  created_at: DateTime
+  updated_at: DateTime
+}

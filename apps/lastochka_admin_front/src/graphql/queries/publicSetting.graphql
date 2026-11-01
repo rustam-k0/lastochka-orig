@@ -1,0 +1,8 @@
+query PublicSetting($key: String!) {
+    publicSetting(key: $key) {
+        id
+        key
+        value
+        type
+    }
+}

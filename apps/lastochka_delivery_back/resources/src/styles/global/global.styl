@@ -1,0 +1,243 @@
+*
+  margin 0
+  padding 0
+  box-sizing border-box
+  min-height 0
+  font-family $font_regular
+  min-width 0
+
+html, .root
+  font-size 14px
+  line-height 26px
+
+  +below(480px)
+    font-size 12px
+
+html
+body
+  margin 0
+  padding 0
+  color $dark
+  background $gray
+  scrollbar-width thin
+  scrollbar-color $main_color $gray
+
+  &::-webkit-scrollbar
+    width 8px
+    height 8px
+
+  &::-webkit-scrollbar-track
+    background $gray
+
+  &::-webkit-scrollbar-thumb
+    background-color $main_color
+    border-radius 3px
+    border 1px solid $gray
+
+ul
+ol
+  list-style none
+
+a
+  color $dark
+  text-decoration none
+  position relative
+  border-bottom 1px solid transparent
+  transition all 0.2s
+
+  &:after
+    left inherit
+    right 50%
+
+  &:hover
+  &:focus
+    text-decoration none
+    color darken($main_color, 20%)
+    border-color transparent
+
+  &:focus
+    outline none
+
+  &:focus
+  &:active
+    text-decoration none
+
+::selection
+  background darken($main_color, 20%)
+  color $white
+  text-shadow none
+
+::-moz-selection
+  background darken($main_color, 20%)
+  color $white
+  text-shadow none
+
+h1
+h2
+h3
+h4
+h5
+h6
+  font-family $font_bold
+  font-weight normal
+  line-height normal
+  margin-top 30px
+  margin-bottom 30px
+
+  &:first-child
+    margin-top 0
+
+h1
+  font-size 3em
+  +below(480px)
+    font-size 2em
+
+h2
+  font-size 2em
+
+  +below(480px)
+    font-size 1.8em
+
+h3
+  font-size 1.625em
+
+  +below(480px)
+    font-size 1.425em
+
+h4
+  font-size 1.425em
+
+  +below(480px)
+    font-size 1.225em
+
+h5
+  font-size 1.225em
+
+  +below(480px)
+    font-size 1.125em
+
+h6
+  font-size 1.125em
+  +below(480px)
+    font-size 1em
+
+b
+strong
+dt
+  font-family $font_bold
+  font-weight normal
+  line-height normal
+
+i
+em
+  font-weight normal
+
+  &:before
+    margin 0
+    width auto
+
+pre
+code
+  margin 0
+  border none
+  background none
+
+p
+  margin-bottom 15px
+
+  &:last-child
+    margin-bottom 0
+
+img
+  vertical-align middle
+  width 100%
+  height auto
+  max-width 100%
+
+  &[data-src]
+  &[data-srcset]
+    display block
+    min-height 1px
+
+/*************details**************/
+details
+  margin-bottom 30px
+  background $gray
+  border-radius 10px
+
+  summary
+    background $gray
+    font-family $font_bold
+    padding 10px
+    border-top-right-radius 10px
+    border-top-left-radius 10px
+    cursor pointer
+
+  > div
+    padding 30px
+
+  input
+  textarea
+  select
+    background $white
+    border 1px solid $white
+    margin-bottom 15px
+
+  textarea
+    width 100%
+
+  select
+    appearance none
+    -moz-appearance none
+    -webkit-appearance none
+    border-radius 10px
+    margin 0 0 15px
+    border 1px solid $white
+    padding 10px 40px 10px 10px
+    background-image linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%)
+    background-position calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px)
+    background-size 5px 5px, 5px 5px
+    background-repeat no-repeat
+
+  label
+    display block
+    margin-bottom 5px
+    font-family $font_bold
+
+/*********Table*************/
+table:not(.tc-table)
+  width 100%
+  border-collapse collapse
+  border 1px solid rgba($main_color, .1)
+
+  thead
+    tr
+      background $gray
+      border: 1px solid $main_color;
+
+      th
+        padding 12px
+        text-align left
+
+  tbody
+    tr
+      border-bottom 1px solid $gray
+      transition 0.2s
+
+      &:last-child
+        border-bottom none
+
+      td
+        vertical-align middle
+
+      &:hover
+        background alpha($gray, 30%)
+        transition 0.2s
+
+/**********Fieldset**********/
+fieldset
+  legend
+    padding 15px 0
+
+.cdx-search-field
+  flex-shrink 0

@@ -1,0 +1,13 @@
+type OneCShopSummary {
+  shop: Shop!
+  has_config: Boolean!
+  is_active: Boolean!
+  last_exchange_at: String
+  has_errors: Boolean!
+}
+
+extend type Query {
+  oneCShopsSummary: [OneCShopSummary!]!
+    @field(resolver: "App\\GraphQL\\Queries\\IntegrationConfig\\OneCShopsSummaryQuery")
+    @guard
+}

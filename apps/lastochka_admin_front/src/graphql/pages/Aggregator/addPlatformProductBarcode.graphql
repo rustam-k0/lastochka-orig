@@ -1,0 +1,10 @@
+mutation ($platformProductId: Int!, $ean: String!) {
+  addPlatformProductBarcode(platformProductId: $platformProductId, ean: $ean) {
+    id
+    barcodes {
+      id
+      ean
+      is_primary
+    }
+  }
+}

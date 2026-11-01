@@ -1,0 +1,52 @@
+# Вкладка «Маркетинг / CRM» (по магазину). Все зарегистрированные покупатели
+# storefront с 'домашним' магазином (store_id первого заказа) - прокси-метрика
+# 'охват базы' для CRM-виджетов (единственный источник, где вообще есть
+# зарегистрированные клиенты - никакой push-подписки в схеме нет). Имя
+# датасета verbatim из BUILD_PLAN. Единственный потребитель - «Stat: Охват
+# базы». Источник: djami_store_copy (db2, MySQL).
+#
+# ИСПРАВЛЕНО против допущений BUILD_PLAN (docs/conversion-rules.md):
+#   Правило 7 - BUILD_PLAN писал `DISTINCT ON (user_id) ... ORDER BY user_id,
+#     created_at ASC` (синтаксис PostgreSQL, ДОПУЩЕНИЕ №2 в notes BUILD_PLAN
+#     "движок djami_store_copy - PostgreSQL (не подтверждено)" - подтверждено
+#     обратное: это MySQL 8) -> переписано на ROW_NUMBER() OVER (PARTITION BY
+#     user_id ORDER BY created_at ASC) + WHERE rn = 1 (MySQL 8.0.45 оконные
+#     функции поддерживает, подтверждено на dev).
+#   Правило 9 - добавлен u.deleted_at IS NULL (users поддерживает SoftDeletes
+#     в db2, подтверждено information_schema).
+#
+# ДОПУЩЕНИЕ BUILD_PLAN №1 (users не хранит собственный store_id, 'домашний'
+# магазин = store_id первого заказа) - подтверждено реальной схемой orders
+# (store_id NOT NULL на заказе, но не на пользователе). Пользователи без
+# единого заказа -> store_id = NULL (видны в общем охвате, не фильтруются по
+# конкретному магазину) - это ожидаемое поведение LEFT JOIN, не баг.
+#
+# Проверено на dev (SELECT-прогон перед записью YAML): 36 активных
+# пользователей (41 всего, 5 soft-deleted), store_id проставлен не всем (есть
+# пользователи без единого заказа - NULL) - НЕ пусто.
+table_name: store_client_base_reach
+main_dttm_col: registered_at
+database_uuid: 22c13af4-950d-4550-9f16-1617f4df8d2f
+schema: null
+sql: |
+  SELECT
+      u.id                                          AS user_id,
+      u.created_at                                  AS registered_at,
+      u.bonus_balance                                AS bonus_balance,
+      fo.store_id                                    AS store_id
+  FROM users u
+  LEFT JOIN (
+      SELECT store_id, user_id
+      FROM (
+          SELECT o.store_id, o.user_id,
+                 ROW_NUMBER() OVER (PARTITION BY o.user_id ORDER BY o.created_at ASC) AS rn
+          FROM orders o
+          WHERE o.deleted_at IS NULL
+      ) ranked
+      WHERE rn = 1
+  ) fo ON fo.user_id = u.id
+  WHERE u.deleted_at IS NULL
+uuid: 2ec80a66-02fa-4382-aacf-e08ea6d08fcc
+columns: []
+metrics: []
+version: 1.0.0

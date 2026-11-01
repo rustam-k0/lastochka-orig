@@ -1,0 +1,24 @@
+extend type Mutation {
+  "Создание отзыва на товар"
+  createProductReview(input: CreateProductReviewInput! @spread): ProductReview!
+    @field(resolver: "ProductReview\\CreateProductReview")
+    @validator(class: "ProductReview\\CreateProductReviewValidator")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "product-reviews")
+}
+
+input CreateProductReviewInput {
+  "ID магазина"
+  shop_id: Int!
+  "ID товара"
+  product_id: Int!
+  "Оценка 1-5"
+  rating: Int!
+  "Текст отзыва"
+  description: String
+  "Опубликован"
+  is_published: Boolean
+  "Имя автора"
+  author_name: String
+  "Телефон автора"
+  author_phone: String
+}

@@ -1,0 +1,41 @@
+type ProductGroupFilter {
+  id: Int!
+  "Название фильтра (Комната, Площадь, Стиль)"
+  name: String!
+  "Порядок отображения"
+  position: Int
+  "Активен"
+  is_active: Boolean
+  "Значения фильтра"
+  values: [ProductGroupFilterValue!]! @hasMany
+  created_at: String
+  updated_at: String
+}
+
+type ProductGroupFilterValue {
+  id: Int!
+  "ID фильтра"
+  product_group_filter_id: Int!
+  "Фильтр"
+  filter: ProductGroupFilter @belongsTo(relation: "filter")
+  "Значение (Ванная, 8 м², Минимализм)"
+  value: String!
+  "Картинка"
+  image_path: String
+  "Порядок"
+  position: Int
+  "Активен"
+  is_active: Boolean
+  created_at: String
+  updated_at: String
+}
+
+extend type Query {
+  "Все фильтры комплексных решений"
+  productGroupFilters: [ProductGroupFilter!]! @all
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Один фильтр по ID"
+  productGroupFilter(id: Int! @eq): ProductGroupFilter @find
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+}

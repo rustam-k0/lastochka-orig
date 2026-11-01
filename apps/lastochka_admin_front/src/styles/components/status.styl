@@ -1,0 +1,118 @@
+.status {
+  display inline-flex
+  justify-content center
+  align-items center
+  gap 4px
+  border-radius 6px
+  padding 4px
+  font-weight 500
+  line-height 16px
+  font-size 0.75rem
+  transition .2s
+
+
+  & .icon {
+    width 16px
+    height 16px
+  }
+
+  &--green {
+    //border 1px solid var(--gray-dark)
+    background var(--green-light)
+    color var(--green)
+
+    & .icon svg path {
+      fill var(--green)
+    }
+  }
+
+  &--gray {
+    //border 1px solid var(--gray-dark)
+    background var(--gray-light-2)
+    color var(--gray-dark-2)
+
+    & .icon svg path {
+      fill var(--gray-dark-2)
+    }
+  }
+
+  &--blue {
+    //border 1px solid var(--gray-dark)
+    background var(--blue-light)
+    color var(--blue-dark)
+
+    & .icon svg path {
+      fill var(--blue-dark)
+    }
+  }
+
+  &--purple {
+    //border 1px solid var(--gray-dark)
+    background var(--purple-light)
+    color var(--purple)
+
+    & .icon svg path {
+      fill var(--purple)
+    }
+  }
+
+  &--orange {
+    //border 1px solid var(--gray-dark)
+    background var(--orange-50)
+    color var(--orange-600)
+
+    & .icon svg path {
+      fill var(--orange)
+    }
+  }
+
+  &--red {
+    //border 1px solid var(--gray-dark)
+    background var(--red-light-3)
+    color var(--red-dark)
+
+    & .icon svg path {
+      fill var(--red-dark)
+    }
+  }
+
+  &--red-light {
+    //border 1px solid var(--gray-dark)
+    background var(--red-25)
+    color var(--red-400)
+
+    & .icon svg path {
+      fill var(--red-400)
+    }
+  }
+
+  &--yellow {
+    //border 1px solid var(--gray-dark)
+    background var(--yellow-light)
+    color var(--yellow-dark)
+
+    & .icon svg path {
+      fill var(--yellow-dark)
+    }
+  }
+
+  &--pink {
+    //border 1px solid var(--gray-dark)
+    background var(--violet-red-50)
+    color var(--pink)
+
+    & .icon svg path {
+      fill var(--pink)
+    }
+  }
+
+  &--heavy {
+    background rgba(255, 149, 0, 0.15)
+    color #ff9500
+
+    & .icon svg path {
+      fill #ff9500
+    }
+  }
+
+}

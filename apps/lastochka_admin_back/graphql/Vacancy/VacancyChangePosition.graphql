@@ -1,0 +1,10 @@
+extend type Mutation {
+  "Изменение порядка отображения вакансии"
+  VacancyChangePosition(
+    "ID вакансии"
+    id: Int!
+    "Новая позиция"
+    position: Int!
+  ): Vacancy! @field(resolver: "Vacancy\\VacancyChangePosition")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "vacancies")
+}

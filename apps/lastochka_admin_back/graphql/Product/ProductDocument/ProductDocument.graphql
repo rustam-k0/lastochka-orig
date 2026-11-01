@@ -1,0 +1,18 @@
+type ProductDocument {
+  id: Int
+  product_id: Int
+  "Название документа"
+  title: String
+  "Путь к файлу"
+  file_path: String
+  "Оригинальное имя файла"
+  original_name: String
+  "MIME тип"
+  mime_type: String
+  "Размер файла"
+  size: String
+  "Группа документа (Документация к товару, Разрешительная документация и т.д.)"
+  group: String
+  "Позиция для сортировки"
+  position: Int
+}

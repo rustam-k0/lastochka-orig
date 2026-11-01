@@ -1,0 +1,24 @@
+"Уведомление об акции"
+type Announcement {
+  "ID"
+  id: Int!
+  "Заголовок уведомления"
+  title: String!
+  "Краткое описание"
+  short_description: String!
+  "Полное описание"
+  description: String!
+  "ID промокода"
+  promocode_id: Int
+  "Активность"
+  is_active: Boolean!
+  "Дата создания"
+  created_at: DateTime
+  "Дата обновления"
+  updated_at: DateTime
+
+  "Связанный промокод"
+  promocode: MerchantPromocode @belongsTo
+  "Изображение уведомления"
+  image: Img @hasOne(relation: "image")
+}

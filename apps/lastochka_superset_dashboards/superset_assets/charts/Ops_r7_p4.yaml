@@ -1,0 +1,49 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Базовые начисления по зонам
+description: С учётом версий тарифов
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: zone_tariff_label
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(courier_earning)
+    label: Начислено, ₽
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: accepted_at
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: is_delivered = 1
+  orientation: horizontal
+  row_limit: 60
+  show_value: true
+  show_legend: false
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: $,.0f
+  truncateYAxis: false
+  zoomable: false
+  rich_tooltip: true
+  stack: null
+  only_total: true
+  comparison_type: values
+  order_desc: true
+  x_axis_title: ''
+  x_axis_title_margin: 30
+  y_axis_title: Начислено, ₽
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  x_axis_sort: Начислено, ₽
+  x_axis_sort_asc: true
+cache_timeout: null
+dataset_uuid: 36a9cf7e-b5c0-4c80-a5be-79eaa4d1810a
+uuid: 6462d5f2-4c2b-5f8a-98e8-291c6cd8b3b7
+version: 1.0.0

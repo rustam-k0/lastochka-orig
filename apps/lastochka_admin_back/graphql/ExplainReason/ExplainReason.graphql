@@ -1,0 +1,24 @@
+type ExplainReason {
+  "ID"
+  id: Int
+  "Причина уточнения"
+  title: String
+  "Активна"
+  is_active: Boolean
+  "Позиция сортировки"
+  position: Int
+}
+
+extend type Query {
+  "Список активных причин уточнения товара"
+  explainReasons: [ExplainReason!]! @all(scopes: ["active"])
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Все причины уточнения (включая неактивные)"
+  allExplainReasons: [ExplainReason!]! @all
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Причина уточнения по ID"
+  explainReason(id: Int! @eq): ExplainReason @find
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+}

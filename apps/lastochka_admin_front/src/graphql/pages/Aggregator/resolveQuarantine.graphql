@@ -1,0 +1,6 @@
+mutation ($id: Int!) {
+  resolveQuarantine(id: $id) {
+    code
+    message
+  }
+}

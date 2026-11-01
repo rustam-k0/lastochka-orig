@@ -1,0 +1,140 @@
+# Вкладка «Клиенты» (по магазину). Клиентская грануляция (1 строка = клиент x
+# магазин): RFM-скоры (терцили NTILE(3) в разрезе shop_id), сегмент 3x3,
+# признак оттока (окно 90 дней). Потребители: LTV, «Средний межзаказный
+# интервал», «Отток клиентов %», «RFM-сегментация» (table). Имя датасета
+# verbatim из BUILD_PLAN.
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1 - o.paid = true (BUILD_PLAN) -> o.status_id = 5. RFM должен
+#     считать РЕАЛЬНЫЕ покупки (доставленные заказы), а не "paid" - на dev
+#     из 115 родительских заказов paid=true почти никогда для оплаты при
+#     получении (тот же паттерн, что и во всех money_*/djami_orders_core
+#     датасетах). statuses НЕ джойнится (таблица пустая).
+#   Правило 2 - WHERE o.parent_order_id IS NULL уже был в BUILD_PLAN (сохранён
+#     как есть) - без него monetary задваивался бы дочерними заказами сплита.
+#   Правило 7 - MySQL (BUILD_PLAN писал в Postgres-синтаксисе):
+#     CURRENT_DATE - MAX(order_dt)::date          -> DATEDIFF(CURDATE(), MAX(order_dt))
+#     EXTRACT(EPOCH FROM (a - b)) / 86400.0        -> TIMESTAMPDIFF(SECOND, b, a) / 86400.0
+#     CURRENT_DATE - INTERVAL '90 days'            -> DATE_SUB(CURDATE(), INTERVAL 90 DAY)
+#     WITH/NTILE(3) OVER(...)/LAG(...) OVER(...) - без изменений, MySQL 8.0.46
+#     (подтверждено SELECT VERSION() на dev) поддерживает оконные функции и CTE.
+#
+# ДОПУЩЕНИЕ (не опровергнуто схемой, как и в BUILD_PLAN): стандартная RFM 3x3
+# таксономия сегментов/рекомендаций - разумный дефолт, имена/пороги/тексты
+# рекомендаций требуют согласования с маркетингом.
+#
+# Проверено на dev (SELECT-прогон перед записью YAML): 6 клиентов с
+# status_id=5-заказами (все shop_id=4), NTILE(3) и LAG отрабатывают корректно,
+# avg_inter_order_days = NULL для клиентов с 1 заказом (ожидаемо - LAG-окно
+# требует минимум 2 заказа), eligible_for_churn_90d = 0 у всех (max recency
+# на dev - 38 дней, ни один клиент не "старше" 90-дневного окна) - это
+# ПУСТО-ОЖИДАЕМО для churn-метрики на текущих тестовых данных, не баг.
+table_name: courier_client_shop_rfm
+main_dttm_col: last_order_dt
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  WITH paid_orders AS (
+      SELECT
+          o.client_id,
+          o.shop_id,
+          o.id AS order_id,
+          o.amount,
+          o.created_at AS order_dt
+      FROM orders o
+      WHERE o.status_id = 5
+        AND o.parent_order_id IS NULL
+  ),
+  client_agg AS (
+      SELECT
+          client_id,
+          shop_id,
+          COUNT(DISTINCT order_id)                     AS orders_count,
+          SUM(amount)                                   AS monetary,
+          MIN(order_dt)                                 AS first_order_dt,
+          MAX(order_dt)                                 AS last_order_dt,
+          DATEDIFF(CURDATE(), MAX(order_dt))            AS recency_days
+      FROM paid_orders
+      GROUP BY client_id, shop_id
+  ),
+  gaps AS (
+      SELECT
+          client_id, shop_id, order_dt,
+          LAG(order_dt) OVER (PARTITION BY client_id, shop_id ORDER BY order_dt) AS prev_order_dt
+      FROM paid_orders
+  ),
+  client_intervals AS (
+      SELECT
+          client_id, shop_id,
+          AVG(TIMESTAMPDIFF(SECOND, prev_order_dt, order_dt) / 86400.0) AS avg_inter_order_days
+      FROM gaps
+      WHERE prev_order_dt IS NOT NULL
+      GROUP BY client_id, shop_id
+  ),
+  scored AS (
+      SELECT
+          a.client_id,
+          a.shop_id,
+          a.orders_count,
+          a.monetary,
+          a.first_order_dt,
+          a.last_order_dt,
+          a.recency_days,
+          i.avg_inter_order_days,
+          NTILE(3) OVER (PARTITION BY a.shop_id ORDER BY a.recency_days DESC) AS r_score,
+          NTILE(3) OVER (PARTITION BY a.shop_id ORDER BY a.orders_count ASC)  AS f_score,
+          NTILE(3) OVER (PARTITION BY a.shop_id ORDER BY a.monetary ASC)      AS m_score,
+          CASE WHEN a.first_order_dt < DATE_SUB(CURDATE(), INTERVAL 90 DAY) THEN 1 ELSE 0 END AS eligible_for_churn_90d,
+          CASE WHEN a.last_order_dt < DATE_SUB(CURDATE(), INTERVAL 90 DAY)
+                AND a.first_order_dt < DATE_SUB(CURDATE(), INTERVAL 90 DAY) THEN 1 ELSE 0 END AS is_churned_90d
+      FROM client_agg a
+      LEFT JOIN client_intervals i ON i.client_id = a.client_id AND i.shop_id = a.shop_id
+  ),
+  final AS (
+      SELECT
+          *,
+          NTILE(3) OVER (PARTITION BY shop_id ORDER BY (f_score + m_score) ASC) AS fm_score
+      FROM scored
+  )
+  SELECT
+      client_id,
+      shop_id,
+      orders_count,
+      monetary,
+      first_order_dt,
+      last_order_dt,
+      recency_days,
+      avg_inter_order_days,
+      r_score,
+      f_score,
+      m_score,
+      fm_score,
+      eligible_for_churn_90d,
+      is_churned_90d,
+      CASE
+          WHEN r_score = 3 AND fm_score = 3 THEN 'Чемпионы'
+          WHEN r_score = 3 AND fm_score = 2 THEN 'Лояльные'
+          WHEN r_score = 3 AND fm_score = 1 THEN 'Новые/перспективные'
+          WHEN r_score = 2 AND fm_score = 3 THEN 'Нуждаются во внимании'
+          WHEN r_score = 2 AND fm_score = 2 THEN 'Потенциально лояльные'
+          WHEN r_score = 2 AND fm_score = 1 THEN 'Начинающие засыпать'
+          WHEN r_score = 1 AND fm_score = 3 THEN 'В зоне риска'
+          WHEN r_score = 1 AND fm_score = 2 THEN 'Не могу их потерять'
+          WHEN r_score = 1 AND fm_score = 1 THEN 'Спящие/потерянные'
+      END AS rfm_segment_name,
+      CASE
+          WHEN r_score = 3 AND fm_score = 3 THEN 'Программа лояльности, ранний доступ к новинкам'
+          WHEN r_score = 3 AND fm_score = 2 THEN 'Апсейл, персональные рекомендации'
+          WHEN r_score = 3 AND fm_score = 1 THEN 'Онбординг, бонус за 2-й заказ'
+          WHEN r_score = 2 AND fm_score = 3 THEN 'Персональный оффер, выяснить причину снижения частоты'
+          WHEN r_score = 2 AND fm_score = 2 THEN 'Напоминания, кросс-категорийные рекомендации'
+          WHEN r_score = 2 AND fm_score = 1 THEN 'Активирующая акция, опрос удовлетворённости'
+          WHEN r_score = 1 AND fm_score = 3 THEN 'Win-back с высоким приоритетом, персональный звонок'
+          WHEN r_score = 1 AND fm_score = 2 THEN 'Win-back рассылка со скидкой'
+          WHEN r_score = 1 AND fm_score = 1 THEN 'Низкий приоритет / массовая реактивационная рассылка'
+      END AS recommended_action
+  FROM final
+uuid: fd10cf03-92d6-4378-b53d-89f878a9beff
+columns: []
+metrics: []
+version: 1.0.0

@@ -1,0 +1,37 @@
+query (
+  $first: Int
+  $page: Int
+  $ordering: [DefaultOrdering]
+  $search: String
+) {
+  users_paginate (
+    first: $first
+    page: $page
+    ordering: $ordering
+    search: $search
+  ) {
+    data {
+      id
+      name
+      surname
+      patronymic
+      phone
+      email
+      shops {
+        id
+        shop {
+          id
+          title
+        }
+      }
+      roles {
+        id
+        name_ru
+      }
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}
+

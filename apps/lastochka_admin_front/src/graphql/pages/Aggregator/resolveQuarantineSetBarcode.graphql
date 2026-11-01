@@ -1,0 +1,6 @@
+mutation ($id: Int!, $ean: String!) {
+  resolveQuarantineSetBarcode(id: $id, ean: $ean) {
+    code
+    message
+  }
+}

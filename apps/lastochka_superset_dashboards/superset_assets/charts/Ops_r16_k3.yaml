@@ -1,0 +1,30 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Средняя дальность
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: AVG(CASE WHEN is_delivered = 1 THEN distance_km END)
+    label: Средняя дальность
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: ordered_at
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: point_type = 'Доставка'
+  subheader: Магазин → адрес, км
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',.1f'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 0ad2564e-be6f-53d8-a3ed-a4902d02ed88
+uuid: ac9e5e85-cc1b-587a-b61a-40dca97c5158
+version: 1.0.0

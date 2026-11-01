@@ -1,0 +1,12 @@
+extend type Mutation {
+  "Удаление уведомления об акции"
+  announcementDelete(
+    "ID уведомления"
+    id: Int!
+    "Таблица"
+    table: String! = "announcements"
+  ): DefaultResponse
+    @field(resolver: "EntityDelete")
+    @validator(class: "EntityDeleteValidator")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "announcements")
+}

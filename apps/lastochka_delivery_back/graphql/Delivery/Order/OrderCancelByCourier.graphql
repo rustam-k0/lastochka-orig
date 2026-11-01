@@ -1,0 +1,11 @@
+extend type Mutation {
+  "Курьер отменяет заказ (клиент не вышел на связь и не принял заказ)"
+  OrderCancelByCourier(
+    "ID записи в таблице delivery_orders"
+    delivery_order_id: Int!
+    "Причина отмены"
+    reason: String
+  ): DefaultResponse @guard @field(resolver: "Order\\OrderCancelByCourier")
+  @validator(class: "Order\\OrderCancelByCourierValidator")
+  @can(model: "Admin", ability: "driverOnShift")
+}

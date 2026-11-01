@@ -1,0 +1,34 @@
+extend type Mutation {
+  "Создание акции мерчанта"
+  createMerchantSale(input: CreateMerchantSaleInput! @spread): MerchantSale!
+    @field(resolver: "MerchantSale\\CreateMerchantSale")
+    @validator(class: "MerchantSale\\CreateMerchantSaleValidator")
+    @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-sales")
+}
+
+input CreateMerchantSaleInput {
+  "Название акции"
+  title: String!
+  "Описание акции"
+  description: String
+  "ID магазина (легаси: одна акция в одном магазине)"
+  shop_id: Int
+  "ID магазинов — создать акцию сразу в нескольких магазинах (MID-237)"
+  shop_ids: [Int!]
+  "Создать акцию во всех магазинах сети"
+  all_shops: Boolean
+  "Процент скидки (1-100)"
+  discount_percent: Int!
+  "Дата и время начала акции"
+  starts_at: DateTime!
+  "Дата и время окончания акции"
+  ends_at: DateTime!
+  "Активность"
+  is_active: Boolean
+  "ID товаров в акции"
+  product_ids: [Int!]!
+  "Изображение акции"
+  image: ImgInput
+  "Динамические чекбоксы (JSON-строка map field => bool)"
+  custom_checkboxes: String
+}

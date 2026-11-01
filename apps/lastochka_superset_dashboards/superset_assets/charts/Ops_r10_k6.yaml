@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Частота покупок
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: COUNT(*) / NULLIF(COUNT(DISTINCT client_id), 0)
+    label: Частота покупок
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: ordered_at
+  subheader: Заказов на покупателя
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',.2f'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 989670f4-23de-57af-8bc4-4041a638c7a1
+uuid: 39ae989d-ea94-5d07-9760-09ee496976e7
+version: 1.0.0

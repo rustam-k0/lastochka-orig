@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Среднее время
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: AVG(delivery_minutes)
+    label: Среднее время
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: accepted_at
+  subheader: Принял → выдал, мин
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',.1f'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 36a9cf7e-b5c0-4c80-a5be-79eaa4d1810a
+uuid: f2fb00ba-b3b7-5979-983f-50b3f70cee9b
+version: 1.0.0

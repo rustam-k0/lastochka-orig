@@ -1,0 +1,11 @@
+type ShopCategory {
+  id:Int
+  title:String
+  products:[Product]
+  has_children:Boolean
+}
+
+type ChildShopCategory {
+  id:Int
+  title:String
+}

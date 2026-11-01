@@ -1,0 +1,49 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Распределение оценок
+description: Количество отзывов · без неоценённых
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: rating_label
+  metrics:
+  - expressionType: SQL
+    sqlExpression: COUNT(*)
+    label: Отзывов
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: reviewed_at
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: rating IS NOT NULL
+  orientation: horizontal
+  row_limit: 1000
+  show_value: true
+  show_legend: false
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: ',d'
+  truncateYAxis: false
+  zoomable: false
+  rich_tooltip: true
+  stack: null
+  only_total: true
+  comparison_type: values
+  order_desc: true
+  x_axis_title: ''
+  x_axis_title_margin: 30
+  y_axis_title: Отзывов
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  x_axis_sort: rating_label
+  x_axis_sort_asc: true
+cache_timeout: null
+dataset_uuid: 061549f5-8d56-5036-baed-944599899194
+uuid: b4ed2c11-ca34-5e70-a926-804ba2221770
+version: 1.0.0

@@ -1,0 +1,33 @@
+extend type Mutation {
+  "Создать/Редактировать зону доставки магазина"
+  ShopZoneCreteOrUpdate(
+    "ID зоны"
+    id:Int
+    "Название зоны"
+    name:String
+    "Файл geojson с координатами"
+    geojson:Upload
+    "ID магазина"
+    shop_id:Int
+    "Цена доставки"
+    delivery_price:Int
+    "Минимальная сумма для заказа"
+    min_order_price:Int
+    "Сумма заказа для бесплатной доставки; игнорируется, если передан delivery_price_ranges (порог вычисляется из ступеней)"
+    free_delivery_from:Int
+    "Стоимость доставки от суммы заказа (MID-280): полный список ступеней, [] = без ступеней; не передано/null = прежнее поведение по free_delivery_from"
+    delivery_price_ranges:[ShopZoneDeliveryPriceRangeInput!]
+    "Тип доставки (own/yandex)"
+    delivery_type:String
+    "Активна ли зона; null/не передано = не менять (тумблер строки — через ShopZoneSetActive)"
+    is_active:Boolean
+    "Стоимость сборки заказа для зоны; не передано = не менять, null = очистить"
+    assembly_price:Int
+    "Дни недели доставки (ISO 1=Пн … 7=Вс); пусто/не передано = все дни"
+    delivery_days:[Int!]
+    "Минимальное время до доставки в минутах (lead time от «сейчас»); пусто/0 = без задержки"
+    delivery_lead_minutes:Int
+  ):DefaultResponse  @field(resolver:"ShopZone\\ShopZoneCreteOrUpdate")
+  @validator(class:"ShopZone\\ShopZoneCreteOrUpdateValidator")
+  @guard @can(model: "Admin",ability: "onlyAdmin")
+}

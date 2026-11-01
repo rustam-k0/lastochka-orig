@@ -1,0 +1,5 @@
+type AdditionalParameter {
+  id:Int
+  title:String
+  value:String
+}

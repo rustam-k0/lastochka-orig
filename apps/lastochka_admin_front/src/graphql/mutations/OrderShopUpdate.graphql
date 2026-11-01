@@ -1,0 +1,6 @@
+mutation($order_id: Int, $shop_id: Int) {
+  OrderShopUpdate(order_id: $order_id, shop_id: $shop_id) {
+    code
+    message
+  }
+}

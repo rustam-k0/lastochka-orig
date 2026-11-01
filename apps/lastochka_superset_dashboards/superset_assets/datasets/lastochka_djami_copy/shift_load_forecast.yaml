@@ -1,0 +1,44 @@
+# Вкладка «Операции» (по магазину). Историческая средняя нагрузка по слоту
+# "день недели x час" - НАИВНЫЙ baseline (среднее по прошлым неделям), не
+# ML-прогноз (в схеме нет модели прогнозирования). Потребитель: «Прогноз
+# нагрузки на смену».
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 2 - WHERE o.parent_order_id IS NULL (считаем реальные заказы,
+#     без задвоения сплитом).
+#   Правило 7 - MySQL: DAYOFWEEK(x)-1 вместо EXTRACT(DOW FROM x);
+#     DATE_SUB(DATE(x), INTERVAL WEEKDAY(x) DAY) вместо DATE_TRUNC('week', x)
+#     (WEEKDAY() в MySQL возвращает 0=пн..6=вс - выражение даёт понедельник
+#     недели заказа, аналог Postgres date_trunc('week', ...)).
+table_name: shift_load_forecast
+main_dttm_col: last_observed_week
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  WITH weekly_counts AS (
+      SELECT
+          o.shop_id                                    AS shop_id,
+          DAYOFWEEK(o.created_at) - 1                   AS order_dow,
+          HOUR(o.created_at)                            AS order_hour,
+          DATE_SUB(DATE(o.created_at), INTERVAL WEEKDAY(o.created_at) DAY) AS order_week,
+          COUNT(*)                                       AS orders_count
+      FROM orders o
+      WHERE o.parent_order_id IS NULL
+      GROUP BY
+          o.shop_id,
+          DAYOFWEEK(o.created_at) - 1,
+          HOUR(o.created_at),
+          DATE_SUB(DATE(o.created_at), INTERVAL WEEKDAY(o.created_at) DAY)
+  )
+  SELECT
+      shop_id,
+      order_dow,
+      order_hour,
+      AVG(orders_count)   AS avg_orders_expected,
+      MAX(order_week)      AS last_observed_week
+  FROM weekly_counts
+  GROUP BY shop_id, order_dow, order_hour
+uuid: 38b16e0a-76c9-4228-a23c-3b142e010a23
+columns: []
+metrics: []
+version: 1.0.0

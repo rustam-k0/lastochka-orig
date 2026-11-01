@@ -1,0 +1,178 @@
+# Вкладка «Лента сигналов» (по сети). Единственный потребитель - «Полная
+# хронологическая лента сигналов по всей сети». Имя датасета verbatim из
+# BUILD_PLAN, SQL ПОЛНОСТЬЮ ПЕРЕСТРОЕН.
+#
+# ПОЛНОСТЬЮ ПЕРЕСТРОЕНО относительно BUILD_PLAN: исходный SQL был "движком
+# правил" c 4 захардкоженными CTE (assembly_delay/delivery_delay/
+# cancellation_spike/shift_late) поверх analytics_events (db3) с
+# НЕПОДТВЕРЖДЁННЫМИ ключами payload (stage, to_status, eta_at, scheduled_at) и
+# захардкоженными в SQL порогами - сам документ признавал, что "в проде такие
+# пороги обычно хотят конфигурировать без правки SQL (нужна отдельная таблица
+# alert_rules)". Именно эта таблица (shop_alert_rules) теперь СУЩЕСТВУЕТ
+# (правило 8, снято с blocked) - датасет полностью переведён на неё.
+#
+# ИСПРАВЛЕНО (ревью Task 8, round 2): #4 gross_margin_pct использовал
+# oi.cancel_reason_id IS NULL как фильтр реализованных позиций, а
+# network_orders_fact/shop_traffic_light - более строгий oi.status_id <> 3 -
+# один metric_key считался двумя разными способами (базы отличаются ~12% на
+# dev). Унифицировано на oi.status_id <> 3 в обеих ногах (revenue и COGS) -
+# см. docs/conversion-rules.md правило 3, docs/metric-keys.md #4.
+#
+# Задача (правило 11 - контракт docs/metric-keys.md): фактические метрики за
+# последние 30 дней по КАЖДОМУ магазину для КАЖДОГО из 9 канонических
+# metric_key, сматченные с активными shop_alert_rules по metric_key (+
+# shop_id-scope: NULL = правило действует на всю сеть), CASE по comparison
+# (lt/lte/gt/gte), оставлены ТОЛЬКО строки, где условие правила нарушено.
+# Формулы факта - буквально из docs/metric-keys.md (##1-9), без изменений.
+#
+# ВАЖНО: окно «последние 30 дней» ЗАШИТО в SQL (задача явно требует
+# фиксированное окно, а не нативный date-range фильтр) - датасет НЕ является
+# order-level virtual table (в отличие от остальных датасетов проекта),
+# main_dttm_col отсутствует по смыслу (это не событийный поток, а regenerated
+# snapshot). shop_id остаётся колонкой для нативного фильтра дашборда
+# (правило 12).
+#
+# Единственный источник - db1 (lastochka_djami_copy): ВСЕ 9 формул
+# metric-keys.md явно посчитаны на db1 (см. шапку файла) - в отличие от
+# BUILD_PLAN'овской версии, здесь НЕТ кросс-DB ограничения (BUILD_PLAN сам
+# отмечал невозможность объединить денежные и analytics-сигналы в одном
+# датасете - при переходе на shop_alert_rules этой проблемы больше нет,
+# т.к. вся сеть сигналов однодатабазная).
+#
+# repeat_rate_pct - client_order_seq считается по ПОЛНОЙ истории заказов
+# клиента (parent_orders CTE, БЕЗ фильтра по 30 дням), затем в 30-дневное окно
+# берутся только заказы, попавшие в него (window_orders) - строго по формуле
+# metric-keys.md #5 ("окно по client_id по ВСЕЙ истории").
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1, 2, 3, 4, 7, 9, 11 - все формулы 1:1 из metric-keys.md (которые
+#   уже содержат применённые правила 1-4).
+#
+# ПУСТО-ОЖИДАЕМО: проверено на dev перед пушем - shop_alert_rules ПУСТА (0
+# строк, справочник заполнит Task 10) -> JOIN к shop_alert_rules даёт 0 строк.
+# Это КОРРЕКТНОЕ поведение (без правил не с чем сравнивать факт), не баг.
+# Проверено также, что base-часть (parent_orders/window_orders) реально видит
+# данные: 52 заказа в последних 30 днях для shop_id=4 - когда Task 10 заведёт
+# shop_alert_rules, датасет сразу начнёт выдавать строки без правок SQL.
+table_name: network_signal_feed
+main_dttm_col: null
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  WITH parent_orders AS (
+      SELECT
+          o.id, o.shop_id, o.client_id, o.created_at, o.status_id, o.type_id,
+          o.finished_at, o.slot_end_date, o.amount,
+          ROW_NUMBER() OVER (PARTITION BY o.client_id ORDER BY o.created_at) AS client_order_seq
+      FROM orders o
+      WHERE o.parent_order_id IS NULL
+  ),
+  window_orders AS (
+      SELECT * FROM parent_orders
+      WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+  ),
+  shop_metric_revenue AS (
+      SELECT shop_id, 'revenue' AS metric_key,
+             SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END) AS metric_value
+      FROM window_orders GROUP BY shop_id
+  ),
+  shop_metric_orders_count AS (
+      SELECT shop_id, 'orders_count' AS metric_key,
+             COUNT(DISTINCT CASE WHEN status_id = 5 THEN id END) AS metric_value
+      FROM window_orders GROUP BY shop_id
+  ),
+  shop_metric_avg_check AS (
+      SELECT shop_id, 'avg_check' AS metric_key,
+             SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END)
+               / NULLIF(COUNT(DISTINCT CASE WHEN status_id = 5 THEN id END), 0) AS metric_value
+      FROM window_orders GROUP BY shop_id
+  ),
+  shop_metric_gross_margin AS (
+      -- metric-keys.md #4: реализованная выручка позиций = price_during_order*quantity
+      -- (у oi.price смешанная семантика - ни SUM(price), ни SUM(price*quantity));
+      -- реализованные позиции: status_id=5 AND oi.status_id <> 3 (канонический фильтр
+      -- реализованных позиций, round 2 - отменённые собранные позиции не дают ни
+      -- выручки, ни COGS; symmetric revenue/COGS leg, см. conversion-rules.md правило 3).
+      SELECT wo.shop_id, 'gross_margin_pct' AS metric_key,
+             (SUM(CASE WHEN wo.status_id = 5 AND oi.status_id <> 3 THEN oi.price_during_order * oi.quantity ELSE 0 END)
+                - SUM(CASE WHEN wo.status_id = 5 AND oi.status_id <> 3 THEN oi.quantity * p.cost_price ELSE 0 END))
+               * 100.0
+               / NULLIF(SUM(CASE WHEN wo.status_id = 5 AND oi.status_id <> 3 THEN oi.price_during_order * oi.quantity ELSE 0 END), 0) AS metric_value
+      FROM window_orders wo
+      JOIN order_items oi ON oi.order_id = wo.id
+      LEFT JOIN products p ON p.id = oi.product_id
+      GROUP BY wo.shop_id
+  ),
+  shop_metric_repeat_rate AS (
+      SELECT shop_id, 'repeat_rate_pct' AS metric_key,
+             COUNT(DISTINCT CASE WHEN client_order_seq > 1 THEN client_id END) * 100.0
+               / NULLIF(COUNT(DISTINCT client_id), 0) AS metric_value
+      FROM window_orders GROUP BY shop_id
+  ),
+  shop_metric_sla AS (
+      SELECT shop_id, 'sla_on_time_pct' AS metric_key,
+             AVG(CASE
+                   WHEN type_id IN (2,5) AND finished_at IS NOT NULL AND slot_end_date IS NOT NULL
+                     THEN CASE WHEN finished_at <= slot_end_date THEN 1 ELSE 0 END
+                 END) * 100.0 AS metric_value
+      FROM window_orders GROUP BY shop_id
+  ),
+  shop_metric_cancel AS (
+      SELECT shop_id, 'cancel_rate_pct' AS metric_key,
+             SUM(CASE WHEN status_id = 6 THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0) AS metric_value
+      FROM window_orders GROUP BY shop_id
+  ),
+  shop_metric_assembly_accuracy AS (
+      SELECT wo.shop_id, 'assembly_accuracy_pct' AS metric_key,
+             100.0 - (SUM(CASE WHEN oi.replace_reason_id IS NOT NULL OR oi.cancel_reason_id IS NOT NULL THEN 1 ELSE 0 END) * 100.0
+                       / NULLIF(COUNT(*), 0)) AS metric_value
+      FROM window_orders wo
+      JOIN order_items oi ON oi.order_id = wo.id
+      GROUP BY wo.shop_id
+  ),
+  shop_metric_revenue_per_sqm AS (
+      SELECT wo.shop_id, 'revenue_per_sqm' AS metric_key,
+             SUM(CASE WHEN wo.status_id = 5 THEN wo.amount ELSE 0 END) / NULLIF(sh.area_sqm, 0) AS metric_value
+      FROM window_orders wo
+      JOIN shops sh ON sh.id = wo.shop_id AND sh.deleted_at IS NULL
+      GROUP BY wo.shop_id, sh.area_sqm
+  ),
+  shop_metrics AS (
+      SELECT * FROM shop_metric_revenue
+      UNION ALL SELECT * FROM shop_metric_orders_count
+      UNION ALL SELECT * FROM shop_metric_avg_check
+      UNION ALL SELECT * FROM shop_metric_gross_margin
+      UNION ALL SELECT * FROM shop_metric_repeat_rate
+      UNION ALL SELECT * FROM shop_metric_sla
+      UNION ALL SELECT * FROM shop_metric_cancel
+      UNION ALL SELECT * FROM shop_metric_assembly_accuracy
+      UNION ALL SELECT * FROM shop_metric_revenue_per_sqm
+  )
+  SELECT
+      sm.shop_id                             AS shop_id,
+      sh.title                                AS shop_name,
+      sar.id                                  AS rule_id,
+      sar.name                                AS rule_name,
+      sm.metric_key                           AS metric_key,
+      sm.metric_value                         AS metric_value,
+      sar.comparison                          AS comparison,
+      sar.threshold_value                     AS threshold_value,
+      sar.recommended_action_text             AS recommended_action_text
+  FROM shop_metrics sm
+  JOIN shops sh ON sh.id = sm.shop_id AND sh.deleted_at IS NULL
+  JOIN shop_alert_rules sar
+      ON sar.metric_key = sm.metric_key
+     AND sar.deleted_at IS NULL AND sar.is_active = 1
+     AND (sar.shop_id = sm.shop_id OR sar.shop_id IS NULL)
+  WHERE sm.metric_value IS NOT NULL
+    AND (
+      (sar.comparison = 'lt'  AND sm.metric_value <  sar.threshold_value) OR
+      (sar.comparison = 'lte' AND sm.metric_value <= sar.threshold_value) OR
+      (sar.comparison = 'gt'  AND sm.metric_value >  sar.threshold_value) OR
+      (sar.comparison = 'gte' AND sm.metric_value >= sar.threshold_value)
+    )
+  ORDER BY sar.position ASC, sh.title ASC
+uuid: bdd36567-498d-4faa-b19b-9556550abdb3
+columns: []
+metrics: []
+version: 1.0.0

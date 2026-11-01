@@ -1,0 +1,18 @@
+query GetAnnouncements($first: Int, $page: Int, $is_active: Boolean) {
+  announcements(first: $first, page: $page, is_active: $is_active) {
+    data {
+      id
+      title
+      description
+      is_active
+      created_at
+      updated_at
+    }
+    paginatorInfo {
+      currentPage
+      lastPage
+      hasMorePages
+      total
+    }
+  }
+}

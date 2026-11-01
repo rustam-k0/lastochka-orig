@@ -1,0 +1,49 @@
+{
+  "name": "ProductGroup",
+  "migration_create": false,
+  "columns": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "comment":"Название"
+    },
+    {
+      "name": "type_id",
+      "type": "integer",
+      "required":true,
+      "comment": "Тип (Выбор товаров, ссылка с фильтром)"
+    },
+    {
+      "name": "products",
+      "type": "manyToMany",
+      "related": "Product",
+      "comment": "Товары"
+    },
+    {
+      "name": "filters",
+      "type": "text",
+      "comment": "фильтры товаров в формате JSON"
+    },
+    {
+      "name": "stocks_sets",
+      "type": "boolean",
+      "comment": "Между акциями и наборами"
+    },
+    {
+      "name": "sets_cooking",
+      "type": "boolean",
+      "comment": "Межу наборами и кулинарией"
+    },
+    {
+      "name": "after_cooking",
+      "type": "boolean",
+      "comment": "После кулинарии"
+    },
+    {
+      "name": "position",
+      "type": "integer",
+      "comment": "Позиция"
+    }
+  ]
+}

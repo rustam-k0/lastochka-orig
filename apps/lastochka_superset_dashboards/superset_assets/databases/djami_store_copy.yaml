@@ -1,0 +1,17 @@
+# Подключение db2 - storefront (копия). УЖЕ существует в Superset (uuid-match, пароль из метабазы).
+database_name: Djami Store (storefront, копия)
+uuid: 22c13af4-950d-4550-9f16-1617f4df8d2f
+sqlalchemy_uri: mysql+mysqldb://superset_ro:XXXXXXXXXX@127.0.0.1:3306/djami_store_copy?charset=utf8mb4
+cache_timeout: null
+expose_in_sqllab: true
+allow_run_async: false
+allow_ctas: false
+allow_cvas: false
+allow_dml: false
+allow_file_upload: false
+extra:
+  metadata_params: {}
+  engine_params: {}
+  metadata_cache_timeout: {}
+  schemas_allowed_for_file_upload: []
+version: 1.0.0

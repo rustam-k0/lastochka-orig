@@ -1,0 +1,6 @@
+mutation ($clientId: ID!, $type: String!, $amount: Int!, $comment: String!) {
+  clientBonusOperationCreate(clientId: $clientId, type: $type, amount: $amount, comment: $comment) {
+    code
+    message
+  }
+}

@@ -1,0 +1,42 @@
+extend type Mutation {
+  "Задать цену и остаток товара в магазине (сетевой каталог). Публикует офферные события price_updated/stock_updated (MID-226)"
+  ProductShopPriceSave(
+    "ID товара"
+    product_id: Int! @rules(apply: ["required", "exists:products,id"])
+    "ID магазина"
+    shop_id: Int! @rules(apply: ["required", "exists:shops,id,deleted_at,NULL"])
+    "Цена за единицу, > 0"
+    price: Float! @rules(apply: ["required", "numeric", "gt:0"])
+    "Остаток целым числом, >= 0. Устарело: обрезает дробный остаток весовых, используйте stock_quantity"
+    quantity: Int @rules(apply: ["nullable", "required_without:stock_quantity", "integer", "min:0"])
+    "Остаток в базовой единице товара (кг/л/шт), дробный, >= 0. Приоритетнее quantity"
+    stock_quantity: Float @rules(apply: ["nullable", "required_without:quantity", "numeric", "min:0"])
+    "Лесенка «цены от количества» магазина (MID-308). Не передан или null: не трогаем; []: очистить"
+    price_tiers: [PriceTierInput!] @rulesForArray(apply: ["nullable", "App\\Rules\\PriceTiersRule"])
+  ): Price @field(resolver: "Product\\ProductShopPriceSave")
+  @can(ability: "onlyShop",model: "Shop") @section(key: "products")
+
+  "Убрать товар из магазина: снять оффер (публикует price=0/quantity=0) (MID-226)"
+  ProductShopPriceDelete(
+    "ID товара"
+    product_id: Int! @rules(apply: ["required", "exists:products,id"])
+    "ID магазина"
+    shop_id: Int! @rules(apply: ["required", "exists:shops,id"])
+  ): Boolean @field(resolver: "Product\\ProductShopPriceDelete")
+  @can(ability: "onlyShop",model: "Shop") @section(key: "products")
+
+  "Задать цену и остаток товара во всех активных магазинах сети. Возвращает число магазинов (MID-226)"
+  ProductShopPricesApplyToAll(
+    "ID товара"
+    product_id: Int! @rules(apply: ["required", "exists:products,id"])
+    "Цена за единицу, > 0"
+    price: Float! @rules(apply: ["required", "numeric", "gt:0"])
+    "Остаток целым числом, >= 0. Устарело: обрезает дробный остаток весовых, используйте stock_quantity"
+    quantity: Int @rules(apply: ["nullable", "required_without:stock_quantity", "integer", "min:0"])
+    "Остаток в базовой единице товара (кг/л/шт), дробный, >= 0. Приоритетнее quantity"
+    stock_quantity: Float @rules(apply: ["nullable", "required_without:quantity", "numeric", "min:0"])
+    "Лесенка «цены от количества» магазина (MID-308). Не передан или null: не трогаем; []: очистить"
+    price_tiers: [PriceTierInput!] @rulesForArray(apply: ["nullable", "App\\Rules\\PriceTiersRule"])
+  ): Int @field(resolver: "Product\\ProductShopPricesApplyToAll")
+  @can(ability: "onlyShop",model: "Shop") @section(key: "products")
+}

@@ -1,0 +1,6 @@
+mutation($id: Int, $title: String, $description: String, $header: Boolean, $footer: Boolean, $for_customers: Boolean, $company: Boolean, $partners: Boolean) {
+  ActUpdate(id: $id, title: $title, footer: $footer, header: $header, description: $description, for_customers: $for_customers, company: $company, partners: $partners) {
+    message
+    code
+  }
+}

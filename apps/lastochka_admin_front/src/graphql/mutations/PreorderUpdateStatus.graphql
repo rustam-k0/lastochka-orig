@@ -1,0 +1,6 @@
+mutation PreorderUpdateStatus($id: Int!, $status: String!) {
+  PreorderUpdateStatus(id: $id, status: $status) {
+    code
+    message
+  }
+}

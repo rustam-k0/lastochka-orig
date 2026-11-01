@@ -1,0 +1,43 @@
+# Вкладка «Операции». Метрики курьеров: заказов/смену, % опозданий, км на
+# заказ - на датасете courier_performance (db3, delivery.courier_assigned/
+# finished, см. комментарий в датасете). "Км на заказ" из BUILD_PLAN был
+# помечен НЕВОЗМОЖНЫМ - разблокирован через событие delivery.distance_logged
+# (payload.distance_m, появилось с B2E-эпиком после написания BUILD_PLAN).
+# employee_id показан в СЫРОМ виде (courier_id), имя недостижимо без
+# кросс-database JOIN. Итоговая оценка - Conditional Formatting (UI, пороги
+# согласовать с заказчиком).
+#
+# ПУСТО/СКУДНО-ОЖИДАЕМО: на dev 2 delivery.finished события - таблица даст
+# 1-2 строки, distance_m заполнен только для одной из них (1 событие
+# delivery.distance_logged на весь dev).
+slice_name: Метрики курьеров
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - employee_id
+  - delivery_shift_date
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      column_name: order_id
+    aggregate: COUNT_DISTINCT
+    label: Заказов за смену
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: AVG(is_late) * 100
+    label: Доля опозданий, %
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: AVG(distance_m) / 1000.0
+    label: Км на заказ (по distance_logged)
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 30e76022-6d3e-4be3-9de0-54c266112398
+uuid: 4da2eb9e-2831-434f-b88f-a3bbc27de761
+version: 1.0.0

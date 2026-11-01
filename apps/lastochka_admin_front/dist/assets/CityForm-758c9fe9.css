@@ -1,0 +1,1 @@
+.city-form{display:flex;flex-direction:column;gap:20px;max-width:640px}.city-form__loading{display:flex;justify-content:center;padding:48px}.city-form__coordinates{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.city-form__hint{font-weight:400;font-size:.75rem;color:var(--dark-light);margin-top:-12px}.city-form__actions{display:flex;gap:12px;margin-top:8px}

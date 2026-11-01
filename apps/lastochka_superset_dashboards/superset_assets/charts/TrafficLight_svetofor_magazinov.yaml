@@ -1,0 +1,114 @@
+# Вкладка «Светофор магазинов». «1 большой table» - факт+план по 9 каноническим
+# metric_key (docs/metric-keys.md, правило 11) + операционный прокси
+# «Сигналы» (см. комментарий датасета shop_traffic_light почему это НЕ
+# дубликат network_signal_feed). План-колонки (target_*) на dev вернут NULL -
+# kpi_targets пуста, справочник заполнит Task 10; факт-колонки считаются
+# независимо и корректно.
+#
+# ЦВЕТОКОДИРОВАНИЕ (BUILD_PLAN «светофор»): Superset Table chart поддерживает
+# Conditional Formatting (Customize -> Conditional formatting) - НЕ вынесено в
+# params (непроверяемая на этом наборе данных JSON-структура, риск сломать
+# импорт неверным ключом), настраивается вручную в UI после импорта, пороги
+# по факт/план колонкам (напр. факт < план = красный) - см. отчёт Task 8.
+#
+# ИСПРАВЛЕНО (ревью Task 8, round 1): «Маржа факт, %» считалась от amount
+# (orders.amount, включает delivery/assembly, уменьшен скидками/бонусами) -
+# нарушение контракта #4. Переведена на order_line_revenue (см.
+# shop_traffic_light.yaml) = SUM(price_during_order*quantity) (status_id<>3):
+# у oi.price СМЕШАННАЯ семантика, верный итог позиции = price_during_order x
+# quantity (ни SUM(price), ни SUM(price*quantity)), см. разбор в комментарии
+# датасета. «Точность сборки факт, %» неявно наследует фикс items_cancelled_cnt
+# из датасета (без return_reason_id).
+slice_name: 'Светофор магазинов: Таблица-светофор по магазинам сети (факт vs план)'
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - shop_id
+  - shop_name
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END)
+    label: 'GMV факт, ₽'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX(target_revenue)
+    label: 'GMV план, ₽'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN status_id = 5 THEN order_id END)
+    label: 'Заказы факт, шт'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX(target_orders_count)
+    label: 'Заказы план, шт'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END) / NULLIF(COUNT(DISTINCT CASE WHEN status_id = 5 THEN order_id END), 0)
+    label: 'Средний чек факт, ₽'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX(target_avg_check)
+    label: 'Средний чек план, ₽'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: (SUM(CASE WHEN status_id = 5 THEN order_line_revenue ELSE 0 END) - SUM(CASE WHEN status_id = 5 THEN order_cogs END)) * 100.0 / NULLIF(SUM(CASE WHEN status_id = 5 THEN order_line_revenue ELSE 0 END), 0)
+    label: 'Маржа факт, %'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX(target_gross_margin_pct)
+    label: 'Маржа план, %'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(is_on_time_flag) * 100.0 / NULLIF(SUM(is_delivery_completed_flag), 0)
+    label: 'SLA факт, %'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX(target_sla_on_time_pct)
+    label: 'SLA план, %'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status_id = 6 THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0)
+    label: 'Отмены факт, %'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX(target_cancel_rate_pct)
+    label: 'Отмены план, %'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: 100.0 - (SUM(items_cancelled_cnt) + SUM(items_replaced_cnt)) * 100.0 / NULLIF(SUM(items_ordered_cnt), 0)
+    label: 'Точность сборки факт, %'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX(target_assembly_accuracy_pct)
+    label: 'Точность сборки план, %'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN client_order_seq > 1 THEN client_id END) * 100.0 / NULLIF(COUNT(DISTINCT client_id), 0)
+    label: 'Повторные клиенты факт, %'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX(target_repeat_rate_pct)
+    label: 'Повторные клиенты план, %'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END) / NULLIF(MAX(shop_area_sqm), 0)
+    label: 'Выручка/м2 факт, ₽'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX(target_revenue_per_sqm)
+    label: 'Выручка/м2 план, ₽'
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(is_late_flag) + SUM(has_fulfillment_issue_flag)
+    label: 'Сигналы (опоздания + проблемы сборки), шт'
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 7992080f-db78-413e-8fc7-17cd1b83b02e
+uuid: ab149a5a-9d70-48bb-83b1-5fabeb30342b
+version: 1.0.0

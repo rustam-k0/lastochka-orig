@@ -1,0 +1,61 @@
+# Вкладка «Стратегия» (по магазину). Заказы курьерской системы на уровне
+# строки заказа (все каналы - курьерка фулфиллит сайт/приложение,
+# маркетплейсы, телефонные заказы, признака канала в схеме нет). Имя
+# датасета verbatim из BUILD_PLAN. Потребитель - «Удельные метрики:
+# маржинальный доход на заказ». Источник: lastochka_djami_copy (db1, MySQL).
+#
+# Конверсии применены (docs/conversion-rules.md):
+#   Правило 1 - убран LEFT JOIN statuses (BUILD_PLAN джойнил `st.name AS
+#     status_name` через statuses.table_name='orders' - таблица statuses
+#     ПУСТАЯ, джойн даст NULL везде) -> статус текстом через CASE по
+#     status_id (словарь из правила 1). paid оставлен колонкой (не
+#     используется как признак выручки), реальная "доставленность" - через
+#     status_id = 5 в метрике чарта.
+#   Правило 2 - WHERE o.parent_order_id IS NULL (был в BUILD_PLAN, сохранён -
+#     без него amount задваивается дочерними заказами сплита, на dev 115 из
+#     221 заказов - родители).
+#
+# ДОПУЩЕНИЕ BUILD_PLAN (не опровергнуто схемой): orders.created_at - обычный
+# timestamp, есть и используется без оговорок.
+#
+# Проверено на dev (SELECT-прогон перед записью YAML): 115 родительских
+# заказов, 27 доставленных (status_id=5). Маржинальная метрика
+# AVG(items_subtotal - discount - assembly_cost - delivery_price) по
+# доставленным = 323.30 - РЕАЛЬНОЕ значение, не пусто (items_subtotal
+# заполнен только у 28/221 строк на dev в целом, но среди доставленных
+# заказов достаточно для ненулевого AVG).
+table_name: courier_orders_fact
+main_dttm_col: order_created_at
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: |
+  SELECT
+      o.id                                     AS order_id,
+      o.shop_id                                AS shop_id,
+      o.client_id                              AS client_id,
+      o.created_at                              AS order_created_at,
+      o.amount                                  AS amount,
+      o.items_subtotal                          AS items_subtotal,
+      o.discount                                AS discount,
+      o.delivery_price                          AS delivery_price,
+      o.assembly_cost                           AS assembly_cost,
+      o.bonus_spent                             AS bonus_spent,
+      o.bonus_earned                            AS bonus_earned,
+      o.shipping_method                         AS shipping_method,
+      o.type_id                                 AS type_id,
+      o.status_id                               AS status_id,
+      CASE o.status_id
+          WHEN 1 THEN 'Создан'  WHEN 2 THEN 'На сборке' WHEN 3 THEN 'Собран'
+          WHEN 4 THEN 'В доставке' WHEN 5 THEN 'Доставлен' WHEN 6 THEN 'Отменён'
+          WHEN 7 THEN 'Готовится' ELSE 'Неизвестно'
+      END                                        AS status_name,
+      o.paid                                     AS paid,
+      o.payment_type_id                          AS payment_type_id,
+      o.finished_at                              AS finished_at,
+      o.parent_order_id                          AS parent_order_id
+  FROM orders o
+  WHERE o.parent_order_id IS NULL
+uuid: 5f9862d0-ea63-44a6-b6ec-c4a466539a3a
+columns: []
+metrics: []
+version: 1.0.0

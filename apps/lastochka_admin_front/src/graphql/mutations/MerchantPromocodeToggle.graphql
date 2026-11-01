@@ -1,0 +1,7 @@
+mutation ($id: Int!, $is_active: Boolean!) {
+  toggleMerchantPromocode(id: $id, is_active: $is_active) {
+    id
+    is_active
+    status
+  }
+}

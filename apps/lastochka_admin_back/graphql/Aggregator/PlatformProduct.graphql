@@ -1,0 +1,81 @@
+"Платформенная карточка товара (aggregator-режим, FOODLINK-10874)"
+type PlatformProduct {
+  id: Int!
+  canonical_title: String!
+  canonical_description: String
+  canonical_image: String
+  canonical_attributes: String @method(name: "canonicalAttributesJson")
+  category_id: Int
+  measurement_unit_id: Int
+  is_active: Boolean!
+  is_curated: Boolean!
+  offers_count: Int @count(relation: "offers")
+  created_at: DateTime
+  updated_at: DateTime
+
+  "Штрихкоды товара (все, не только primary)"
+  barcodes: [PlatformProductBarcode!]! @hasMany
+
+  "Предложения магазинов-поставщиков"
+  offers: [ProductOffer!]! @hasMany
+}
+
+type PlatformProductBarcode {
+  id: Int!
+  platform_product_id: Int!
+  ean: String!
+  is_primary: Boolean!
+  source_shop_id: Int
+  created_at: DateTime
+}
+
+type ProductOffer {
+  id: Int!
+  platform_product_id: Int!
+  shop_id: Int!
+  shop_title: String
+  local_product_id: Int!
+  "Исходное название товара как пришло из 1С (id товара у поставщика = local_product_id)"
+  local_product_title: String
+  price: Int!
+  qty: Float!
+  min_qty: Float!
+  is_active: Boolean!
+  sort: Int!
+  last_sync_at: DateTime
+}
+
+"Запись карантина — товар не попал на витрину"
+type AggregatorQuarantine {
+  id: Int!
+  shop_id: Int!
+  shop_title: String
+  local_product_id: Int
+  incoming_title: String
+  reason: AggregatorQuarantineReason!
+  matched_platform_product_ids: String @method(name: "matchedIdsJson")
+  resolved_at: DateTime
+  created_at: DateTime
+}
+
+enum AggregatorQuarantineReason {
+  no_ean @enum(value: "no_ean")
+  double_match @enum(value: "double_match")
+}
+
+input PointInput {
+  latitude: Float
+  longitude: Float
+}
+
+type MergeConflict {
+  offerId: Int!
+  shopId: Int!
+  message: String!
+}
+
+type MergePreviewResult {
+  offersCount: Int!
+  stocksSum: Float!
+  conflicts: [MergeConflict!]!
+}

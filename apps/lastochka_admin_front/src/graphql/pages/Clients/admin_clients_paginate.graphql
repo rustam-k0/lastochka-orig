@@ -1,0 +1,18 @@
+query($first: Int, $page: Int, $ordering: [DefaultOrdering], $title: String, $is_b2b: Boolean) {
+  admin_clients_paginate(first: $first, page: $page, ordering: $ordering, title: $title, is_b2b: $is_b2b) {
+    data {
+      id
+      phone
+      name
+      surname
+      patronymic
+      email
+      orders_count
+      orders_amount
+      is_b2b
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}

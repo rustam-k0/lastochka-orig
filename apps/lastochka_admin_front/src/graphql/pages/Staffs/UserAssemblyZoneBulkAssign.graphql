@@ -1,0 +1,16 @@
+mutation (
+  $user_ids: [Int!]!
+  $shop_id: Int!
+  $assembly_zone_id: Int
+  $date: Date
+) {
+  UserAssemblyZoneBulkAssign(
+    user_ids: $user_ids
+    shop_id: $shop_id
+    assembly_zone_id: $assembly_zone_id
+    date: $date
+  ) {
+    code
+    message
+  }
+}

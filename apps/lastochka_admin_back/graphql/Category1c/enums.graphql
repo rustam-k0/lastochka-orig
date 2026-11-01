@@ -1,0 +1,14 @@
+"Статус batch'а синхронизации Category1c"
+enum Category1cSyncStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+"Фильтр по состоянию привязки 1С-категории к витринной"
+enum Category1cLinkedFilter {
+  LINKED
+  UNLINKED
+  ALL
+}

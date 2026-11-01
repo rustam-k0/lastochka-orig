@@ -1,0 +1,34 @@
+# Вкладка «Стратегия». Удельные метрики: выручка на сотрудника (прокси
+# 'прибыль на сотрудника' - в схеме нет COGS, только выручка). employee_cnt -
+# снимок ТЕКУЩЕЙ численности (не историческая по месяцам), поэтому в
+# знаменателе MAX(), НЕ SUM() (см. notes датасета - при SUM() по нескольким
+# месяцам штат задваивался бы).
+slice_name: 'Удельные метрики: выручка на сотрудника (прокси прибыли на сотрудника)'
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - shop_id
+  - order_month
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(revenue_total)
+    label: Выручка магазина, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: MAX(employee_cnt)
+    label: Сотрудников (курьеры+сборщики, снимок)
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(revenue_total) / NULLIF(MAX(employee_cnt), 0)
+    label: Выручка на сотрудника, ₽
+    hasCustomLabel: true
+  adhoc_filters: []
+  row_limit: 1000
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: true
+dataset_uuid: 6afbd3c1-0d1d-4db2-9883-e163eb2e0fab
+uuid: 3167d67c-1c18-4bef-8d9d-55c16ba1ba64
+version: 1.0.0

@@ -1,0 +1,276 @@
+{
+  "type": "form",
+  "name": "Course",
+  "route": "courses",
+  "editOnly": false,
+  "addName": "Добавление курса",
+  "editName": "Редактирование курса",
+  "graphql": {
+    "create": {
+      "name": "CourseCreate",
+      "type": "mutation",
+      "variables": [
+        {
+          "name": "first",
+          "type": "Int!"
+        },
+        {
+          "name": "page",
+          "type": "Int"
+        },
+        {
+          "name": "ordering",
+          "type": "[DefaultOrdering]"
+        }
+      ],
+      "body": {
+        "code": true,
+        "message": true
+      }
+    },
+    "update": {
+      "name": "CourseUpdate",
+      "type": "mutation",
+      "variables": [
+        {
+          "name": "first",
+          "type": "Int!"
+        },
+        {
+          "name": "page",
+          "type": "Int"
+        },
+        {
+          "name": "ordering",
+          "type": "[DefaultOrdering]"
+        }
+      ],
+      "body": {
+        "code": true,
+        "message": true
+      }
+    },
+    "get": {
+      "name": "admin_course",
+      "type": "query",
+      "variables": [
+        {
+          "name": "id",
+          "type": "Int!"
+        }
+      ],
+      "body": {
+        "id": true,
+        "title": true,
+        "updated_at": true,
+        "status": {
+          "id": true,
+          "name": true,
+          "code": true,
+          "table_name": true
+        }
+      }
+    },
+    "admin_courses": {
+      "independent": true,
+      "name": "admin_courses",
+      "type": "query",
+      "body": {
+        "id": true,
+        "title": true
+      }
+    }
+  },
+  "form": [
+    {
+      "field": "title",
+      "title": "Заголовок",
+      "type": "string",
+      "autofocus": true
+    },
+    {
+      "field": "price",
+      "title": "Цена",
+      "type": "string",
+      "inputType": "number",
+      "min": 0,
+      "max": 10
+    },
+    {
+      "field": "description",
+      "title": "Описание",
+      "type": "textarea",
+      "rows": 5
+    },
+    {
+      "field": "article",
+      "title": "Статья",
+      "type": "article",
+      "placeholder": "Статья"
+    },
+    {
+      "field": "head_img",
+      "title": "Главная картинка",
+      "type": "image"
+    },
+    {
+      "type": "row",
+      "fields": [
+        {
+          "field": "study_period",
+          "title": "Дата обучения",
+          "type": "date",
+          "range": true,
+          "mode": "dateTime"
+        },
+        {
+          "field": "video",
+          "title": "Видео",
+          "type": "file"
+        }
+      ]
+    },
+    {
+      "field": "modules",
+      "title": "Модули",
+      "type": "array",
+      "fields": [
+        {
+          "type": "column",
+          "fields": [
+            {
+              "field": "head_img",
+              "title": "Главная картинка",
+              "type": "image"
+            },
+            {
+              "type": "row",
+              "fields": [
+                {
+                  "field": "moduleTag",
+                  "title": "Тег модуля",
+                  "clearable": false,
+                  "labelName": "title",
+                  "idName": "id",
+                  "type": "select",
+                  "options": {
+                    "type": "array",
+                    "array": [
+                      {
+                        "id": 0,
+                        "title": "Первый элемент"
+                      },
+                      {
+                        "id": 1,
+                        "title": "Второй элемент"
+                      },
+                      {
+                        "id": 2,
+                        "title": "Третий элемент"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "field": "study_period",
+                  "title": "Дата обучения",
+                  "type": "date",
+                  "range": true,
+                  "mode": "dateTime"
+                },
+                {
+                  "field": "video",
+                  "title": "Видео",
+                  "type": "file"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "field": "modules2",
+      "title": "Модули2",
+      "type": "array",
+      "fields": [
+        {
+          "field": "head_img",
+          "title": "Главная картинка",
+          "type": "image"
+        },
+        {
+          "field": "video",
+          "title": "Видео",
+          "type": "file"
+        },
+        {
+          "type": "row",
+          "fields": [
+            {
+              "field": "article",
+              "title": "Статья",
+              "type": "article",
+              "placeholder": "Статья"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "aside": [
+    {
+      "field": "tags",
+      "title": "Теги",
+      "type": "select",
+      "multiple": true,
+      "labelName": "title",
+      "idName": "id",
+      "options": {
+        "type": "query",
+        "name": "admin_courses"
+      }
+    },
+    {
+      "field": "tag",
+      "title": "Тег",
+      "clearable": false,
+      "labelName": "title",
+      "idName": "id",
+      "type": "select",
+      "options": {
+        "type": "array",
+        "array": [
+          {
+            "id": 0,
+            "title": "Первый элемент"
+          },
+          {
+            "id": 1,
+            "title": "Второй элемент"
+          },
+          {
+            "id": 2,
+            "title": "Третий элемент"
+          }
+        ]
+      }
+    },
+    {
+      "field": "start_date",
+      "title": "Дата начала",
+      "type": "date",
+      "mode": "dateTime",
+      "placeholder": "Не выбрано"
+    },
+    {
+      "field": "published",
+      "title": "Опубликовать",
+      "type": "checkbox",
+      "default": true,
+      "receiveJoin": "status",
+      "receiveJoinParam": "code",
+      "receiveJoinParamValue": 1
+    }
+  ]
+}

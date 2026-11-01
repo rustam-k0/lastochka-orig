@@ -1,0 +1,12 @@
+extend type Query {
+  "Документы товара"
+  product_documents(
+    product_id: Int! @eq
+  ): [ProductDocument] @all(scopes: ["sorter"])
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+
+  "Уникальные группы документов (для автокомплита)"
+  product_document_groups: [String]
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+  @field(resolver: "ProductDocument\\ProductDocumentGroups")
+}

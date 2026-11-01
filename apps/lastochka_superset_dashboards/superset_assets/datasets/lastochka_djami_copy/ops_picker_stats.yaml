@@ -1,0 +1,80 @@
+# Сгенерировано scripts/ops_datasets.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками: описание правил расчёта - в генераторе.
+table_name: ops_picker_stats
+main_dttm_col: assembly_started_at
+database_uuid: 5fe2883e-9e10-44ad-8cb5-22305f923603
+schema: null
+sql: "{% set period = get_time_filter('assembly_started_at', remove_filter=True, target_type='DATETIME') %}\n{% set shops = filter_values('shop_name', remove_filter=True) %}\nWITH base AS (\n    SELECT * FROM (\nSELECT\n    CONCAT(pa.picker_id, '-', pa.order_id)          AS picker_order_key,\n    pa.order_id                                     AS order_id,\n    s.title                                         AS shop_name,\n    pa.picker_id                                    AS picker_id,\n    COALESCE(NULLIF(TRIM(CONCAT_WS(' ', u.surname, u.name)), ''), CONCAT('Сборщик #', pa.picker_id))        AS picker_name,\n    pa.started_at                                   AS assembly_started_at,\n    pa.finished_at                                  AS assembly_finished_at,\n    CASE WHEN pa.unfinished = 0 THEN 1 ELSE 0 END   AS is_finished,\n    CASE WHEN pa.unfinished = 0 AND pa.finished_at >= pa.started_at\n              AND TIMESTAMPDIFF(MINUTE, pa.started_at, pa.finished_at) <= 1440\n         THEN\
+  \ TIMESTAMPDIFF(SECOND, pa.started_at, pa.finished_at) / 60 END AS assembly_minutes,\n    CASE WHEN pa.unfinished = 0 AND TIMESTAMPDIFF(MINUTE, pa.started_at, pa.finished_at) > 1440\n         THEN 1 ELSE 0 END                          AS is_over_day,\n    pa.positions_ordered,\n    pa.positions_assembled,\n    pa.positions_replaced,\n    pa.positions_not_found,\n    CASE WHEN JSON_SEARCH(o.checkout_options, 'one', 'call_if_no_exists') IS NULL\n         THEN pa.positions_replaced ELSE 0 END      AS positions_no_offer,\n    CASE WHEN pa.positions_replaced > 0 THEN 1 ELSE 0 END AS has_replacement,\n    CASE WHEN o.status_id = 5 THEN rev.revenue END  AS order_check,\n    1.0 / COUNT(*) OVER (PARTITION BY pa.order_id)  AS order_weight,\n    rv.rating                                       AS review_rating,\n    CASE rv.error_type\n        WHEN 'shortage' THEN 'Недовоз'\n        WHEN 'wrong_item' THEN 'Пересорт'\n        WHEN 'expired' THEN 'Просрочка'\n        WHEN 'other' THEN 'Другое'\n  \
+  \  END                                             AS error_type_name,\n    CASE WHEN rv.error_type IS NOT NULL THEN 1 ELSE 0 END AS has_error,\n    CASE WHEN rv.rating <= 3 AND rv.error_type IS NULL THEN 1 ELSE 0 END AS is_low_rating_unmarked\nFROM (\n    SELECT\n        COALESCE(ao.parent_order_id, ao.id)          AS order_id,\n        a.user_id                                    AS picker_id,\n        MIN(a.created_at)                            AS started_at,\n        MAX(a.finished_at)                           AS finished_at,\n        SUM(CASE WHEN a.finished_at IS NULL THEN 1 ELSE 0 END) AS unfinished,\n        SUM(COALESCE(it.positions_ordered, 0))       AS positions_ordered,\n        SUM(COALESCE(it.positions_assembled, 0))     AS positions_assembled,\n        SUM(COALESCE(it.positions_replaced, 0))      AS positions_replaced,\n        SUM(COALESCE(it.positions_not_found, 0))     AS positions_not_found\n    FROM assemblies a\n    JOIN orders ao ON ao.id = a.order_id AND ao.deleted_at\
+  \ IS NULL\n    LEFT JOIN (\n        SELECT\n            oi.order_id,\n            COUNT(*)                                                          AS positions_ordered,\n            SUM(CASE WHEN oi.status_id <> 3 THEN 1 ELSE 0 END)                AS positions_assembled,\n            SUM(CASE WHEN oi.origin_product_id IS NOT NULL\n                      AND oi.origin_product_id <> oi.product_id THEN 1 ELSE 0 END) AS positions_replaced,\n            SUM(CASE WHEN oi.status_id = 3\n                      AND COALESCE(oi.cancel_reason_id, 0) <> 5 THEN 1 ELSE 0 END) AS positions_not_found\n        FROM order_items oi\n        WHERE oi.deleted_at IS NULL\n        GROUP BY oi.order_id\n    ) it ON it.order_id = a.order_id\n    WHERE a.deleted_at IS NULL\n    GROUP BY COALESCE(ao.parent_order_id, ao.id), a.user_id\n) pa\nJOIN orders o     ON o.id = pa.order_id\nLEFT JOIN shops s ON s.id = o.shop_id\nLEFT JOIN users u ON u.id = pa.picker_id\nLEFT JOIN (\n    SELECT oi.order_id, SUM(oi.price_during_order\
+  \ * oi.quantity) AS revenue\n    FROM order_items oi\n    WHERE oi.deleted_at IS NULL AND oi.status_id <> 3\n    GROUP BY oi.order_id\n) rev ON rev.order_id = pa.order_id\nLEFT JOIN (\n    SELECT order_id, MAX(id) AS review_id\n    FROM order_reviews\n    WHERE deleted_at IS NULL\n    GROUP BY order_id\n) rl ON rl.order_id = pa.order_id\nLEFT JOIN order_reviews rv ON rv.id = rl.review_id\nWHERE COALESCE(o.client_id, 0) <> 35\n  AND COALESCE(CONCAT_WS(' ', u.surname, u.name), '') NOT LIKE '%тест%'\n    ) b\n    WHERE 1 = 1\n      {% if period.from_expr %}AND b.assembly_started_at >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND b.assembly_started_at < {{ period.to_expr }}{% endif %}\n      {% if shops %}AND b.shop_name IN {{ shops | where_in }}{% endif %}\n),\nranked AS (\n    SELECT picker_id, assembly_minutes,\n           ROW_NUMBER() OVER (PARTITION BY picker_id ORDER BY assembly_minutes) AS rn,\n           COUNT(*) OVER (PARTITION BY picker_id)              \
+  \            AS cnt\n    FROM base\n    WHERE assembly_minutes IS NOT NULL\n),\npct AS (\n    SELECT picker_id,\n           AVG(CASE WHEN rn IN (FLOOR((cnt + 1) / 2), CEIL((cnt + 1) / 2)) THEN assembly_minutes END) AS median_minutes,\n           MIN(CASE WHEN rn >= CEIL(0.9 * cnt) THEN assembly_minutes END)                          AS p90_minutes\n    FROM ranked\n    GROUP BY picker_id\n),\nsh AS (\n    SELECT user_id AS picker_id,\n           SUM(TIMESTAMPDIFF(SECOND, created_at, finished_at)) / 3600 AS shift_hours\n    FROM shifts\n    WHERE deleted_at IS NULL AND finished_at IS NOT NULL\n      {% if period.from_expr %}AND created_at >= {{ period.from_expr }}{% endif %}\n        {% if period.to_expr %}AND created_at < {{ period.to_expr }}{% endif %}\n    GROUP BY user_id\n)\nSELECT\n    MAX(b.assembly_started_at)                        AS assembly_started_at,\n    {% if shops %}'Выбранные магазины'{% else %}'Все магазины'{% endif %} AS shop_name,\n    b.picker_name,\n    COUNT(DISTINCT\
+  \ CASE WHEN b.is_finished = 1 THEN b.order_id END) AS orders,\n    SUM(CASE WHEN b.is_finished = 1 THEN b.positions_assembled ELSE 0 END) AS units,\n    AVG(b.assembly_minutes)                           AS net_minutes,\n    CAST(NULL AS DECIMAL(10, 1))                      AS full_minutes,\n    MAX(pct.median_minutes)                           AS median_minutes,\n    MAX(pct.p90_minutes)                              AS p90_minutes,\n    COUNT(DISTINCT CASE WHEN b.is_finished = 1 THEN b.order_id END) / NULLIF(MAX(sh.shift_hours), 0) AS orders_per_hour,\n    SUM(CASE WHEN b.is_finished = 1 THEN b.positions_assembled ELSE 0 END)\n        / NULLIF(COUNT(DISTINCT CASE WHEN b.is_finished = 1 THEN b.order_id END), 0) AS units_per_order,\n    SUM(b.order_check * b.order_weight) / NULLIF(SUM(CASE WHEN b.order_check IS NOT NULL THEN b.order_weight END), 0) AS avg_check,\n    100 * SUM(b.has_replacement) / NULLIF(COUNT(*), 0) AS replaced_pct\nFROM base b\nLEFT JOIN pct ON pct.picker_id = b.picker_id\n\
+  LEFT JOIN sh  ON sh.picker_id = b.picker_id\nGROUP BY b.picker_id, b.picker_name\n"
+uuid: e4a1a151-0882-52a2-b19d-18fcd79b7401
+columns:
+- column_name: assembly_started_at
+  is_dttm: true
+- column_name: shop_name
+  is_dttm: false
+  verbose_name: Магазин
+  groupby: true
+  filterable: true
+- column_name: picker_name
+  is_dttm: false
+  verbose_name: Сборщик
+  groupby: true
+  filterable: true
+- column_name: orders
+  is_dttm: false
+  verbose_name: Заказов
+  groupby: true
+  filterable: true
+- column_name: units
+  is_dttm: false
+  verbose_name: Единиц
+  groupby: true
+  filterable: true
+- column_name: net_minutes
+  is_dttm: false
+  verbose_name: Чистое время, мин
+  groupby: true
+  filterable: true
+- column_name: full_minutes
+  is_dttm: false
+  verbose_name: Полное время, мин
+  groupby: true
+  filterable: true
+- column_name: median_minutes
+  is_dttm: false
+  verbose_name: Медиана, мин
+  groupby: true
+  filterable: true
+- column_name: p90_minutes
+  is_dttm: false
+  verbose_name: p90, мин
+  groupby: true
+  filterable: true
+- column_name: orders_per_hour
+  is_dttm: false
+  verbose_name: Заказов/ч
+  groupby: true
+  filterable: true
+- column_name: units_per_order
+  is_dttm: false
+  verbose_name: Единиц/заказ
+  groupby: true
+  filterable: true
+- column_name: avg_check
+  is_dttm: false
+  verbose_name: Средний чек, ₽
+  groupby: true
+  filterable: true
+- column_name: replaced_pct
+  is_dttm: false
+  verbose_name: '% с заменой'
+  groupby: true
+  filterable: true
+metrics: []
+version: 1.0.0

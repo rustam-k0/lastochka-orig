@@ -1,0 +1,27 @@
+extend type Query {
+  "Список баннеров с пагинацией"
+  merchantBanners(
+    shop_id: Int
+    is_active: Boolean
+    link_type: MerchantBannerLinkType
+    search: String
+    ordering: [DefaultOrdering]
+  ): [MerchantBanner] @paginate(defaultCount: 10, scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-banners")
+
+  "Все баннеры без пагинации"
+  merchantBannersAll(
+    shop_id: Int
+    is_active: Boolean
+    link_type: MerchantBannerLinkType
+    search: String
+    ordering: [DefaultOrdering]
+  ): [MerchantBanner] @all(scopes: ["sorter", "filter"])
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-banners")
+
+  "Получение баннера по ID"
+  merchantBanner(
+    id: Int @eq
+  ): MerchantBanner @find
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-banners")
+}

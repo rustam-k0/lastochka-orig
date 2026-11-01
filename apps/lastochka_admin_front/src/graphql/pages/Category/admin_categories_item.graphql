@@ -1,0 +1,197 @@
+query (
+  $id: Int
+  $ordering: [DefaultOrdering]
+) {
+  admin_categories_item (
+    id: $id
+    ordering: $ordering
+  ) {
+    id
+    title
+    link
+    is_cooking
+    is_perishable
+    show_on_main
+    is_active
+    without_blocking_price
+    custom_checkboxes
+    tag_text
+    tag_color
+    child_categories {
+      id
+      title
+      link
+      parent {
+        id
+        title
+        link
+      }
+      attributes {
+        id
+        title
+      }
+      important
+      quantum_step
+      quantum_unit_type_id
+      stock_mode
+      fixed_stock_quantity
+      fixed_stock_unit_type_id
+      is_cooking
+      site_catalog_img {
+        id
+        path
+        origin_name
+        alt
+        size
+        type
+      }
+      site_square_img {
+        id
+        path
+        origin_name
+        alt
+        size
+        type
+      }
+      site_rect_img {
+        id
+        path
+        origin_name
+        alt
+        size
+        type
+      }
+      mobile_column_img {
+        id
+        path
+        origin_name
+        alt
+        size
+        type
+      }
+      mobile_square_img {
+        id
+        path
+        origin_name
+        alt
+        size
+        type
+      }
+      mobile_rect_img {
+        id
+        path
+        origin_name
+        alt
+        size
+        type
+      }
+      child_categories {
+        id
+        title
+        link
+        parent {
+          id
+          title
+          link
+        }
+      }
+    }
+    parent {
+      id
+      title
+      link
+    }
+    attributes {
+      id
+      title
+    }
+    attribute_family {
+      id
+      title
+    }
+    assembly_zone {
+      id
+      title
+    }
+    important
+    quantum_step
+    quantum_unit_type_id
+    stock_mode
+    fixed_stock_quantity
+    fixed_stock_unit_type_id
+    site_catalog_img {
+      id
+      path
+      origin_name
+      alt
+      size
+      type
+    }
+    site_square_img {
+      id
+      path
+      origin_name
+      alt
+      size
+      type
+    }
+    site_rect_img {
+      id
+      path
+      origin_name
+      alt
+      size
+      type
+    }
+    mobile_column_img {
+      id
+      path
+      origin_name
+      alt
+      size
+      type
+    }
+    mobile_square_img {
+      id
+      path
+      origin_name
+      alt
+      size
+      type
+    }
+    mobile_rect_img {
+      id
+      path
+      origin_name
+      alt
+      size
+      type
+    }
+    background_img {
+      id
+      path
+      origin_name
+      alt
+      size
+      type
+    }
+  }
+  categories {
+    id
+    title
+  }
+  attributes {
+    id
+    title
+  }
+  attribute_families {
+    id
+    title
+    is_system
+  }
+  assembly_zones {
+    id
+    title
+  }
+}
+

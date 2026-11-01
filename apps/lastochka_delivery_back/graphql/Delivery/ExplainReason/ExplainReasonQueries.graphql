@@ -1,0 +1,4 @@
+extend type Query {
+  "Справочник причин уточнения товара (активные) — для выбора сборщиком"
+  explain_reasons:[ExplainReason] @all(scopes: ["active", "ordered"]) @guard
+}

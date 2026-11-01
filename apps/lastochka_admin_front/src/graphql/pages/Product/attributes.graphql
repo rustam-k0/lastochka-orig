@@ -1,0 +1,10 @@
+query($category_id: Int) {
+  attributes(category_id: $category_id) {
+    id
+    title
+    values {
+      id
+      title
+    }
+  }
+}

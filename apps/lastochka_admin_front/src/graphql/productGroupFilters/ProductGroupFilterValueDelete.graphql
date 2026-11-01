@@ -1,0 +1,6 @@
+mutation ProductGroupFilterValueDelete($id: Int!) {
+  ProductGroupFilterValueDelete(id: $id) {
+    code
+    message
+  }
+}

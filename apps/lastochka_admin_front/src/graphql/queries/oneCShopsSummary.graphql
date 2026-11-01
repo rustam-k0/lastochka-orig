@@ -1,0 +1,13 @@
+query OneCShopsSummary {
+  oneCShopsSummary {
+    shop {
+      id
+      title
+      code
+    }
+    has_config
+    is_active
+    last_exchange_at
+    has_errors
+  }
+}

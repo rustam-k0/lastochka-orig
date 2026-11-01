@@ -1,0 +1,15 @@
+query productGroupFilters {
+  productGroupFilters {
+    id
+    name
+    position
+    is_active
+    values {
+      id
+      value
+      image_path
+      position
+      is_active
+    }
+  }
+}

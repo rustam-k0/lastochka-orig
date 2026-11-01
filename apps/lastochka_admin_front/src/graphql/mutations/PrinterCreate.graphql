@@ -1,0 +1,6 @@
+mutation ($title: String!, $ip_address: String!, $port: Int!, $is_active: Boolean) {
+  PrinterCreate(title: $title, ip_address: $ip_address, port: $port, is_active: $is_active) {
+    code
+    message
+  }
+}

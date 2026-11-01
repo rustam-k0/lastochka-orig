@@ -1,0 +1,34 @@
+query ($id: Int!) {
+  merchantBanner(id: $id) {
+    id
+    title
+    link_type
+    product_id
+    category_id
+    display_category_id
+    shop_id
+    is_active
+    position
+    custom_checkboxes
+    shop {
+      id
+      title
+    }
+    product {
+      id
+      title
+    }
+    category {
+      id
+      title
+    }
+    display_category {
+      id
+      title
+    }
+    image {
+      id
+      path
+    }
+  }
+}

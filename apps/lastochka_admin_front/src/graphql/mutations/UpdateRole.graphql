@@ -1,0 +1,5 @@
+mutation UpdateRole($id: Int!, $name_ru: String, $scope_type: String) {
+  updateRole(id: $id, name_ru: $name_ru, scope_type: $scope_type) {
+    id name_ru scope_type
+  }
+}

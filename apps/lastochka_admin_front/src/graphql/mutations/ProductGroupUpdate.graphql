@@ -1,0 +1,26 @@
+mutation(
+  $id: Int
+  $title: String
+  $type_id: Int
+  $products: [Int]
+  $filters: String
+  $stocks_sets: Boolean
+  $sets_cooking: Boolean
+  $after_cooking: Boolean
+  $position: Int
+) {
+  ProductGroupUpdate(
+    id: $id
+    title: $title
+    type_id: $type_id
+    products: $products
+    filters: $filters
+    stocks_sets: $stocks_sets
+    sets_cooking: $sets_cooking
+    after_cooking: $after_cooking
+    position: $position
+  ) {
+    code
+    message
+  }
+}

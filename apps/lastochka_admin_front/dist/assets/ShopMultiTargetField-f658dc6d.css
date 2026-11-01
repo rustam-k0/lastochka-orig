@@ -1,0 +1,1 @@
+.shop-multi-target{display:flex;flex-direction:column;gap:8px}.shop-multi-target__label{font-weight:500;font-size:.875rem;color:var(--dark)}.shop-multi-target__label .required{color:var(--red)}.shop-multi-target__all{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.875rem}.shop-multi-target__error{color:var(--red);font-size:.75rem}

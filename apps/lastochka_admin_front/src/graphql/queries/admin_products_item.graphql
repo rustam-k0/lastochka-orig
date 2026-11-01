@@ -1,0 +1,141 @@
+query($id: Int) {
+  admin_products_item(id: $id) {
+    id
+    articul
+    code
+    plu
+    barcode
+    barcodes
+    title
+    description
+    additional_info
+    meta_description
+    meta_title
+    meta_keywords
+    fill_percent
+    weight
+    supplements {
+      id
+      title
+      type
+      is_required
+      values {
+        id
+        title
+        price
+        product_id
+        max_quantity
+        track_stock
+        position
+        product {
+          id
+          title
+        }
+      }
+    }
+    cook_time {
+      start_time
+      end_time
+    }
+    ready_fixed_time
+    img {
+      path
+      origin_name
+      alt
+    }
+    images {
+      id
+      path
+      origin_name
+      alt
+    }
+    attributes {
+      id
+      attribute {
+        category_type_id
+        title
+        type_id
+        id
+      }
+      attribute_value {
+        id
+        title
+      }
+      string_value
+      text_value
+      int_value
+      float_value
+    }
+    default_price {
+      value
+      price_per_small_unit
+    }
+    prices {
+      shop_id
+      value
+      price_without_discount
+      shop {
+        id
+        title
+      }
+    }
+    price_tiers {
+      shop_id
+      min_quantity
+      value
+    }
+    info_weight_type_id
+    info_weight
+    base_unit_type_id
+    category_quantum_step
+    category_quantum_unit_type_id
+    manual_quantum_step
+    manual_quantum_unit_type_id
+    stock_mode
+    fixed_stock_quantity
+    fixed_stock_unit_type_id
+    remains {
+      shop_id
+      quantity
+      shop {
+        id
+        title
+      }
+    }
+    is_culinary
+    sugar_free
+    on_search_page
+    served_warm
+    pickup_only
+    adult_only
+    is_marked
+    is_new
+    is_hurry_up
+    custom_checkboxes
+    vat_code
+    brand_id
+    video_path
+    brand {
+      id
+      title
+    }
+    documents {
+      id
+      title
+      file_path
+      original_name
+      mime_type
+      size
+      group
+      position
+    }
+    categories {
+      id
+      title
+      is_cooking
+    }
+    status_id
+    parent_id
+    is_configurable
+  }
+}

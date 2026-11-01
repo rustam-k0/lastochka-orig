@@ -1,0 +1,15 @@
+extend type Mutation {
+  "Массовое обновление порядка отображения вопросов FAQ"
+  FaqChangePosition(
+    items: [FaqPositionInput!]!
+  ): DefaultResponse @field(resolver: "Faq\\FaqChangePosition")
+  @validator(class: "Faq\\FaqChangePositionValidator")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}
+
+input FaqPositionInput {
+  "ID вопроса"
+  id: Int!
+  "Новая позиция (1 — первый в списке)"
+  position: Int!
+}

@@ -1,0 +1,27 @@
+# Глобальное дерево категорий — для карточки товара без выбранного магазина
+# (сетевой каталог). Обычный options.graphql в этом случае непригоден:
+# shop(id: $shop_id) без id — это @find без фильтра, и при более чем одном
+# магазине Lighthouse отвечает ошибкой «Query returned more than one result»,
+# а shop_categories(shop_id: null) возвращает null (см. GetShopCategories).
+query {
+  parent_categories {
+    id
+    title
+    is_cooking
+    child_categories {
+      id
+      title
+      is_cooking
+      child_categories {
+        id
+        title
+        is_cooking
+        child_categories {
+          id
+          title
+          is_cooking
+        }
+      }
+    }
+  }
+}

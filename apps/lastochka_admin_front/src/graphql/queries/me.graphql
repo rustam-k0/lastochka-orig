@@ -1,0 +1,27 @@
+{
+  me {
+    id
+    name
+    surname
+    patronymic
+    email
+    section_keys
+    order_action_keys
+    role_matrix_enabled
+    is_super_admin
+    shops {
+      id
+      shop_id
+      shop {
+        id
+        title
+      }
+    }
+    roles {
+      id
+      name_ru
+      name
+      scope_type
+    }
+  }
+}

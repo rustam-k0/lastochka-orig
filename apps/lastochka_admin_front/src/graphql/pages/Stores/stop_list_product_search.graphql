@@ -1,0 +1,22 @@
+query (
+  $shop_id: Int
+  $title: String
+  $page: Int
+  $first: Int
+) {
+  admin_products_paginate(
+    shop_id: $shop_id
+    title: $title
+    page: $page
+    first: $first
+  ) {
+    data {
+      id
+      articul
+      title
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}

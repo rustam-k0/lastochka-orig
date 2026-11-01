@@ -1,0 +1,66 @@
+# Вкладка «Маркетинг / CRM» (по магазину). Сессии с добавлением в корзину
+# (event_type cart.item_added), не завершившиеся оформлением, окно
+# 'брошенности' 2 часа с последнего добавления. Имя датасета verbatim из
+# BUILD_PLAN. Потребитель - «Stat: Брошенные корзины — количество». Источник:
+# lastochka_analytics (db3, PostgreSQL). Один источник, без кросс-database
+# join (правило проекта: 1 датасет = 1 источник).
+#
+# ИСПРАВЛЕНО против допущений BUILD_PLAN (docs/conversion-rules.md, правило
+# 6, проверено `SELECT DISTINCT event_type` + `jsonb_object_keys(payload)` на
+# dev):
+#   - event_type = 'b2c.cart_item_added' (BUILD_PLAN) НЕ СУЩЕСТВУЕТ -> реальное
+#     имя 'cart.item_added' (без префикса b2c, см. правило 6).
+#   - Признак завершения оформления BUILD_PLAN искал как event_type IN
+#     ('b2c.order_created','b2c.checkout_completed') - ни одно из этих имён не
+#     существует. Реальные события с session_id: 'checkout.started' (начало
+#     оформления) и 'order.created' (без префикса b2c, payload содержит
+#     session_id) - оба взяты как признак "не брошено" (сессия либо начала
+#     оформление, либо заказ реально создан).
+#   - cart_value (SUM цены позиций из BUILD_PLAN, payload->>'price' *
+#     payload->>'qty') УБРАН ИЗ ДАТАСЕТА: реальный payload cart.item_added
+#     содержит ТОЛЬКО product_id/quantity/session_id/device_client_id/
+#     client_id (проверено на dev полным SELECT payload) - ключа 'price' НЕТ
+#     ВООБЩЕ, посчитать сумму брошенной корзины из этого источника нельзя.
+#     Виджет «Брошенные корзины — сумма» из-за этого переведён в BLOCKED (см.
+#     отчёт Task 7) - BUILD_PLAN ошибочно допускал наличие цены в payload.
+#
+# B2C-поток единичный (мобилка не выпущена, см. правило 6) - пустой/скудный
+# результат это норма. Проверено на dev: 0 строк (единственная сессия
+# cart.item_added на dev ЗАВЕРШИЛАСЬ - тот же session_id есть в
+# checkout.started) - ПУСТО-ОЖИДАЕМО, не баг.
+table_name: analytics_abandoned_carts
+main_dttm_col: last_cart_add_at
+database_uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+schema: null
+sql: |
+  WITH cart_sessions AS (
+      SELECT
+          ae.session_id,
+          ae.store_id,
+          ae.client_id,
+          MIN(ae.occurred_at) AS first_cart_add_at,
+          MAX(ae.occurred_at) AS last_cart_add_at
+      FROM analytics_events ae
+      WHERE ae.event_type = 'cart.item_added'
+      GROUP BY ae.session_id, ae.store_id, ae.client_id
+  ),
+  converted_sessions AS (
+      SELECT DISTINCT session_id
+      FROM analytics_events
+      WHERE event_type IN ('checkout.started', 'order.created')
+        AND session_id IS NOT NULL
+  )
+  SELECT
+      cs.session_id,
+      cs.store_id,
+      cs.client_id,
+      cs.first_cart_add_at,
+      cs.last_cart_add_at
+  FROM cart_sessions cs
+  LEFT JOIN converted_sessions co ON co.session_id = cs.session_id
+  WHERE co.session_id IS NULL
+    AND cs.last_cart_add_at < NOW() - INTERVAL '2 hours'
+uuid: ff94b1db-680d-4c02-856b-b8107ad027dc
+columns: []
+metrics: []
+version: 1.0.0

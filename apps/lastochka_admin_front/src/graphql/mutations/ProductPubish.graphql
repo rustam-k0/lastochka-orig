@@ -1,0 +1,8 @@
+mutation ($id: Int) {
+  ProductPublish(
+    id: $id
+  ) {
+    code
+    message
+  }
+}

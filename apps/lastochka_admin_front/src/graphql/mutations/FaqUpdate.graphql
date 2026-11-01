@@ -1,0 +1,6 @@
+mutation ($id: Int!, $question: String, $answer: String, $is_active: Boolean) {
+  FaqUpdate(id: $id, question: $question, answer: $answer, is_active: $is_active) {
+    code
+    message
+  }
+}

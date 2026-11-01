@@ -1,0 +1,34 @@
+extend type Mutation {
+  "Создание баннера мерчанта"
+  merchantBannerCreate(input: MerchantBannerCreateInput! @spread): MerchantBanner!
+    @field(resolver: "MerchantBanner\\MerchantBannerCreate")
+    @validator(class: "MerchantBanner\\MerchantBannerCreateValidator")
+    @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-banners")
+}
+
+input MerchantBannerCreateInput {
+  "Название баннера"
+  title: String!
+  "Тип перехода"
+  link_type: MerchantBannerLinkType
+  "ID товара (обязательно если link_type = product)"
+  product_id: Int
+  "ID категории (обязательно если link_type = category)"
+  category_id: Int
+  "ID категории, на странице которой показывать баннер (null = главная)"
+  display_category_id: Int
+  "ID магазина (обязательно для admin, для seller подставляется автоматически)"
+  shop_id: Int
+  "ID магазинов — создать баннер сразу в нескольких магазинах (MID-238)"
+  shop_ids: [Int!]
+  "Создать баннер во всех магазинах сети"
+  all_shops: Boolean
+  "Активность"
+  is_active: Boolean
+  "Позиция сортировки"
+  position: Int
+  "Изображение баннера"
+  image: ImgInput
+  "Динамические чекбоксы (JSON-строка map field => bool)"
+  custom_checkboxes: String
+}

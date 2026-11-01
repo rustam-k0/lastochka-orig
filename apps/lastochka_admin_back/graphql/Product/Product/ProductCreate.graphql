@@ -1,0 +1,82 @@
+extend type Mutation {
+  ProductCreate(
+    "Артикул"
+    articul:String
+    "Название"
+    title:String
+    "Описание"
+    description:String
+    "Дополнительная информация (произвольный текст)"
+    additional_info:String
+    "Мета заголовок"
+    meta_title:String
+    "Мета описание"
+    meta_description:String
+    "Мета ключевые слова"
+    meta_keywords:String
+    "Цена"
+    price:Float
+    "Остаток целым числом. Устарело: обрезает дробный остаток весовых, используйте stock_quantity"
+    quantity:Int
+    "Остаток в базовой единице товара (base_unit_type_id: кг/л/шт), дробный: 12.806 кг. Приоритетнее quantity"
+    stock_quantity:Float
+    "Лесенка «цены от количества» магазина товара (MID-308). Не передан или null: не трогаем; []: очистить"
+    price_tiers:[PriceTierInput!] @rulesForArray(apply: ["nullable", "App\\Rules\\PriceTiersRule"])
+    "Категории (листовые)"
+    category_ids:[Int!]
+    "Значения атрибутов"
+    attributes:[AttributeInput]
+    "Главное изображение"
+    img:ImgInput
+    "Слайдер"
+    images:[ImgInput]
+    "Вес товара (Необходимо только в случае если товар штучный)"
+    weight:Int
+    "Информация: количество товара"
+    info_weight:Int
+    """""Информация: ед. измерения количества товара
+    1 -  шт
+    2 -  грамм
+    3 -  килограмм
+    4 -  литр
+    5 -  миллилитр
+    """
+    info_weight_type_id:Int
+    "Шаг ручного кванта товара — исключение, переопределяет квант витринной категории"
+    manual_quantum_step:Int
+    "Единица ручного кванта (2=грамм, 5=мл, 1=шт)"
+    manual_quantum_unit_type_id:Int
+    shop_id:Int
+    "Бренд"
+    brand_id:Int
+    "Путь к видео"
+    video_path:String
+    supplements:[SupplementInput]
+    "Признак кулинарного товара"
+    is_culinary:Boolean
+    "Товар без сахара"
+    sugar_free:Boolean
+    "Показывать на странице поиска"
+    on_search_page:Boolean
+    "Подаётся тёплым"
+    served_warm:Boolean
+    "Товар доступен только для самовывоза"
+    pickup_only:Boolean
+    "Товар 18+ — продажа только совершеннолетним"
+    adult_only:Boolean
+    "Маркируемый товар (Честный знак)"
+    is_marked:Boolean
+    "Новинка (наполняет автоматическую товарную группу «Новинки»)"
+    is_new:Boolean
+    "Успей купить (наполняет автоматическую товарную группу «Успей купить»)"
+    is_hurry_up:Boolean
+    "Ставка НДС ЮKassa (1-6, 11 — 22%, 12 — 22/122)"
+    vat_code:Int
+    "Время готовности товара ЧЧ:ММ, ежедневное (null = не задано)"
+    ready_fixed_time:String
+    "Динамические чекбоксы (JSON-строка map field => bool)"
+    custom_checkboxes:String
+  ):DefaultResponse @field(resolver: "Product\\ProductUpdate")
+  @validator(class: "Product\\ProductUpdateValidator")
+  @can(ability: "onlyShop",model: "Shop") @section(key: "products")
+}

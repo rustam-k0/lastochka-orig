@@ -1,0 +1,28 @@
+# Вкладка «Обзор сети». Замена BUILD_PLAN'овской "margin_proxy_amount"
+# (delivery_price+assembly_cost-discount) на РЕАЛЬНУЮ формулу
+# gross_margin_pct из docs/metric-keys.md #4 (правило 8) - больше не прокси.
+#
+# ИСПРАВЛЕНО (ревью Task 8, round 1): числитель/знаменатель считались от
+# amount (orders.amount, включает delivery/assembly, уменьшен скидками/
+# бонусами) - нарушение контракта #4. Переведено на order_line_revenue (см.
+# network_orders_fact.yaml) = SUM(price_during_order*quantity) (status_id<>3):
+# у oi.price СМЕШАННАЯ семантика, верный итог позиции = price_during_order x
+# quantity (ни SUM(price), ни SUM(price*quantity)), см. разбор в комментарии
+# датасета.
+slice_name: 'Обзор сети: Средняя маржа %, сеть'
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: (SUM(CASE WHEN status_id = 5 THEN order_line_revenue ELSE 0 END) - SUM(CASE WHEN status_id = 5 THEN order_cogs END)) * 100.0 / NULLIF(SUM(CASE WHEN status_id = 5 THEN order_line_revenue ELSE 0 END), 0)
+    label: Валовая маржа, %
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: 'NULL пока себестоимость (1С) не заполнена'
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: 920e6c66-08db-49d0-9518-3e0ffd86598c
+uuid: a5f92e6f-ee93-454f-88d6-a7c125a35534
+version: 1.0.0

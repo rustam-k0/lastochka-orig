@@ -1,0 +1,6 @@
+mutation($id: Int, $collector_id: Int, $courier_id: Int) {
+  OrderGoToNextStep(id: $id, collector_id: $collector_id, courier_id: $courier_id ) {
+    message
+    code
+  }
+}

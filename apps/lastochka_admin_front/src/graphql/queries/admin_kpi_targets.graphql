@@ -1,0 +1,15 @@
+query ($shop_id: Int, $metric_key: String) {
+  admin_kpi_targets(shop_id: $shop_id, metric_key: $metric_key) {
+    id
+    metric_key
+    shop_id
+    shop { id title }
+    category_id
+    category { id title }
+    period_start
+    period_end
+    target_value
+    comment
+    is_active
+  }
+}

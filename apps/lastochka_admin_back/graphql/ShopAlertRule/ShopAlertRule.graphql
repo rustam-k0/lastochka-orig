@@ -1,0 +1,28 @@
+type ShopAlertRule {
+  "ID"
+  id: Int
+  "Название правила"
+  name: String
+  "Ключ метрики"
+  metric_key: String
+  "Сравнение: lt | lte | gt | gte"
+  comparison: String
+  "Порог срабатывания"
+  threshold_value: Float
+  "Рекомендуемое действие"
+  recommended_action_text: String
+  "ID магазина (null = все магазины)"
+  shop_id: Int
+  "Магазин"
+  shop: Shop @belongsTo
+  "Активно"
+  is_active: Boolean
+  "Позиция сортировки"
+  position: Int
+}
+
+extend type Query {
+  "Правила сигналов (лента сигналов в аналитике)"
+  admin_shop_alert_rules: [ShopAlertRule!]!
+    @all(scopes: ["ordered"]) @guard @can(ability: "onlyAdmin", model: "Admin")
+}

@@ -1,0 +1,18 @@
+mutation TestIntegrationConfig(
+  $integration_type: String!
+  $driver: String!
+  $credentials: String!
+  $test_params: String
+  $shop_id: Int
+) {
+  testIntegrationConfig(
+    integration_type: $integration_type
+    driver: $driver
+    credentials: $credentials
+    test_params: $test_params
+    shop_id: $shop_id
+  ) {
+    success
+    message
+  }
+}

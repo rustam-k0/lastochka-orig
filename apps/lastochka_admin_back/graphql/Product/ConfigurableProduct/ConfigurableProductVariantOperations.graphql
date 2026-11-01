@@ -1,0 +1,127 @@
+input CombinationInput {
+  attribute_values: [VariantAttributeValueInput!]!
+  sku: String
+  price: Float
+  stock: Int
+  title: String
+}
+
+type ConfigurableCombinationPreview {
+  attribute_values: [VariantAttributeValueOutput]
+}
+
+type VariantAttributeValueOutput {
+  attribute_id: Int
+  attribute_value_id: Int
+}
+
+type AddVariantResponse {
+  code: Int
+  message: String
+  variant_id: Int
+}
+
+type SyncVariantsResponse {
+  code: Int
+  message: String
+  variant_ids: [Int]
+}
+
+type GenerateVariantsResponse {
+  code: Int
+  message: String
+  variant_ids: [Int]
+}
+
+type RemoveAttributeValueResponse {
+  status: Boolean!
+  message: String
+  deleted_variant_ids: [Int]
+  blocked_by_orders: [Int]
+}
+
+type VariantsByAttributeResponse {
+  variant_ids: [Int]
+  blocked_by_orders: [Int]
+}
+
+type VariantOrdersCountResponse {
+  variant_id: Int
+  active_orders: Int
+  total_orders: Int
+}
+
+extend type Mutation {
+  ConfigurableProductAddVariant(
+    parent_id: Int!
+    attribute_values: [VariantAttributeValueInput!]!
+    sku: String
+    price: Float
+    stock: Int
+    title: String
+    img: ImgInput
+    images: [ImgInput]
+  ): AddVariantResponse
+    @field(resolver: "ConfigurableProduct\\ConfigurableProductAddVariant")
+    @guard @can(model: "Admin", ability: "onlyShop")
+
+  ConfigurableProductSyncVariants(
+    parent_id: Int!
+    attribute_id: Int!
+    attribute_value_id: Int!
+    combinations_to_create: [CombinationInput!]!
+  ): SyncVariantsResponse
+    @field(resolver: "ConfigurableProduct\\ConfigurableProductSyncVariants")
+    @guard @can(model: "Admin", ability: "onlyShop")
+
+  ConfigurableProductRemoveAttributeValue(
+    parent_id: Int!
+    attribute_id: Int!
+    attribute_value_id: Int!
+  ): RemoveAttributeValueResponse
+    @field(resolver: "ConfigurableProduct\\ConfigurableProductRemoveAttributeValue")
+    @guard @can(model: "Admin", ability: "onlyShop")
+
+  ConfigurableProductDeleteVariant(
+    variant_id: Int!
+  ): DefaultResponse
+    @field(resolver: "ConfigurableProduct\\ConfigurableProductDeleteVariant")
+    @guard @can(model: "Admin", ability: "onlyShop")
+
+  ConfigurableProductUpdateVariant(
+    variant_id: Int!
+    attribute_values: [VariantAttributeValueInput!]
+    sku: String
+    price: Float
+    stock: Int
+    title: String
+    img: ImgInput
+    images: [ImgInput]
+  ): DefaultResponse
+    @field(resolver: "ConfigurableProduct\\ConfigurableProductUpdateVariant")
+    @guard @can(model: "Admin", ability: "onlyShop")
+}
+
+extend type Query {
+  configurableProductPreviewNewCombinations(
+    parent_id: Int!
+    attribute_id: Int!
+    attribute_value_id: Int!
+  ): [ConfigurableCombinationPreview]
+    @field(resolver: "App\\GraphQL\\Queries\\ConfigurableProduct\\ConfigurableProductPreviewNewCombinations")
+    @guard @can(model: "Admin", ability: "onlyShop")
+
+  configurableProductVariantsByAttribute(
+    parent_id: Int!
+    attribute_id: Int!
+    attribute_value_id: Int!
+  ): VariantsByAttributeResponse
+    @field(resolver: "App\\GraphQL\\Queries\\ConfigurableProduct\\ConfigurableProductVariantsByAttribute")
+    @guard @can(model: "Admin", ability: "onlyShop")
+
+  variantOrdersCount(
+    variant_id: Int!
+  ): VariantOrdersCountResponse
+    @field(resolver: "App\\GraphQL\\Queries\\ConfigurableProduct\\VariantOrdersCount")
+    @guard @can(model: "Admin", ability: "onlyShop")
+}

@@ -1,0 +1,6 @@
+mutation ConfigurableProductDeleteVariant($variant_id: Int!) {
+  ConfigurableProductDeleteVariant(variant_id: $variant_id) {
+    code
+    message
+  }
+}

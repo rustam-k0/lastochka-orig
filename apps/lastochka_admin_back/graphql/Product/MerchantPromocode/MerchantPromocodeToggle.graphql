@@ -1,0 +1,11 @@
+extend type Mutation {
+  "Быстрая активация/деактивация промокода"
+  toggleMerchantPromocode(
+    "ID промокода"
+    id: Int!
+    "Новое значение is_active"
+    is_active: Boolean!
+  ): MerchantPromocode!
+    @field(resolver: "MerchantPromocode\\ToggleMerchantPromocode")
+    @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-promocodes")
+}

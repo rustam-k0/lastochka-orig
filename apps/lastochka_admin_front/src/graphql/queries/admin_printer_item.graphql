@@ -1,0 +1,9 @@
+query ($id: Int!) {
+  printer(id: $id) {
+    id
+    title
+    ip_address
+    port
+    is_active
+  }
+}

@@ -1,0 +1,32 @@
+# Вкладка «Спрос» (по магазину). Поисковые события покупателей. db3 Postgres.
+# Потребители: «Дефициты: поисковые запросы без результата», «Запросы без
+# выдачи результата (список)» (тот же датасет, переиспользован по указанию
+# BUILD_PLAN), «Популярные поисковые запросы».
+#
+# Конверсии применены (docs/conversion-rules.md, правило 6):
+#   event_type = 'b2c.search.performed' (не существует) -> 'search.performed'
+#     (проверено whitelist config/analytics.php + фактическая строка на dev).
+#   ae.shop_id -> ae.store_id.
+# Ключи payload 'query'/'results_count' - ПОДТВЕРЖДЕНЫ (не допущение): на dev
+# реальная строка search.performed содержит payload.query='чеснок',
+# payload.results_count=3 - структура из BUILD_PLAN совпала с фактом.
+table_name: an_search_events
+main_dttm_col: occurred_at
+database_uuid: 43a9433a-6c4d-4350-98ba-c4ccf663080b
+schema: null
+sql: |
+  SELECT
+      ae.occurred_at                              AS occurred_at,
+      CAST(ae.occurred_at AS DATE)                 AS event_date,
+      ae.store_id                                  AS store_id,
+      ae.session_id                                AS session_id,
+      ae.client_id                                 AS client_id,
+      ae.payload->>'query'                         AS search_query,
+      (ae.payload->>'results_count')::int          AS results_count,
+      ae.event_type                                AS event_type
+  FROM analytics_events ae
+  WHERE ae.event_type = 'search.performed'
+uuid: 3e83a052-bf44-4b9e-b942-5754694370e5
+columns: []
+metrics: []
+version: 1.0.0

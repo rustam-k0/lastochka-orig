@@ -1,0 +1,48 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Динамика средней оценки
+description: По выбранной аудитории и фильтрам
+viz_type: echarts_timeseries_line
+params:
+  viz_type: echarts_timeseries_line
+  x_axis: period_label
+  metrics:
+  - expressionType: SQL
+    sqlExpression: AVG(rating)
+    label: Средняя оценка
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: reviewed_at
+  row_limit: 10000
+  seriesType: line
+  markerEnabled: true
+  markerSize: 6
+  show_value: false
+  show_legend: true
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: ',.2f'
+  y_axis_bounds:
+  - 1
+  - 5
+  x_axis_sort_asc: true
+  zoomable: false
+  rich_tooltip: true
+  comparison_type: values
+  x_axis_time_format: '%d.%m'
+  x_axis_title: Интервал (* неполный)
+  x_axis_title_margin: 30
+  y_axis_title: Оценка
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  x_axis_sort: period_label
+cache_timeout: null
+dataset_uuid: f3ddfc4b-0e48-5505-8bff-ad146cf1ff46
+uuid: d732b399-fad4-5037-a8a8-03f4e7a1e77c
+version: 1.0.0

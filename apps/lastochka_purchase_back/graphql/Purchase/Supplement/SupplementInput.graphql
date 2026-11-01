@@ -1,0 +1,6 @@
+input SupplementInput {
+  "ID добавки"
+  supplement_id:Int
+  "Массив с ID вариантами добавки"
+  values:[Int]
+}

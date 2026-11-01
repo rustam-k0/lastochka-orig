@@ -1,0 +1,6 @@
+mutation($id: Int, $collector_id: Int) {
+  OrderCollectorUpdate(id: $id, collector_id: $collector_id) {
+    code
+    message
+  }
+}

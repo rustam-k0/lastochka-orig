@@ -1,0 +1,7 @@
+mutation SetCategoryQuantum($category_id: Int!, $quantum_step: Int, $quantum_unit_type_id: Int) {
+  SetCategoryQuantum(category_id: $category_id, quantum_step: $quantum_step, quantum_unit_type_id: $quantum_unit_type_id) {
+    id
+    quantum_step
+    quantum_unit_type_id
+  }
+}

@@ -1,0 +1,8 @@
+extend type Mutation {
+  "Удаление баннера мерчанта (soft delete)"
+  merchantBannerDelete(
+    "ID баннера"
+    id: Int! @eq
+  ): MerchantBanner @delete
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-banners")
+}

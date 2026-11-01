@@ -1,0 +1,34 @@
+mutation ConfigurableProductUpdate(
+  $id: Int!
+  $title: String
+  $description: String
+  $category_id: Int
+  $meta_title: String
+  $meta_description: String
+  $meta_keywords: String
+  $brand_id: Int
+  $video_path: String
+  $img: ImgInput
+  $images: [ImgInput]
+  $children_add: [Int!]
+  $children_remove: [Int!]
+) {
+  ConfigurableProductUpdate(
+    id: $id
+    title: $title
+    description: $description
+    category_id: $category_id
+    meta_title: $meta_title
+    meta_description: $meta_description
+    meta_keywords: $meta_keywords
+    brand_id: $brand_id
+    video_path: $video_path
+    img: $img
+    images: $images
+    children_add: $children_add
+    children_remove: $children_remove
+  ) {
+    code
+    message
+  }
+}

@@ -1,0 +1,1 @@
+import{y as s}from"./index-5da92eef-44242689.js";const i=s({id:"filters",state:()=>{const t=localStorage.getItem("filters");return{filters:JSON.parse(t||"{}")}},actions:{get(t){return this.filters[t]},set(t,e){this.filters[t]={...this.filters[t],...e},localStorage.setItem("filters",JSON.stringify(this.filters))}}});export{i as u};

@@ -1,0 +1,36 @@
+mutation AnnouncementCreate(
+  $title: String!
+  $short_description: String!
+  $description: String!
+  $promocode_id: Int
+  $is_active: Boolean
+  $image: ImgInput
+) {
+  announcementCreate(
+    title: $title
+    short_description: $short_description
+    description: $description
+    promocode_id: $promocode_id
+    is_active: $is_active
+    image: $image
+  ) {
+    id
+    title
+    short_description
+    description
+    promocode_id
+    is_active
+    created_at
+    updated_at
+    promocode {
+      id
+      title
+      discount_percent
+    }
+    image {
+      id
+      path
+      origin_name
+    }
+  }
+}

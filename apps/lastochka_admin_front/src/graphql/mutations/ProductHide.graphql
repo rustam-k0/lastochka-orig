@@ -1,0 +1,6 @@
+mutation ($id: Int) {
+  ProductHide(id: $id) {
+    message
+    code
+  }
+}

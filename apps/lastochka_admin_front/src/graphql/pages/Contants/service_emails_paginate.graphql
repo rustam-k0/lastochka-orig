@@ -1,0 +1,21 @@
+query (
+  $first: Int
+  $page: Int
+  $ordering: [DefaultOrdering]
+) {
+  admin_service_emails_paginate (
+    first: $first
+    page: $page
+    ordering: $ordering
+  ) {
+    data {
+      id
+      title
+      email
+    }
+    paginatorInfo {
+      total
+    }
+  }
+}
+

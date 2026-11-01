@@ -1,0 +1,20 @@
+extend type Mutation {
+  ConfigurableProductCreate(
+    title: String!
+    description: String
+    """
+    Магазин вариативного товара. Необязателен только при включённом сетевом
+    каталоге: карточка одна на всю сеть и живёт в якорном магазине, магазин
+    в админке не выбирается. Вне сетевого режима отсутствие shop_id у
+    глобального админа отвергается валидацией резолвера.
+    """
+    shop_id: Int
+    category_id: Int
+    configurable_attribute_ids: [Int!]
+    children_ids: [Int!]!
+    img: ImgInput
+    images: [ImgInput]
+  ): DefaultResponse
+    @field(resolver: "ConfigurableProduct\\ConfigurableProductCreate")
+    @guard @can(model: "Admin", ability: "onlyShop")
+}

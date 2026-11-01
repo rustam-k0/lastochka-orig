@@ -1,0 +1,8 @@
+query ($title: String, $first: Int, $ids: [Int]) {
+  shops_paginate(title: $title, first: $first, ids: $ids) {
+    data {
+      id
+      title
+    }
+  }
+}

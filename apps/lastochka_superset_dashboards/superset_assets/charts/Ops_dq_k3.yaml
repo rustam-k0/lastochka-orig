@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Нужна проверка
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status = 'Нужна проверка' THEN 1 ELSE 0 END)
+    label: Нужна проверка
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: checked_at
+  subheader: Нарушения или списки на разбор
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',d'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 333a464b-edbf-54c5-bef2-c7555ba9b482
+uuid: ded84e09-709f-59a0-a1b0-b2d1e04a1a7b
+version: 1.0.0

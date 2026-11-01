@@ -1,0 +1,16 @@
+mutation (
+  $user_shop_id: Int,
+  $opening_time: String,
+  $closing_time: String,
+  $days: [Int]
+) {
+  SetUserWorkingHours(
+    user_shop_id: $user_shop_id,
+    opening_time: $opening_time,
+    closing_time: $closing_time,
+    days: $days
+  ) {
+    code
+    message
+  }
+}

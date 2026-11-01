@@ -1,0 +1,6 @@
+mutation BulkAssignSupplements($product_ids: [Int!]!, $supplement: SupplementInput!) {
+  BulkAssignSupplements(product_ids: $product_ids, supplement: $supplement) {
+    code
+    message
+  }
+}

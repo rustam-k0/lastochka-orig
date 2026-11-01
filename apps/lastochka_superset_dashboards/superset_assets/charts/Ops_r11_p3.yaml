@@ -1,0 +1,46 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Давность последней покупки
+description: Клиентов на дату среза
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: recency_bucket
+  metrics:
+  - expressionType: SQL
+    sqlExpression: COUNT(*)
+    label: Клиентов
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: last_order_at
+  orientation: horizontal
+  row_limit: 1000
+  show_value: true
+  show_legend: false
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: ',d'
+  truncateYAxis: false
+  zoomable: false
+  rich_tooltip: true
+  stack: null
+  only_total: true
+  comparison_type: values
+  order_desc: true
+  x_axis_title: ''
+  x_axis_title_margin: 30
+  y_axis_title: Клиентов
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  x_axis_sort: recency_bucket
+  x_axis_sort_asc: false
+cache_timeout: null
+dataset_uuid: fe6de923-e4b9-58c7-8f16-039f802efed4
+uuid: 71005154-d87f-5178-be30-19b86aa8dffe
+version: 1.0.0

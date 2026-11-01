@@ -1,0 +1,6 @@
+query OrderReviewErrorTypes {
+  orderReviewErrorTypes {
+    value
+    label
+  }
+}

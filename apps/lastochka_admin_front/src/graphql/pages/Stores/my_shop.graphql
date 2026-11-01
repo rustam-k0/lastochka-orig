@@ -1,0 +1,82 @@
+query{
+  my_shop {
+    id
+    title
+    address
+    latitude
+    longitude
+    slot_max_orders
+    slot_time
+    phone
+    email
+    schedule
+    payment_type_id
+    working_days
+    opening_time
+    closing_time
+    work_type_id
+    description
+    commission
+    deposit
+    type_id
+    is_popular
+    ignore_stock
+    is_bonus_enabled
+    bonus_earn_percent
+    bonus_spend_percent
+    custom_checkboxes
+
+    workers {
+      id
+      working_days
+      opening_time
+      closing_time
+      user {
+        id
+        name
+        surname
+        patronymic
+        email
+        phone
+      }
+    }
+
+    categories {
+      id
+      title
+    }
+    zones {
+      name
+      delivery_price
+      min_order_price
+      free_delivery_from
+      delivery_price_ranges {
+        from_amount
+        price
+      }
+    }
+    img {
+      id
+      alt
+      origin_name
+      path
+    }
+    background_img {
+      id
+      alt
+      origin_name
+      path
+    }
+    logo_img {
+      id
+      alt
+      origin_name
+      path
+    }
+    work_type_id
+    working_days
+    zones {
+      id
+    }
+  }
+}

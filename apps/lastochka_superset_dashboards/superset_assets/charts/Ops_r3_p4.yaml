@@ -1,0 +1,40 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Вклад классов в выручку
+description: Пороги применяются к накопленной доле
+viz_type: pie
+params:
+  viz_type: pie
+  groupby:
+  - abc_class
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(revenue)
+    label: Выручка net, ₽
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: order_date
+  row_limit: 6
+  sort_by_metric: true
+  color_scheme: lastochkaOps
+  show_labels: true
+  labels_outside: true
+  label_line: true
+  label_type: value_percent
+  show_labels_threshold: 3
+  number_format: $,.0f
+  show_legend: true
+  legendType: scroll
+  legendOrientation: right
+  donut: true
+  innerRadius: 55
+  outerRadius: 80
+  show_total: false
+cache_timeout: null
+dataset_uuid: 0c964450-5adb-4c83-9968-c05efd2a5aed
+uuid: 565717f8-03c2-5988-9607-506cd8af09d0
+version: 1.0.0

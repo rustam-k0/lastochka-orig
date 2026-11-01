@@ -1,0 +1,32 @@
+query ($id: Int!) {
+  platformProduct(id: $id) {
+    id
+    canonical_title
+    canonical_description
+    canonical_image
+    canonical_attributes
+    category_id
+    is_curated
+    is_active
+    created_at
+    updated_at
+    barcodes {
+      id
+      ean
+      is_primary
+      source_shop_id
+    }
+    offers {
+      id
+      shop_id
+      shop_title
+      local_product_id
+      local_product_title
+      price
+      qty
+      min_qty
+      is_active
+      last_sync_at
+    }
+  }
+}

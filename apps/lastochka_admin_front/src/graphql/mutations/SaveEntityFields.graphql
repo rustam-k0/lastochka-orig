@@ -1,0 +1,8 @@
+mutation SaveEntityFields($config: String!) {
+    saveEntityFields(config: $config) {
+        id
+        key
+        value
+        type
+    }
+}

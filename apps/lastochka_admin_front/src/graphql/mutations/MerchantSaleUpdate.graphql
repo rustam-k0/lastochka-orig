@@ -1,0 +1,32 @@
+mutation (
+  $id: Int!
+  $title: String
+  $description: String
+  $shop_id: Int
+  $discount_percent: Int
+  $starts_at: DateTime
+  $ends_at: DateTime
+  $is_active: Boolean
+  $image: ImgInput
+  $product_ids: [Int!]
+  $custom_checkboxes: String
+) {
+  updateMerchantSale(
+    id: $id
+    input: {
+      title: $title
+      description: $description
+      shop_id: $shop_id
+      discount_percent: $discount_percent
+      starts_at: $starts_at
+      ends_at: $ends_at
+      is_active: $is_active
+      image: $image
+      product_ids: $product_ids
+      custom_checkboxes: $custom_checkboxes
+    }
+  ) {
+    id
+    title
+  }
+}

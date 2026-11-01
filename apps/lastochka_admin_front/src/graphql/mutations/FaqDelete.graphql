@@ -1,0 +1,6 @@
+mutation ($id: Int!) {
+  FaqDelete(id: $id) {
+    code
+    message
+  }
+}

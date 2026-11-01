@@ -1,0 +1,9 @@
+query($id: Int) {
+  attributes_item (id: $id) {
+    title
+    values {
+      id
+      title
+    }
+  }
+}

@@ -1,0 +1,70 @@
+type User {
+  id: Int
+  "Имя"
+  name: String
+  "Фамилия"
+  surname: String
+  "Отчество"
+  patronymic: String
+  "Почта"
+  email: String
+  "Аватар"
+  head_img: Img @hasOne(relation: "headImg")
+  "Телефонный номер"
+  phone:String
+  "Роли"
+  roles:[Role] @hasMany
+  "Смена"
+  shift:Shift @hasOne
+  "Магазины сотрудника (привязка из админки, user_shops)"
+  shops:[Shop] @belongsToMany
+  "Рабочие часы"
+  workingHours: [UserWorkingHour] @hasManyThrough(relation: "workingHours")
+  "Количество завершенных сборок (только для сборщиков)"
+  completedAssemblies: Int @method(name: "getCompletedAssembliesCount")
+  "Количество завершенных заказов на доставку (только для курьеров)"
+  completedDeliveryOrders: Int @method(name: "getCompletedDeliveryOrdersCount")
+  """
+  Курьер занят: есть хотя бы один назначенный и ещё не закрытый заказ на доставку
+  (назначен, в пути или прибыл). Для экрана «Выберите курьера»: true — «На заказе»,
+  false — «Свободен». Занятые курьеры остаются в выдаче shift_couriers
+  """
+  is_busy: Boolean @method(name: "isBusy")
+  "Количество заказов «в работе» у курьера — назначенных и ещё не доставленных/не отменённых"
+  active_delivery_orders_count: Int @method(name: "getActiveDeliveryOrdersCount")
+  external_user_id:String
+}
+
+type Role {
+  name:String
+}
+
+type UserWorkingHour {
+  day_of_week:String
+  opening_time:String
+  closing_time:String
+}
+
+type Shift {
+  id:Int
+  created_at:DateTime
+  shop_id:Int
+  shop:Shop @hasOne
+}
+
+type Shop
+{
+  id:Int
+  title:String
+  "Тип заведения: 1 - магазин, 2 - кафе"
+  type_id:Int
+}
+
+
+extend type Query {
+  me:User @auth
+}
+
+extend type Mutation {
+  UserLogout:DefaultResponse @field(resolver: "User\\UserLogout") @guard
+}

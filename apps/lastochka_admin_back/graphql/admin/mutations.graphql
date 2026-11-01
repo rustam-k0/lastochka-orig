@@ -1,0 +1,63 @@
+type Mutation {
+  "Авторизация админа"
+  AdminLogin(email: String, password: String): LoginResponse
+    @field(resolver: "User\\UserLogin")
+    @validator(class: "User\\AdminLoginValidator")
+
+  "Подтверждение второго фактора (TOTP) после ввода логина/пароля"
+  VerifyTwoFactor(challenge: String, code: String): LoginResponse
+    @field(resolver: "User\\VerifyTwoFactor")
+
+  "Запрос на восстановление пароля: проверка email и отправка письма со ссылкой"
+  UserForgotPassword(email: String): DefaultResponse
+    @field(resolver: "User\\UserForgotPassword")
+    @validator(class: "User\\UserForgotPasswordValidator")
+
+  "Установка нового пароля по токену из письма восстановления"
+  UserResetPassword(
+    token: String
+    email: String
+    password: String
+    password_confirmation: String
+  ): DefaultResponse
+    @field(resolver: "User\\UserResetPassword")
+    @validator(class: "User\\UserResetPasswordValidator")
+
+  """
+  Загрузка файла на сервер
+  возвращает путь к файлу
+  """
+  FilesUpload("Файл" files: [Upload], path: String): [FileResponse]
+  @field(resolver: "Upload\\FilesUpload")
+  @guard
+
+  "Удаление записи"
+  EntityDelete(id: Int!, table: String!): DefaultResponse
+    @field(resolver: "EntityDelete")
+    @validator(class: "EntityDeleteValidator")
+    @guard
+    @can(ability: "onlyAdmin",model: "Admin")
+
+  "Публикация либо скрытие записи"
+  EntityHideOrPublish(id: Int!, table: String!): DefaultResponse
+    @field(resolver: "EntityHideOrPublish")
+    @validator(class: "EntityHideOrPublishValidator")
+    @guard
+    @can(ability: "onlyAdmin",model: "Admin")
+
+  "Загрузка и обрезка изображения"
+  ImageUploadCrop(
+    image: Upload!
+    x: Int!
+    y: Int!
+    width: Int!
+    height: Int!
+    rotate: Int!
+    scaleX: Int!
+    scaleY: Int!
+  ): UploadedImage
+  @field(resolver: "Upload\\ImageUploadCrop")
+  @validator(class: "Upload\\ImageUploadCropValidator")
+  @can(ability: "onlyShop",model: "Shop")
+
+}

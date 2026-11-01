@@ -1,0 +1,23 @@
+# Вкладка «Маркетинг / CRM». KPI-карточка на агрегате без временной оси ->
+# big_number_total (урок Task 6). B2C-поток единичный (мобилка не выпущена) -
+# на dev значение = 0 (единственная сессия cart.item_added конвертировалась в
+# checkout.started) - ПУСТО-ОЖИДАЕМО, не баг (см. notes датасета).
+slice_name: 'Stat: Брошенные корзины — количество'
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SIMPLE
+    column:
+      column_name: session_id
+    aggregate: COUNT
+    label: Брошенных корзин
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: 'окно брошенности 2 часа, B2C-поток единичный (мобилка не выпущена)'
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: ff94b1db-680d-4c02-856b-b8107ad027dc
+uuid: f88af56c-2a09-42df-8b1c-c645913d9f1e
+version: 1.0.0

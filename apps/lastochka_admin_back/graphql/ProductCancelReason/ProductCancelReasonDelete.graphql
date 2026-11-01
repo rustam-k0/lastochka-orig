@@ -1,0 +1,7 @@
+extend type Mutation {
+  ProductCancelReasonDelete(
+    "ID причины"
+    id: Int!
+  ): DefaultResponse @field(resolver: "ProductCancelReason\\ProductCancelReasonDelete")
+  @guard @can(model: "Admin", ability: "onlyAdmin")
+}

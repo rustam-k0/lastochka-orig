@@ -1,0 +1,30 @@
+type City {
+  "ID"
+  id: Int
+  "Название города"
+  name: String
+  "Широта центра города"
+  latitude: Float
+  "Долгота центра города"
+  longitude: Float
+  "Активен"
+  is_active: Boolean
+  "Город по умолчанию"
+  is_default: Boolean
+  "Магазины в городе"
+  shops: [Shop] @hasMany
+}
+
+extend type Query {
+  "Список активных городов"
+  cities: [City!]! @all(scopes: ["active"])
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Все города (включая неактивные)"
+  allCities: [City!]! @all
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+
+  "Город по ID"
+  city(id: Int! @eq): City @find
+  @guard @can(ability: "onlyAdmin", model: "Admin")
+}

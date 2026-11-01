@@ -1,0 +1,17 @@
+extend type Mutation {
+  ProductsAddToOrder(
+    "ID заказа"
+    order_id:Int
+    "Список товаров для добавления"
+    products:[ProductAddOrderInput]
+  ):DefaultResponse @field(resolver: "Order\\ProductsAddToOrder")
+  @validator(class: "Order\\ProductsAddToOrderValidator")
+  @guard(with: ["client","api"])
+}
+
+input ProductAddOrderInput {
+  "ID товара"
+  product_id:Int
+  "Количество товара"
+  quantity:Int
+}

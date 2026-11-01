@@ -1,0 +1,6 @@
+mutation ($shop_id: Int, $category: String!, $rule_type: String!, $value: Float!, $period_start: Date!, $period_end: Date, $comment: String, $is_active: Boolean) {
+  OperatingCostCreate(shop_id: $shop_id, category: $category, rule_type: $rule_type, value: $value, period_start: $period_start, period_end: $period_end, comment: $comment, is_active: $is_active) {
+    code
+    message
+  }
+}

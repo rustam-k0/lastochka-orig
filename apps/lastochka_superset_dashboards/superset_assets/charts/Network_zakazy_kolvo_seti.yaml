@@ -1,0 +1,17 @@
+slice_name: 'Обзор сети: Заказы (кол-во), сеть'
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: COUNT(DISTINCT CASE WHEN status_id = 5 THEN order_id END)
+    label: Заказы, шт
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: доставленные заказы верхнего уровня, вся сеть
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: 920e6c66-08db-49d0-9518-3e0ffd86598c
+uuid: bc8e7aa3-c3ce-4c49-95d8-7d13bfd9597d
+version: 1.0.0

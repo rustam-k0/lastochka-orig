@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Оценок 1–3
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(CASE WHEN rating <= 3 THEN 1 ELSE 0 END) / NULLIF(COUNT(rating), 0)
+    label: Оценок 1–3
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: reviewed_at
+  subheader: '% от оценённых'
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: .1%
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 061549f5-8d56-5036-baed-944599899194
+uuid: 911682f4-1487-5232-8525-9cd7a36f9eb8
+version: 1.0.0

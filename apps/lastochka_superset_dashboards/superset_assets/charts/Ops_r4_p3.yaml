@@ -1,0 +1,46 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Время доставки по курьерам
+description: Среднее · принял → выдал
+viz_type: echarts_timeseries_bar
+params:
+  viz_type: echarts_timeseries_bar
+  x_axis: courier_name
+  metrics:
+  - expressionType: SQL
+    sqlExpression: AVG(delivery_minutes)
+    label: Минут
+    hasCustomLabel: true
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: accepted_at
+  orientation: horizontal
+  row_limit: 5
+  show_value: true
+  show_legend: false
+  legendOrientation: bottom
+  legendType: scroll
+  color_scheme: lastochkaOps
+  y_axis_format: ',.1f'
+  truncateYAxis: false
+  zoomable: false
+  rich_tooltip: true
+  stack: null
+  only_total: true
+  comparison_type: values
+  order_desc: true
+  x_axis_title: ''
+  x_axis_title_margin: 30
+  y_axis_title: Минут
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  x_axis_sort: Минут
+  x_axis_sort_asc: false
+cache_timeout: null
+dataset_uuid: 36a9cf7e-b5c0-4c80-a5be-79eaa4d1810a
+uuid: 4ab96445-9ba8-507b-9129-43110c6c9ea5
+version: 1.0.0

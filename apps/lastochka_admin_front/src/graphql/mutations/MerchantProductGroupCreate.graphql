@@ -1,0 +1,51 @@
+mutation (
+  $title: String!
+  $description: String
+  $shop_id: Int
+  $shop_ids: [Int!]
+  $all_shops: Boolean
+  $show_on_main: Boolean
+  $show_on_merchant_page: Boolean
+  $show_in_merchant_catalog: Boolean
+  $show_on_search: Boolean
+  $sort_order: Int
+  $is_active: Boolean
+  $is_recommended: Boolean
+  $is_cart_page: Boolean
+  $is_complex_solution: Boolean
+  $image: ImgInput
+  $product_ids: [Int!]
+  $products_with_qty: [ProductGroupItemInput!]
+  $filter_value_ids: [Int!]
+  $custom_checkboxes: String
+  $fill_type: String
+) {
+  createMerchantProductGroup(
+    input: {
+      title: $title
+      description: $description
+      shop_id: $shop_id
+      shop_ids: $shop_ids
+      all_shops: $all_shops
+      show_on_main: $show_on_main
+      show_on_merchant_page: $show_on_merchant_page
+      show_in_merchant_catalog: $show_in_merchant_catalog
+      show_on_search: $show_on_search
+      sort_order: $sort_order
+      is_active: $is_active
+      is_recommended: $is_recommended
+      is_cart_page: $is_cart_page
+      is_complex_solution: $is_complex_solution
+      image: $image
+      product_ids: $product_ids
+      products_with_qty: $products_with_qty
+      filter_value_ids: $filter_value_ids
+      custom_checkboxes: $custom_checkboxes
+      fill_type: $fill_type
+    }
+  ) {
+    id
+    title
+    fill_type
+  }
+}

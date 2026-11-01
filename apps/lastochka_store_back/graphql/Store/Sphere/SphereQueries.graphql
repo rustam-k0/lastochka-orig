@@ -1,0 +1,12 @@
+extend type Query {
+
+  spheres(
+    ordering:[DefaultOrdering]
+  ):[Sphere] @all(scopes: ["sorter","filter"])
+
+  sphere_item(
+    ordering:[DefaultOrdering]
+    id:Int @eq
+  ):Sphere @find(scopes: ["sorter","filter"])
+
+}

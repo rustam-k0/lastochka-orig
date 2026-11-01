@@ -1,0 +1,10 @@
+extend type Mutation {
+  "Установить/снять квант продажи на витринной листовой категории: единица + шаг (LASTOCHKI-JAMI-11200)"
+  SetCategoryQuantum(
+    category_id: Int!
+    quantum_step: Int
+    quantum_unit_type_id: Int
+  ): Category
+    @field(resolver: "Category\\SetCategoryQuantum")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "categories")
+}

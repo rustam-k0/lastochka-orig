@@ -1,0 +1,34 @@
+mutation (
+  $title: String!
+  $description: String
+  $shop_id: Int
+  $shop_ids: [Int!]
+  $all_shops: Boolean
+  $discount_percent: Int!
+  $starts_at: DateTime!
+  $ends_at: DateTime!
+  $is_active: Boolean
+  $image: ImgInput
+  $product_ids: [Int!]!
+  $custom_checkboxes: String
+) {
+  createMerchantSale(
+    input: {
+      title: $title
+      description: $description
+      shop_id: $shop_id
+      shop_ids: $shop_ids
+      all_shops: $all_shops
+      discount_percent: $discount_percent
+      starts_at: $starts_at
+      ends_at: $ends_at
+      is_active: $is_active
+      image: $image
+      product_ids: $product_ids
+      custom_checkboxes: $custom_checkboxes
+    }
+  ) {
+    id
+    title
+  }
+}

@@ -1,0 +1,16 @@
+extend type Mutation {
+  "Массовое обновление порядка сортировки товарных групп мерчанта"
+  MerchantProductGroupChangePosition(
+    items: [MerchantProductGroupPositionInput!]!
+  ): DefaultResponse
+    @field(resolver: "MerchantProductGroup\\ChangeMerchantProductGroupPosition")
+    @validator(class: "MerchantProductGroup\\ChangeMerchantProductGroupPositionValidator")
+    @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-product-groups")
+}
+
+input MerchantProductGroupPositionInput {
+  "ID товарной группы"
+  id: Int!
+  "Новый порядок сортировки (0 — первая в списке)"
+  sort_order: Int!
+}

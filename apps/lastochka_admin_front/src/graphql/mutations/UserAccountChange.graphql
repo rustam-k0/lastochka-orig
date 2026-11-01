@@ -1,0 +1,27 @@
+mutation (
+  $pin_code: Int
+) {
+  UserAccountChange(
+    pin_code: $pin_code
+  ) {
+    token
+    refresh_token
+    user {
+      id
+      name
+      surname
+      patronymic
+      email
+      head_img {
+        id
+        path
+        alt
+      }
+      status {
+        id
+        name
+        code
+      }
+    }
+  }
+}

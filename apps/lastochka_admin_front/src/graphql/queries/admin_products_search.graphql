@@ -1,0 +1,26 @@
+query ($title: String, $first: Int, $categories: [Int]) {
+  admin_products_paginate(title: $title, first: $first, categories: $categories) {
+    data {
+      id
+      articul
+      title
+      img {
+        path
+      }
+      default_price {
+        value
+      }
+      remains {
+        shop_id
+        quantity
+      }
+      categories {
+        id
+        title
+      }
+      status_id
+      is_configurable
+      parent_id
+    }
+  }
+}

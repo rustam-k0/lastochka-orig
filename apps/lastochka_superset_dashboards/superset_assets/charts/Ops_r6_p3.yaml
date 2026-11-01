@@ -1,0 +1,50 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Распределение по зонам
+description: Условная схема · не географическая карта
+viz_type: table
+params:
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - zone_name
+  metrics:
+  - &id001
+    expressionType: SQL
+    sqlExpression: COUNT(*)
+    label: Заказы
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: COUNT(*) / NULLIF(SUM(COUNT(*)) OVER (), 0)
+    label: Доля
+    hasCustomLabel: true
+  percent_metrics: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: accepted_at
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: true
+  show_totals: true
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  order_desc: true
+  column_config:
+    Заказы:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    Доля:
+      d3NumberFormat: .1%
+      horizontalAlign: right
+  timeseries_limit_metric: *id001
+cache_timeout: null
+dataset_uuid: 36a9cf7e-b5c0-4c80-a5be-79eaa4d1810a
+uuid: 6ec54ba5-9233-5af2-8799-6280880bf5a7
+version: 1.0.0

@@ -1,0 +1,6 @@
+mutation ($id: Int!) {
+  ProductReplaceReasonDelete(id: $id) {
+    code
+    message
+  }
+}

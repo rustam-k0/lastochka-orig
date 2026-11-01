@@ -1,0 +1,9 @@
+extend type Mutation {
+  updateClientB2bStatus(
+    "ID клиента"
+    clientId: ID!
+    "B2B-статус"
+    isB2b: Boolean!
+  ):DefaultResponse @field(resolver:"Client\\UpdateClientB2bStatus")
+  @guard @can(model: "Admin",ability: "onlyAdmin") @section(key: "clients")
+}

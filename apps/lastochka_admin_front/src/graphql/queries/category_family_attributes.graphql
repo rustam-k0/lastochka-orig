@@ -1,0 +1,17 @@
+query CategoryFamilyAttributes($category_id: Int!) {
+  category_family_attributes(category_id: $category_id) {
+    id
+    position
+    is_required
+    attribute {
+      id
+      title
+      type_id
+      category_type_id
+      values {
+        id
+        title
+      }
+    }
+  }
+}

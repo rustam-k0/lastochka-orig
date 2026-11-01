@@ -1,0 +1,6 @@
+mutation ProductGroupFilterCreate($name: String!, $position: Int, $is_active: Boolean) {
+  ProductGroupFilterCreate(name: $name, position: $position, is_active: $is_active) {
+    code
+    message
+  }
+}

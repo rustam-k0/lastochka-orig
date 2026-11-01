@@ -1,0 +1,19 @@
+type Supplement {
+  id:Int
+  title:String
+  "one - выбор одного , many - можно выбрать неограниченно"
+  type:String
+  is_required:Boolean
+  "Вариации добавок"
+  values:[SupplementValue] @hasMany
+}
+
+input SupplementInput {
+  id:Int
+  title:String
+  "one - выбор одного , many - можно выбрать неограниченно"
+  type:String
+  is_required:Boolean
+  "Вариации добавок"
+  values:[SupplementValueInput]
+}

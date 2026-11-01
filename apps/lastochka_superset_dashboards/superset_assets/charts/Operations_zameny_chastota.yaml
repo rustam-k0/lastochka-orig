@@ -1,0 +1,21 @@
+# Вкладка «Операции». Экономика замен товара при сборке — частота замен: %
+# позиций с заменой от всех собранных позиций. ПУСТО-ОЖИДАЕМО: на dev
+# replace_reason_id и parent_id ВСЕГДА NULL (0 реальных замен за всю историю)
+# - карточка покажет 0%, это честный результат (см. assembly_product_stats.yaml).
+slice_name: Экономика замен — частота замен, %
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: 100.0 * COUNT(DISTINCT CASE WHEN is_replaced = 1 THEN order_item_id END) / NULLIF(COUNT(DISTINCT order_item_id), 0)
+    label: Частота замен, %
+    hasCustomLabel: true
+  adhoc_filters: []
+  subheader: доля позиций с заменой; пусто-ожидаемо на dev (0 замен в истории)
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: SMART_NUMBER
+dataset_uuid: a39a8a84-d892-4d13-bd24-96190a61989a
+uuid: 265aa2e8-4e0d-4a58-8960-b03c0b901a55
+version: 1.0.0

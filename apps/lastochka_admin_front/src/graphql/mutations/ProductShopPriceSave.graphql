@@ -1,0 +1,12 @@
+mutation ($product_id: Int!, $shop_id: Int!, $price: Float!, $stock_quantity: Float!, $price_tiers: [PriceTierInput!]) {
+  ProductShopPriceSave(
+    product_id: $product_id
+    shop_id: $shop_id
+    price: $price
+    stock_quantity: $stock_quantity
+    price_tiers: $price_tiers
+  ) {
+    shop_id
+    value
+  }
+}

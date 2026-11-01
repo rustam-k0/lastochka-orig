@@ -1,0 +1,33 @@
+mutation SaveIntegrationConfig(
+  $integration_type: String!
+  $driver: String!
+  $credentials: String!
+  $is_active: Boolean!
+  $sync_categories_enabled: Boolean
+  $sync_images_enabled: Boolean
+  $deactivate_missing_enabled: Boolean
+  $shop_id: Int
+) {
+  saveIntegrationConfig(
+    integration_type: $integration_type
+    driver: $driver
+    credentials: $credentials
+    is_active: $is_active
+    sync_categories_enabled: $sync_categories_enabled
+    sync_images_enabled: $sync_images_enabled
+    deactivate_missing_enabled: $deactivate_missing_enabled
+    shop_id: $shop_id
+  ) {
+    id
+    integration_type
+    driver
+    credentials
+    is_active
+    sync_categories_enabled
+    sync_images_enabled
+    deactivate_missing_enabled
+    tested_at
+    test_error
+    shop_id
+  }
+}

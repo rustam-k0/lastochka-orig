@@ -1,0 +1,6 @@
+mutation ($id: Int!, $table: String!) {
+  EntityHideOrPublish(id: $id, table: $table) {
+    code
+    message
+  }
+}

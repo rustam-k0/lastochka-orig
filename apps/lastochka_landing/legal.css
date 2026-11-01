@@ -1,0 +1,348 @@
+/* ============================================================
+   Ласточка Джами — стили для юридических и сервисных страниц
+   (privacy, terms, support, account-deletion)
+   Используется ВМЕСТЕ со styles.css — токены оттуда.
+   ============================================================ */
+
+/* ---------- Простая шапка для статических страниц ---------- */
+.lnav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(251,244,239, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--hairline);
+}
+.lnav__shell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0.85rem var(--gutter);
+}
+.lnav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--brand-deep);
+  letter-spacing: -0.01em;
+}
+.lnav__brand img { width: 32px; height: 32px; }
+.lnav__brand-sub {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+}
+.lnav__home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+.lnav__home:hover { background: var(--brand); color: var(--cream); border-color: var(--brand); }
+.lnav__home svg { width: 14px; height: 14px; }
+
+/* ---------- Заголовок страницы ---------- */
+.lhero {
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gutter) clamp(1.5rem, 3vw, 2.5rem);
+  max-width: var(--container);
+  margin: 0 auto;
+}
+.lhero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(194,30,25, 0.06);
+  color: var(--brand-deep);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+.lhero__eyebrow .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--bright);
+  border-radius: 50%;
+}
+.lhero__title {
+  font-family: var(--serif);
+  font-weight: 800;
+  font-size: clamp(2rem, 4.4vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--brand-deep);
+  margin-bottom: 0.85rem;
+}
+.lhero__title em { font-style: normal; color: var(--brand-mid); }
+.lhero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.lhero__meta strong { color: var(--ink-soft); font-weight: 600; }
+
+/* ---------- Тело документа ---------- */
+.legal {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 1rem var(--gutter) clamp(3rem, 6vw, 5rem);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+.legal h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.35rem, 2.3vw, 1.75rem);
+  font-weight: 600;
+  color: var(--brand-deep);
+  letter-spacing: -0.01em;
+  margin: 2.4rem 0 0.9rem;
+  scroll-margin-top: 80px;
+}
+.legal h2:first-child { margin-top: 0; }
+.legal h3 {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 1.5rem 0 0.6rem;
+}
+.legal p { margin: 0 0 0.95rem; }
+.legal a {
+  color: var(--brand-mid);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.legal a:hover { color: var(--brand); }
+.legal ul, .legal ol {
+  margin: 0 0 1.1rem;
+  padding-left: 0;
+}
+.legal ul li {
+  position: relative;
+  padding: 0.15rem 0 0.15rem 1.4rem;
+}
+.legal ul li::before {
+  content: "";
+  position: absolute;
+  left: 0.35rem;
+  top: 0.7rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--bright);
+}
+.legal ol { counter-reset: legalnum; padding-left: 0; }
+.legal ol li {
+  counter-increment: legalnum;
+  position: relative;
+  padding: 0.15rem 0 0.15rem 2rem;
+}
+.legal ol li::before {
+  content: counter(legalnum) ".";
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--brand-mid);
+}
+.legal strong { color: var(--ink); font-weight: 600; }
+
+.legal__intro {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  line-height: 1.5;
+  color: var(--ink);
+  padding: 1.25rem 1.5rem;
+  border-left: 3px solid var(--bright);
+  background: rgba(252,201,0, 0.06);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin: 0 0 2rem;
+}
+
+/* Карточка с реквизитами / контактами в конце документа */
+.legal__card {
+  margin-top: 2.5rem;
+  padding: 1.5rem 1.75rem;
+  background: var(--bone);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+}
+.legal__card h3 { margin-top: 0; }
+.legal__card dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.6rem 1.5rem;
+  margin: 0;
+  font-size: 0.95rem;
+}
+.legal__card dt { color: var(--muted); font-weight: 500; }
+.legal__card dd { color: var(--ink); margin: 0; }
+
+/* Оглавление (TOC) */
+.legal__toc {
+  margin-bottom: 2rem;
+  padding: 1.1rem 1.4rem;
+  background: rgba(194,30,25, 0.04);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline);
+}
+.legal__toc-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+}
+.legal__toc ol {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
+  font-size: 0.93rem;
+}
+@media (min-width: 720px) {
+  .legal__toc ol { grid-template-columns: 1fr 1fr; }
+}
+.legal__toc ol li { padding-left: 1.6rem; }
+.legal__toc a { color: var(--ink-soft); text-decoration: none; }
+.legal__toc a:hover { color: var(--brand-mid); text-decoration: underline; }
+
+/* ---------- Сетка для support / account-deletion ---------- */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+}
+@media (min-width: 720px) {
+  .cards { grid-template-columns: 1fr 1fr; }
+}
+.card {
+  padding: 1.5rem 1.75rem;
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+.card h3 {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--brand-deep);
+  margin: 0 0 0.4rem;
+}
+.card p { margin: 0 0 0.8rem; color: var(--ink-soft); }
+.card .card__meta {
+  font-size: 0.86rem;
+  color: var(--muted);
+  margin-top: 0.6rem;
+}
+.card a.card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  color: var(--brand-mid);
+  text-decoration: none;
+}
+.card a.card__link:hover { color: var(--brand); }
+
+.callout {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(224, 122, 63, 0.08);
+  border-left: 3px solid var(--orange);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin: 1.25rem 0 1.75rem;
+}
+.callout strong { color: var(--brand-deep); }
+
+.steps {
+  counter-reset: stepnum;
+  padding: 0;
+  margin: 0 0 2rem;
+}
+.legal .steps li {
+  counter-increment: stepnum;
+  position: relative;
+  padding: 0.5rem 0 1.1rem 3.25rem;
+  border-bottom: 1px dashed var(--hairline);
+}
+.legal .steps li:last-child { border-bottom: none; }
+.legal .steps li::before {
+  content: counter(stepnum);
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--brand);
+  color: var(--cream);
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1rem;
+}
+.steps li::marker { content: none; }
+.steps strong { display: block; color: var(--ink); margin-bottom: 0.25rem; font-size: 1.02rem; }
+
+/* ---------- Подвал ---------- */
+.lfoot {
+  margin-top: clamp(2rem, 5vw, 4rem);
+  padding: 2rem var(--gutter);
+  background: var(--brand-deep);
+  color: var(--cream);
+}
+.lfoot__inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  gap: 1.25rem;
+}
+.lfoot__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+}
+.lfoot__links a {
+  color: var(--cream);
+  opacity: 0.85;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(251,244,239, 0.25);
+  padding-bottom: 1px;
+}
+.lfoot__links a:hover { opacity: 1; border-bottom-color: var(--bright); }
+.lfoot__meta {
+  font-size: 0.84rem;
+  color: rgba(251,244,239, 0.7);
+  line-height: 1.55;
+}

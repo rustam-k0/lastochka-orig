@@ -1,0 +1,19 @@
+extend type Query {
+  assembly_items(
+    "ID сборки"
+    assembly_id:Int!
+    """
+    Статус товара в заказе
+    1 - Собрать
+    2 - Товар собран
+    3 - Уточнить
+    4 - Товар отменен
+    """
+    statuses_id:[Int]
+  ):[AssemblyItem] @all(scopes: ["filter","auth","byCategoryPriority"]) @guard
+
+  assembly_item(
+    "AssemblyItem -> id"
+    id:Int! @eq
+  ):AssemblyItem @find(scopes: ["filter","auth"]) @guard
+}

@@ -1,0 +1,15 @@
+extend type Mutation {
+  "Курьер возвращает позицию (клиент не принял). Штучный — quantity штук; весовой — только полностью."
+  OrderItemReturnByCourier(
+    "DeliveryOrder -> id"
+    delivery_order_id: Int!
+    "OrderItem -> id"
+    order_item_id: Int!
+    "Сколько штук вернуть (только штучный). Весовой — не передавать, возврат полный."
+    quantity: Int
+    "Причина возврата (product_cancel_reasons), опционально"
+    reason_id: Int
+  ): DefaultResponse @guard @field(resolver: "Order\\OrderItemReturnByCourier")
+  @validator(class: "Order\\OrderItemReturnByCourierValidator")
+  @can(model: "Admin", ability: "driverOnShift")
+}

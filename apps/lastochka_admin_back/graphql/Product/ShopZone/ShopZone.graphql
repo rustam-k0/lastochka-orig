@@ -1,0 +1,44 @@
+type ShopZone {
+    "ID"
+    id:Int
+    "Название зоны"
+    name:String
+    "Цена доставки"
+    delivery_price:Int
+    "Минимальная сумма для заказа"
+    min_order_price:Int
+    "Сумма заказа для бесплатной доставки (вычисляется из ступеней: ступень с ценой 0)"
+    free_delivery_from:Int
+    "Стоимость доставки от суммы заказа (MID-280): ступени по возрастанию from_amount; [] = ступеней нет"
+    delivery_price_ranges:[ShopZoneDeliveryPriceRange!] @method(name: "deliveryPriceRangesList")
+    "Тип доставки (own/yandex)"
+    delivery_type:String
+    "Активна ли зона (неактивная не участвует в расчёте доставки)"
+    is_active:Boolean
+    "Стоимость сборки заказа для зоны; null = не задана"
+    assembly_price:Int
+    "Дни недели доставки (ISO 1=Пн … 7=Вс); null = все дни"
+    delivery_days:[Int]
+    "Минимальное время до доставки в минутах (lead time от «сейчас»); null = без задержки"
+    delivery_lead_minutes:Int
+    "Загружены ли координаты"
+    coordinates_loaded:Boolean @method(name: "coordinatesExists")
+    "Координаты полигона зоны"
+    coordinates:[ZoneCoordinate] @hasMany
+}
+
+"Ступень стоимости доставки зоны (MID-280): от суммы товаров from_amount доставка стоит price"
+type ShopZoneDeliveryPriceRange {
+    "Сумма товаров до промокода и бонусов, с которой действует ступень, руб."
+    from_amount:Int!
+    "Стоимость доставки, руб.; 0 = бесплатно"
+    price:Int!
+}
+
+"Ступень стоимости доставки зоны при сохранении (MID-280)"
+input ShopZoneDeliveryPriceRangeInput {
+    "Сумма товаров до промокода и бонусов, с которой действует ступень, руб."
+    from_amount:Int!
+    "Стоимость доставки, руб.; 0 = бесплатно"
+    price:Int!
+}

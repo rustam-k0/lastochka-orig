@@ -1,0 +1,7 @@
+type Brand {
+  "ID"
+  id: Int
+  "Название"
+  title: String
+  img: Img @hasOne(relation:"img")
+}

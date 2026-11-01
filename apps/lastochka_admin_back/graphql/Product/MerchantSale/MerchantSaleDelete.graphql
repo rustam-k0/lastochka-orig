@@ -1,0 +1,8 @@
+extend type Mutation {
+  "Удаление акции мерчанта (soft delete)"
+  deleteMerchantSale(
+    "ID акции"
+    id: Int! @eq
+  ): MerchantSale @delete
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-sales")
+}

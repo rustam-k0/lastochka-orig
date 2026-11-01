@@ -1,0 +1,50 @@
+"Проблемный товар 1С — без обязательного реквизита (FOODLINK-11039)"
+type OneCProblemProduct {
+  id: ID!
+  shop_id: Int
+  shop_title: String
+  code: String!
+  external_id: String
+  sku: String
+  name: String
+  barcode: String
+  "id товара курьерки для перехода на карточку из карантина; null — товара нет (FOODLINK-11458)"
+  local_product_id: Int
+  created_at: DateTime
+}
+
+extend type Query {
+  "Список проблемных товаров 1С по коду причины (missing_sku / missing_barcode / missing_price / missing_stock / missing_image / missing_name / missing_unit). shop_id опционален: без него — по всем магазинам (для единой страницы «Карантин товаров»)."
+  oneCProblemProducts(
+    shop_id: Int @scope(name: "filterByShop")
+    code: String! @eq
+  ): [OneCProblemProduct!]!
+    @paginate(defaultCount: 25, maxCount: 200)
+    @guard
+    @can(ability: "onlyAdmin", model: "Admin")
+}
+
+"Строка объединённого списка «Без штрихкода» (FOODLINK-11039): карантин агрегатора (no_ean) ЛИБО проблемный товар 1С (missing_barcode)."
+type QuarantineNoBarcodeRow {
+  "Источник: quarantine (карантин агрегатора — есть действие «Проставить штрихкод») | onec (1С — read-only)"
+  source: String!
+  "id в исходной таблице (aggregator_quarantine для quarantine, onec_problem_products для onec)"
+  id: Int!
+  shop_id: Int
+  shop_title: String
+  name: String
+  sku: String
+  "id товара курьерки для перехода на карточку из карантина; null — товара нет (FOODLINK-11458)"
+  local_product_id: Int
+  created_at: DateTime
+}
+
+extend type Query {
+  "Объединённый список «без штрихкода»: карантин агрегатора (no_ean, неразрешённые) + проблемные товары 1С (missing_barcode). shop_id опционален (без него — по всем магазинам). (FOODLINK-11039)"
+  quarantineNoBarcode(
+    shop_id: Int
+  ): [QuarantineNoBarcodeRow!]!
+    @paginate(builder: "App\\GraphQL\\Queries\\QuarantineNoBarcode@builder", defaultCount: 25, maxCount: 200)
+    @guard
+    @can(ability: "onlyAdmin", model: "Admin")
+}

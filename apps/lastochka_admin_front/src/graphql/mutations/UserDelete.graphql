@@ -1,0 +1,10 @@
+mutation(
+  $id: Int,
+) {
+  UserDelete(
+    id: $id
+  ) {
+    code
+    message
+  }
+}

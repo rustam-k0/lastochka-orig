@@ -1,0 +1,12 @@
+extend type Mutation {
+
+  "Сбросить двухфакторную аутентификацию пользователя"
+  ResetUserTwoFactor(
+    "ID пользователя"
+    id: Int!
+  ): DefaultResponse
+    @field(resolver: "User\\ResetUserTwoFactor")
+    @guard
+    @can(model: "Admin", ability: "onlyAdmin") @section(key: "staffs")
+
+}

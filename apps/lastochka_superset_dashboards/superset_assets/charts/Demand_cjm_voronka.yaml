@@ -1,0 +1,33 @@
+# Вкладка «Спрос». Воронка «Путь клиента (CJM)» по 7 реальным стадиям (см.
+# комментарий в an_cjm_funnel_events - список пересмотрен относительно
+# фантазийных 9 стадий BUILD_PLAN).
+#
+# FIX ROUND 1 (ревью, Important): funnel-чарт Superset сортирует строки по
+#   метрике по убыванию, а не по dimension - на разреженных данных порядок
+#   расходился с cjm_stage_no. Явного поля "сортировать по dimension" в
+#   params funnel_chart нет, поэтому фикс сделан железно через два изменения:
+#   1) params.sort_by_metric: false (отключает дефолтную сортировку по
+#      метрике), 2) cjm_stage_name в an_cjm_funnel_events теперь содержит
+#      числовой префикс ('1. Открытие приложения' ... '7. Заказ создан') -
+#      алфавитная сортировка строкового dimension тогда совпадает с порядком
+#      стадий при любом распределении метрики.
+slice_name: 'Путь клиента (CJM) - воронка из 7 стадий'
+viz_type: funnel
+params:
+  viz_type: funnel
+  metric:
+    expressionType: SIMPLE
+    column:
+      column_name: session_id
+    aggregate: COUNT_DISTINCT
+    label: Сессии на стадии
+    hasCustomLabel: true
+  groupby:
+  - cjm_stage_name
+  adhoc_filters: []
+  row_limit: 10
+  number_format: SMART_NUMBER
+  sort_by_metric: false
+dataset_uuid: 83f4cdd0-bcbd-4972-ae6f-fc33e80f8377
+uuid: 29910a4a-2b9d-46d5-ae31-85c794d9efe5
+version: 1.0.0

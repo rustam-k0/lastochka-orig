@@ -1,0 +1,8 @@
+extend type Mutation {
+  "Удаление товарной группы мерчанта (soft delete)"
+  deleteMerchantProductGroup(
+    "ID группы"
+    id: Int! @eq
+  ): MerchantProductGroup @delete
+  @guard @can(model: "Admin", ability: "onlyShop") @section(key: "merchant-product-groups")
+}

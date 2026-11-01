@@ -1,0 +1,18 @@
+type Shop {
+  id:Int
+  title:String
+  img: Img @hasOne(relation:"img")
+  "График работы"
+  schedule:String
+  "Изображение лого"
+  logo_img:Img @hasOne(relation:"logoImg")
+  "Изображение бэкграунд"
+  background_img:Img @hasOne(relation:"backgroundImg")
+  "Популярный партнер"
+  is_popular:Boolean
+  reviews:[ShopReview] @hasMany(scopes: ["withComment","published"])
+  reviews_count:Int @count(relation: "reviews")
+  reviews_avg_mark:Float @method(name: "reviewsAvgMark") @with(relation: "reviews")
+  my_review:ShopReview @hasOne(relation: "myReview")
+
+}

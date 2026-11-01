@@ -1,0 +1,10 @@
+mutation ($barcodeId: Int!) {
+  setPrimaryPlatformProductBarcode(barcodeId: $barcodeId) {
+    id
+    barcodes {
+      id
+      ean
+      is_primary
+    }
+  }
+}

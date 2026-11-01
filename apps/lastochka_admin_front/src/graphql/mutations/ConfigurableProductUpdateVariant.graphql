@@ -1,0 +1,24 @@
+mutation ConfigurableProductUpdateVariant(
+  $variant_id: Int!
+  $attribute_values: [VariantAttributeValueInput!]
+  $sku: String
+  $price: Float
+  $stock: Int
+  $title: String
+  $img: ImgInput
+  $images: [ImgInput]
+) {
+  ConfigurableProductUpdateVariant(
+    variant_id: $variant_id
+    attribute_values: $attribute_values
+    sku: $sku
+    price: $price
+    stock: $stock
+    title: $title
+    img: $img
+    images: $images
+  ) {
+    code
+    message
+  }
+}

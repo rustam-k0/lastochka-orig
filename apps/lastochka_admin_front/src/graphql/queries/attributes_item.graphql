@@ -1,0 +1,16 @@
+query AttributeItem($id: Int!) {
+  attribute_item(id: $id) {
+    id
+    title
+    code
+    description
+    type_id
+    category_type_id
+    position
+    is_default
+    values {
+      id
+      title
+    }
+  }
+}

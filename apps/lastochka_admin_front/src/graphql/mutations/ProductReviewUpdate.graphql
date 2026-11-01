@@ -1,0 +1,10 @@
+mutation UpdateProductReview($input: UpdateProductReviewInput!) {
+  updateProductReview(input: $input) {
+    id
+    rating
+    description
+    is_published
+    author_name
+    author_phone
+  }
+}

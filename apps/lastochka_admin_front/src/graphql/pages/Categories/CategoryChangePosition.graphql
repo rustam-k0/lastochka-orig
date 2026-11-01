@@ -1,0 +1,6 @@
+mutation($items: [CategoryPosition]) {
+  CategoryChangePosition(items: $items) {
+    message
+    code
+  }
+}

@@ -1,0 +1,30 @@
+slice_name: Выручка и прибыль по дням
+viz_type: echarts_timeseries_line
+params:
+  viz_type: echarts_timeseries_line
+  metrics:
+  - expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END)
+    label: Выручка, ₽
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: (SUM(CASE WHEN status_id = 5 THEN amount ELSE 0 END) - SUM(CASE
+      WHEN status_id = 5 THEN order_cogs END))
+    label: Валовая прибыль, ₽ (COGS из 1С, пока NULL)
+    hasCustomLabel: true
+  - expressionType: SQL
+    sqlExpression: SUM(CASE WHEN status_id = 5 THEN items_subtotal - discount - assembly_cost
+      ELSE 0 END)
+    label: Маржинальный доход (проксирующая метрика, без себестоимости), ₽
+    hasCustomLabel: true
+  groupby: []
+  x_axis: order_created_at
+  time_grain_sqla: P1D
+  adhoc_filters: []
+  row_limit: 10000
+  comparison_type: values
+  x_axis_sort_asc: true
+  y_axis_format: SMART_NUMBER
+dataset_uuid: d991fd22-7a5f-4c1f-977b-866968e97b0c
+uuid: e05bee4e-d141-45b6-adac-e16ffb7af5ad
+version: 1.0.0

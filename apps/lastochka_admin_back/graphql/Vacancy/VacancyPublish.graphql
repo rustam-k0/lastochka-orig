@@ -1,0 +1,15 @@
+extend type Mutation {
+  "Публикация вакансии: становится видна в мобильном приложении и на сайте"
+  VacancyPublish(
+    "ID вакансии"
+    id: Int!
+  ): Vacancy! @field(resolver: "Vacancy\\VacancyPublish")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "vacancies")
+
+  "Снятие вакансии с публикации"
+  VacancyUnpublish(
+    "ID вакансии"
+    id: Int!
+  ): Vacancy! @field(resolver: "Vacancy\\VacancyUnpublish")
+  @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "vacancies")
+}

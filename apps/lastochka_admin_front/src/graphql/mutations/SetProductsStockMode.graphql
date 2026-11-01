@@ -1,0 +1,3 @@
+mutation SetProductsStockMode($ids: [Int!]!, $stock_mode: String, $fixed_stock_quantity: Int, $fixed_stock_unit_type_id: Int) {
+  SetProductsStockMode(ids: $ids, stock_mode: $stock_mode, fixed_stock_quantity: $fixed_stock_quantity, fixed_stock_unit_type_id: $fixed_stock_unit_type_id)
+}

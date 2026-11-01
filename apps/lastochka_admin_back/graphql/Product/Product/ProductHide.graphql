@@ -1,0 +1,5 @@
+extend type Mutation {
+  ProductHide(id:Int):DefaultResponse  @field(resolver: "Product\\ProductHide")
+  @validator(class: "Product\\ProductHideValidator")
+  @can(ability: "onlyShop",model: "Shop") @section(key: "products")
+}

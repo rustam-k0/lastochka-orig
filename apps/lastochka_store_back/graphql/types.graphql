@@ -1,0 +1,27 @@
+"Изображение"
+type Img {
+  "id изображения (table: img)"
+  id: Int
+  "Путь к изображению"
+  path: String
+  "Название изображения"
+  origin_name: String
+  "Текст при неуспешной загрузке изображения"
+  alt: String
+  "Размер изображения (1.3 Мб)"
+  size: String
+  "Тип изображения (jpg, png)"
+  type: String
+  links:[ImageLink] @hasMany
+
+}
+
+
+type ImageLink {
+  id:Int
+  "Параметры изображения"
+  query:String
+  "Путь к изображению"
+  path:String
+}
+

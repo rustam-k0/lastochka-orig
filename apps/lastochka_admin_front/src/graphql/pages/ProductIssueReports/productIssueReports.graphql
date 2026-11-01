@@ -1,0 +1,29 @@
+query productIssueReports($page: Int, $perPage: Int, $type: String, $shop_id: Int, $product_id: Int) {
+  productIssueReports(page: $page, perPage: $perPage, type: $type, shop_id: $shop_id, product_id: $product_id) {
+    data {
+      id
+      email
+      type
+      message
+      created_at
+      product {
+        id
+        title
+      }
+      shop {
+        id
+        title
+      }
+      client {
+        id
+        name
+        phone
+      }
+    }
+    paginatorInfo {
+      currentPage
+      lastPage
+      total
+    }
+  }
+}

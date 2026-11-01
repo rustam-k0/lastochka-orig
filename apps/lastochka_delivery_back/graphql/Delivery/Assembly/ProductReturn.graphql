@@ -1,0 +1,9 @@
+extend type Mutation{
+  "Вернуть товар в собрать"
+  ProductReturn(
+    "AssemblyItem -> id"
+    id:Int
+  ):DefaultResponse @guard @field(resolver: "Assembly\\ProductReturn")
+  @validator(class: "Assembly\\ProductReturnValidator")
+  @can(model: "Admin",ability: "onShift")
+}

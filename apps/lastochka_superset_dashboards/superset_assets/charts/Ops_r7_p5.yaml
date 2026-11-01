@@ -1,0 +1,57 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Начисления по курьерам и зонам
+description: null
+viz_type: table
+params:
+  viz_type: table
+  query_mode: raw
+  all_columns:
+  - courier_name
+  - zone_name
+  - delivered
+  - zone_tariff
+  - base_amount
+  - bonus_amount
+  - deduction_amount
+  - total_amount
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: accepted_at
+  row_limit: 10000
+  server_pagination: false
+  page_length: 12
+  include_search: true
+  show_cell_bars: false
+  allow_rearrange_columns: false
+  allow_render_html: false
+  table_timestamp_format: '%d.%m.%Y'
+  color_pn: false
+  column_config:
+    delivered:
+      d3NumberFormat: ',d'
+      horizontalAlign: right
+    zone_tariff:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    base_amount:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    bonus_amount:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    deduction_amount:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+    total_amount:
+      d3NumberFormat: $,.0f
+      horizontalAlign: right
+  order_by_cols:
+  - '["total_amount", false]'
+cache_timeout: null
+dataset_uuid: 62e9ce97-1fc3-5a4f-9f57-104a29da8689
+uuid: 718b25bf-fe33-5e75-9142-bc2ff8dd587a
+version: 1.0.0

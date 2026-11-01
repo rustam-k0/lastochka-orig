@@ -1,0 +1,86 @@
+mutation(
+  $id: Int
+  $title: String
+  $city_id: Int
+  $is_default: Boolean
+  $phone: String
+  $email: String
+  $slot_time: Int
+  $slot_max_orders: Int
+  $longitude: Float
+  $latitude: Float
+  $address: String
+  $commission: Float
+  $area_sqm: Float
+  $schedule: String
+  $type_id: Int
+  $status_id: Int
+  $payment_type_id: Int
+  $description: String
+  $deposit: Float
+  $img: ImgInput
+  $logo_img: ImgInput
+  $background_img: ImgInput
+  $categories: [Int]
+  $is_popular: Boolean
+  $is_b2b: Boolean
+  $ignore_stock: Boolean
+  $is_bonus_enabled: Boolean
+  $bonus_earn_percent: Int
+  $bonus_spend_percent: Int
+  $is_pickup_enabled: Boolean
+  $min_pickup_order_amount: Int
+  $heavy_order_threshold: Int
+  $assembly_price: Int
+  $pickup_payment_methods: String
+  $pickup_auto_cancel_enabled: Boolean
+  $pickup_wait_perishable_hours: Int
+  $pickup_wait_regular_hours: Int
+  $pickup_grace_period_hours: Int
+  $custom_checkboxes: String
+) {
+  ShopUpdate(
+    id: $id
+    title: $title
+    city_id: $city_id
+    is_default: $is_default
+    phone: $phone
+    email: $email
+    slot_time: $slot_time
+    slot_max_orders: $slot_max_orders
+    longitude: $longitude
+    latitude: $latitude
+    address: $address
+    commission: $commission
+    area_sqm: $area_sqm
+    schedule: $schedule
+    payment_type_id: $payment_type_id
+    type_id: $type_id
+    status_id: $status_id
+    description: $description
+    deposit: $deposit
+    img: $img
+    logo_img: $logo_img
+    background_img: $background_img
+    categories: $categories
+    is_popular: $is_popular
+    is_b2b: $is_b2b
+    ignore_stock: $ignore_stock
+    is_bonus_enabled: $is_bonus_enabled
+    bonus_earn_percent: $bonus_earn_percent
+    bonus_spend_percent: $bonus_spend_percent
+    is_pickup_enabled: $is_pickup_enabled
+    min_pickup_order_amount: $min_pickup_order_amount
+    heavy_order_threshold: $heavy_order_threshold
+    assembly_price: $assembly_price
+    pickup_payment_methods: $pickup_payment_methods
+    pickup_auto_cancel_enabled: $pickup_auto_cancel_enabled
+    pickup_wait_perishable_hours: $pickup_wait_perishable_hours
+    pickup_wait_regular_hours: $pickup_wait_regular_hours
+    pickup_grace_period_hours: $pickup_grace_period_hours
+    custom_checkboxes: $custom_checkboxes
+  ) {
+    message
+    code
+  }
+}

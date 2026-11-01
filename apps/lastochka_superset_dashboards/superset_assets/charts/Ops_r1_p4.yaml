@@ -1,0 +1,43 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Что формирует потери
+description: Структура упущенной выручки
+viz_type: pie
+params:
+  viz_type: pie
+  groupby:
+  - loss_kind
+  metric:
+    expressionType: SQL
+    sqlExpression: SUM(loss_amount)
+    label: Потери, ₽
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: event_at
+  - clause: WHERE
+    expressionType: SQL
+    sqlExpression: loss_kind IN ('Товар не найден · оценка', 'Отказ от замены', 'Замена дешевле')
+  row_limit: 6
+  sort_by_metric: true
+  color_scheme: lastochkaOps
+  show_labels: true
+  labels_outside: true
+  label_line: true
+  label_type: value_percent
+  show_labels_threshold: 3
+  number_format: $,.0f
+  show_legend: true
+  legendType: scroll
+  legendOrientation: right
+  donut: true
+  innerRadius: 55
+  outerRadius: 80
+  show_total: false
+cache_timeout: null
+dataset_uuid: 1ee44de1-76c8-439c-bbe1-720914f5e3fc
+uuid: 0caefc17-66e9-5084-85ef-23935db9c854
+version: 1.0.0

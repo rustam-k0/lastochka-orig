@@ -1,0 +1,33 @@
+# Вкладка «Операции». Путь заказа — сквозная воронка по 5 прогрессивным
+# стадиям (см. order_stage_funnel.yaml - пересмотрено относительно
+# BUILD_PLAN, payload->>'to_stage' не существует). sort_by_metric: false +
+# числовой префикс stage_label - тот же фикс, что в Demand_cjm_voronka.yaml
+# (funnel Superset сортирует по метрике, а не по dimension).
+#
+# FIX ROUND 2 (ревью, Important x2): "Отменён" убран из воронки (это
+# терминальная ветка, не шаг линейного пути заказа - раньше стоял стадией 6,
+# глубже "Доставлен"=5, и ломал монотонность воронки) - датасет теперь
+# отдаёт только 5 стадий, groupby остался stage_label без изменений (список
+# стадий не хардкодится в чарте, приходит из датасета). Также в датасете
+# order_id нормализован к родителю (split_part) - до фикса дочерние
+# сплит-заказы раздували COUNT DISTINCT в нижних стадиях воронки.
+slice_name: Путь заказа — сквозная воронка (стадии)
+viz_type: funnel
+params:
+  viz_type: funnel
+  metric:
+    expressionType: SIMPLE
+    column:
+      column_name: order_id
+    aggregate: COUNT_DISTINCT
+    label: Заказов на стадии
+    hasCustomLabel: true
+  groupby:
+  - stage_label
+  adhoc_filters: []
+  row_limit: 10
+  number_format: SMART_NUMBER
+  sort_by_metric: false
+dataset_uuid: 05e57b34-1a7b-4dfc-840d-a6ca2ccb3139
+uuid: 5701f7b5-2bcd-4cc9-86d2-47c0a6d1412b
+version: 1.0.0

@@ -1,0 +1,6 @@
+mutation MerchantProductGroupChangePosition($items: [MerchantProductGroupPositionInput!]!) {
+  MerchantProductGroupChangePosition(items: $items) {
+    code
+    message
+  }
+}

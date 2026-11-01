@@ -1,0 +1,9 @@
+extend type Mutation {
+    saveEntityFields(
+        "JSON-конфигурация видимости полей сущностей"
+        config: String!
+    ): AdminSetting!
+        @field(resolver: "AdminSetting\\SaveEntityFields")
+        @guard
+        @can(ability: "manageSettings", model: "Admin")
+}

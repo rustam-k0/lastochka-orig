@@ -1,0 +1,146 @@
+type Order {
+  id:Int
+  paid:Boolean
+  assembly:Assembly @hasOne
+  status_id:Int
+  "Общая сумма"
+  amount:Float
+  "Сумма товаров без скидки (amount + discount)"
+  subtotal:Float
+  "Скидка по промокоду"
+  discount:Float
+  "Списанные бонусы"
+  bonus_spent:Int
+  "Стоимость доставки"
+  delivery_price:Float
+  """
+  Суммарный вес заказа в граммах. Приходит на любом статусе заказа: до сборки —
+  плановый по составу заказа, при завершении сборки перезаписывается фактическим
+  (учитывает взвешенные позиции, замены и отмены). null — рассчитать невозможно:
+  в заказе нет позиций либо ни у одной нет веса в карточке товара
+  """
+  total_weight:Int @method(name: "resolveTotalWeight")
+  "Единица измерения total_weight. Всегда «g» (граммы) — форматирование в г/кг на стороне клиента"
+  total_weight_unit:String @method(name: "resolveTotalWeightUnit")
+  "Вес неполный: есть штучные позиции без веса в карточке товара. Значение total_weight занижено — показывать как приблизительное"
+  is_weight_partial:Boolean @method(name: "resolveIsWeightPartial")
+  "Признак «Тяжёлый заказ»: вес превышает порог магазина (модуль heavy_orders). Приходит на любом статусе заказа. Плашка в приложениях сборщика и курьера"
+  is_heavy:Boolean @method(name: "resolveIsHeavy")
+  "Число курьеров, задействованных в доставке. 0 = курьер ещё не назначен («Ожидает курьера»), >1 = совместная доставка тяжёлого заказа"
+  couriers_count:Int @method(name: "resolveCouriersCount")
+  "Курьеры, назначенные на доставку заказа. Пустой список — курьер ещё не назначен"
+  couriers:[User] @field(resolver: "App\\GraphQL\\Queries\\OrderCouriersResolver")
+  "Товары в заказе"
+  items:[OrderItem] @hasMany(relation: "orderItems")
+  "Количество товаров"
+  products_count:Int @count(relation: "orderItems")
+  """
+  Начало слота доставки. null — слот показывать не нужно: включён модуль
+  «Оформление заказа без слотов», клиент оформил доставку без выбора времени
+  (доставка в ближайшее время после оформления). Самовывоз в модуль не входит —
+  там слот приходит всегда
+  """
+  slot_start_date:DateTime @method(name: "resolveSlotStartDate")
+  "Окончание слота доставки. null — по той же причине, что и slot_start_date"
+  slot_end_date:DateTime @method(name: "resolveSlotEndDate")
+  "Время, к которому рекомендуется завершить сборку"
+  warning_time:DateTime
+  """
+  Тип оплаты
+  PAYMENT_ONLINE = 1
+  PAYMENT_OFFLINE = 2 - Временно недоступен
+  """
+  payment_type_id:Int
+  """
+  Тип получения
+  1 - Самовывоз
+  2 - Доставка
+  """
+  type_id:Int
+  """
+  Что делать в случае отсутствия товара
+  ON_CHANGE_CALL = 1 Позвонить
+  ON_CHANGE_CHANGE = 2 Заменить
+  ON_CHANGE_CANCEL = 3 Отменить
+  """
+  on_change_action_id:Int
+  "Комментарий клиента"
+  client_comment:String
+  "Опции оформления, выбранные клиентом (например «Охладить перед доставкой»). Снапшот на момент оформления, пустой список — опции не выбирались"
+  checkout_options:[CheckoutOption!] @method(name: "resolveCheckoutOptions")
+  "Комментарий оператора"
+  operator_comment:String
+  "Информация о клиенте"
+  client_info:ClientOrderInfo @hasOne(relation: "clientInfo")
+  "Пакеты (для parent-заказа агрегирует packages всех дочерних подзаказов)"
+  packages:[AssemblyPackage] @field(resolver: "App\\GraphQL\\Queries\\OrderPackagesResolver")
+  "ID родительского заказа (null для обычных заказов)"
+  parent_order_id:Int
+  "Номер подзаказа"
+  sub_number:Int
+  "Сквозной номер заказа (= номер заказа в сторфронте; у подзаказов с суффиксом '-N')"
+  number:String
+  "Метка заказа — сквозной номер (например '5' или '5-1')"
+  label:String
+  "ID зоны сборки"
+  assembly_zone_id:Int
+  "Зона сборки (этаж) — название настраивается в админке"
+  assemblyZone:AssemblyZone @belongsTo
+  "Самовывоз: момент готовности заказа к выдаче (завершение сборки)"
+  pickup_ready_at:DateTime
+  "Самовывоз: момент фактической выдачи заказа клиенту. null — заказ ещё не выдан"
+  picked_up_at:DateTime
+  "Дочерние заказы (подзаказы)"
+  childOrders:[Order] @hasMany
+  "Родительский заказ"
+  parentOrder:Order @belongsTo
+}
+
+"Опция оформления заказа (чекбокс чекаута витрины)"
+type CheckoutOption {
+  "Машинный код опции, например chill_before_delivery"
+  code:String!
+  "Текст для отображения, например «Охладить перед доставкой»"
+  label:String!
+}
+
+type ClientOrderInfo {
+  "Имя"
+  name:String
+  "Фамилия"
+  surname:String
+  "Номер телефона"
+  phone:String
+  "Почта"
+  email:String
+  "Адрес"
+  address:String
+  "Первый ли заказ"
+  first_order:Boolean
+  "Широта"
+  latitude:String
+  "Долгода"
+  longitude:String
+  "Подъезд"
+  entrance:String
+  "Домофон"
+  intercom:String
+  "Этаж"
+  floor:String
+  "Квартира"
+  flat:String
+  object_data: ObjectAddressDataType
+}
+
+"Зона сборки (этаж)"
+type AssemblyZone {
+  id:Int
+  "Название зоны (например «1 этаж»)"
+  title:String
+  "Цветовое обозначение (HEX) для индикации в приложении сборщика"
+  color:String
+  "Активность зоны"
+  is_active:Boolean
+  "Порядок отображения"
+  position:Int
+}

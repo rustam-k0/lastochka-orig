@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zelenoe-admin-front
+  labels:
+    app: zelenoe_admin_front
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: zelenoe_admin_front
+  template:
+    metadata:
+      labels:
+        app: zelenoe_admin_front
+    spec:
+      containers:
+        - name: zelenoe-admin-front
+          image: gitlab.comrades.dev:5050/comrades-developers/zelenoe_admin_front:latest
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: zelenoe-admin-front
+      nodeSelector:
+        app: zelenoe_admin_front
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zelenoe-admin-front
+  labels:
+    app: zelenoe_admin_front
+spec:
+  selector:
+    app: zelenoe_admin_front
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 80
+      nodePort: 30081
+  type: NodePort

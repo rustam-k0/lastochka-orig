@@ -1,0 +1,27 @@
+# Сгенерировано scripts/ops_reports.py («Операционные отчёты», ТЗ v2.1).
+# Не править руками.
+slice_name: Актуальность витрин
+description: null
+viz_type: big_number_total
+params:
+  viz_type: big_number_total
+  metric:
+    expressionType: SQL
+    sqlExpression: MAX(copy_age_hours)
+    label: Актуальность витрин
+    hasCustomLabel: true
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: checked_at
+  subheader: Часов с обновления копии БД
+  header_font_size: 0.4
+  subheader_font_size: 0.15
+  y_axis_format: ',.1f'
+  time_format: smart_date
+cache_timeout: null
+dataset_uuid: 333a464b-edbf-54c5-bef2-c7555ba9b482
+uuid: 96bd348d-b1e5-5de3-9c98-d9bead1f8a22
+version: 1.0.0

@@ -1,0 +1,8 @@
+mutation SaveProjectModules($config: String!) {
+    saveProjectModules(config: $config) {
+        id
+        key
+        value
+        type
+    }
+}

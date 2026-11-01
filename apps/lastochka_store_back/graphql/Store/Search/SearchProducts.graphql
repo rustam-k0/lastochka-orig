@@ -1,0 +1,16 @@
+extend type Query {
+  search_products(
+    title:String!
+  ):[SearchResult] @field(resolver: "SearchProducts")
+}
+
+type SearchResult {
+  "id магазина"
+  id:Int
+  "Название магазина"
+  title:String
+  "лого магазина"
+  logo_img:Img
+  "товары поиска"
+  products:[Product]
+}

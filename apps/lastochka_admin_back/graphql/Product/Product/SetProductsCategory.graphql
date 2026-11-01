@@ -1,0 +1,6 @@
+extend type Mutation {
+  "Массово перенести товары в категорию (замена привязок категорий). Возвращает число обработанных."
+  SetProductsCategory(ids: [Int!]!, category_id: Int!): Int
+    @field(resolver: "Product\\SetProductsCategory")
+    @guard @can(model: "Admin", ability: "onlyAdmin") @section(key: "products")
+}

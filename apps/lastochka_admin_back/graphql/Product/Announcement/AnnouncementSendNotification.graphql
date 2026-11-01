@@ -1,0 +1,29 @@
+enum NotificationTarget {
+    ALL_USERS @enum(value: "ALL_USERS")
+    ACTIVE_USERS @enum(value: "ACTIVE_USERS")
+    SEGMENT @enum(value: "SEGMENT")
+}
+
+type NotificationSent {
+    success: Boolean!
+    message: String!
+    target: NotificationTarget!
+    announcement: Announcement!
+}
+
+extend type Mutation {
+    sendAnnouncementNotification(
+        announcement_id: ID!
+        target: NotificationTarget = ALL_USERS
+        segment_criteria: NotificationSegmentInput
+    ): NotificationSent
+        @field(resolver: "App\\GraphQL\\Mutations\\Announcement\\SendAnnouncementNotification")
+        @guard(with: ["sanctum"]) @section(key: "announcements")
+}
+
+input NotificationSegmentInput {
+    gender: String
+    age_from: Int
+    age_to: Int
+    city: String
+}
